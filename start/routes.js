@@ -28,4 +28,5 @@ Route.group(() => {
   Route.post('Auth/Register', 'Authentication/AuthController.register').validator('Register')
   Route.get('Auth/Confirm/:confirmation_token',  'Authentication/AuthController.confirmAccount')
   Route.post('Auth/Authenticate',  'Authentication/AuthController.loginUser')
+  Route.post('Password/SendPasswordResetLink',  'PasswordMgt/PasswordController.sendLink')
 }).prefix('api/v1')

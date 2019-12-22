@@ -22,3 +22,14 @@ Event.on('new::merchant', async (mailDetails) => {
     }
   )
 })
+
+Event.on('new::passwordReset', async (mailDetails) => {
+  await Mail.send(
+    "emails.reset_password", mailDetails, message => {
+      message
+        .to(mailDetails.user.email, mailDetails.user.first_name + " " + mailDetails.user.last_name)
+        .from("info@shoppy.com", "Shopee")
+        .subject("Shoppy Password Reset link")
+    }
+  )
+})
