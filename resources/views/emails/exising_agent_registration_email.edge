@@ -1,0 +1,29 @@
+@layout('emails.email_base')
+@section('email_body')
+
+	<tr>
+		<td style="font-family: sans-serif; font-size: 15px; vertical-align: top;">
+			<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Dear {{user.first_name}},</p>
+				@if(created_by != user.id)
+					<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px;">You have been successfully registered as an Agent of {{cooperative.cooperative_label}} by an Administrator</p>
+				@else
+					<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px;">You have been successfully registered as an Agent of {{cooperative.cooperative_label}}</p>
+				@endif
+			<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Below are the contact details we have on file for you: </p>
+			<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+					<strong>
+							<ul>
+								<li>Full Name: {{user.first_name}} {{user.last_name}}</li>
+								<li>Telephone: {{user.phone_number}}</li>
+								<li>Email: {{user.email}}</li>
+
+							</ul>
+					</strong>
+			</p>
+			
+			<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px; margin-top: 40px;">Thank you for being part of us<br>
+			<span style="font-family: sans-serif; font-size: 20px; font-weight: normal; margin: 0; Margin-bottom: 15px;"><strong>Farmer1st</strong></span></p>
+		</td>
+	</tr>
+    
+@endsection

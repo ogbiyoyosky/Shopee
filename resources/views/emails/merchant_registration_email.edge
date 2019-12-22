@@ -1,0 +1,29 @@
+@layout('emails.email_base')
+@section('email_body')
+
+	<tr>
+		<td style="font-family: sans-serif; font-size: 15px; vertical-align: top;">
+			<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Dear {{profile.first_name}},</p>
+			<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Below are the details we have on file for you: </p>
+			<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+					<strong>
+							<ul>
+								<li>Full Name: {{profile.first_name}} {{profile.last_name}}</li>
+								<li>Telephone: {{user.phone_number}}</li>
+								<li>Email: {{user.email}}</li>
+							</ul>
+					</strong>
+			</p>
+			
+				<p style="font-family: sans-serif; font-size: 15px; font-weight: bˀold; margin: 0; Margin-bottom: 15px;">
+            <a href="{{frontend_url}}/Confirm/{{user.confirmation_token}}">Please Confirm Your Email Address</a>
+            <br> or copy the link <br>
+						<a href="{{frontend_url}}/Confirm/{{user.confirmation_token}}">{{frontend_url}}/Confirm/{{user.confirmation_token}}</a>
+				</p>
+			
+			<p style="font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px; margin-top: 40px;">We look forward to having you onboard<br>
+			<span style="font-family: sans-serif; font-size: 20px; font-weight: normal; margin: 0; Margin-bottom: 15px;"><strong>Profile</strong></span></p>
+		</td>
+	</tr>
+
+@endsection
