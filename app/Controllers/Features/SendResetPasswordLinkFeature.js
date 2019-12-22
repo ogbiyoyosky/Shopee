@@ -33,20 +33,27 @@ class SendResetPasswordLinkFeature {
               if(password_reset_token) {
                 return this.response.status(200).send({
                   status: "Success",
-                  message: `An email has been sent to ${user.email} `,
+                  message: `An email has already been sent to ${user.email} `,
                   status_code: 200
-              })
+                })
               } else {
                 const profile = await Profile.findBy('user_id', user.id)
                 const token = randomString.generate(32)
                 const expires_at = moment() + 3600000;
-                console.log("Epx", expires_at)
-  
-                const password_reset = new PasswordReset()
-                password_reset.expires_at = expires_at
-                password_reset.token = token
-                password_reset.user_id = user.id
-                await password_reset.save()
+                //  find the last password reset token and delete
+                const last_token = await PasswordReset.findBy('user_id', user.id)
+                if (last_token) {
+                  last_token.expires_at = expires_at
+                  last_token.token = token
+                  await last_token.save()
+                } else {
+                  const password_reset = new PasswordReset()
+                  password_reset.expires_at = expires_at
+                  password_reset.token = token
+                  password_reset.user_id = user.id
+                  await password_reset.save()
+                }
+                
 
                 const mailDetails = {
                   user,
