@@ -3,7 +3,7 @@
 class SendLink {
   get rules () {
     return {
-      email: 'required|email|unique:users,email'
+      email: 'required|email'
     }
   }
 
@@ -11,7 +11,6 @@ class SendLink {
     return {
 			'email.required': 'Email is required',
 			'email.email': 'Please provide a valid email address',
-      'email.unique': 'A user with similar email has already registered',
     }
   }
   
@@ -19,6 +18,7 @@ class SendLink {
     return this.ctx.response.status(400).json({
       status: "invalid",
       message: "Invalid data",
+      status_code: 400,
       errorMessages: errorMessages[0].message
     })
   }

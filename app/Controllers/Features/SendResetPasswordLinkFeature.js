@@ -5,6 +5,8 @@ const PasswordReset = use('App/Models/PasswordReset')
 const Event = use('Event')
 const randomString = require('randomstring')
 const moment = require('moment')
+const Env = use('Env')
+const frontend_url = Env.get('FRONTEND_URL')
 
 
 class SendResetPasswordLinkFeature {
@@ -58,7 +60,7 @@ class SendResetPasswordLinkFeature {
                 const mailDetails = {
                   user,
                   profile, 
-                  resetToken : token
+                  resetToken : `${frontend_url}/change-password?token`
                 }
   
                 Event.fire('new::passwordReset', mailDetails)
