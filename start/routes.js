@@ -24,8 +24,12 @@ Route.get("/", () => {
 })
 
 Route.group(() => {
-  Route.get('/MetaData', 'MetaDataController.showMetadata')
+  Route.get('/MetaData', 'Meta/MetaDatumController.showMetadata')
+  Route.get('/MetaData/States/:country_id', 'Meta/MetaDatumController.fetchState')
+  Route.get('/MetaData/Provinces/:state_id', 'Meta/MetaDatumController.fetchProvince')
   Route.post('Auth/Register', 'Authentication/AuthController.register').validator('Register')
   Route.get('Auth/Confirm/:confirmation_token',  'Authentication/AuthController.confirmAccount')
   Route.post('Auth/Authenticate',  'Authentication/AuthController.loginUser')
+  Route.post('Password/SendPasswordResetLink',  'PasswordMgt/PasswordController.sendLink').validator('SendLink')
+  Route.post('Password/PasswordReset',  'PasswordMgt/PasswordController.resetPassword')
 }).prefix('api/v1')
