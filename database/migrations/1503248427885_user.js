@@ -10,7 +10,7 @@ class UserSchema extends Schema {
 			table.string('password').notNullable()
 			table.string('email').notNullable()
       table.bigInteger('phone_number').unique().notNullable()
-      table.string('confirmation_token').notNullable()
+      table.integer('confirmation_token').nullable()
 			table.dateTime('is_activated_at').nullable()
 			table.dateTime('is_deleted_at').nullable()
 			table.integer('role_id')
