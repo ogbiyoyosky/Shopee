@@ -19,7 +19,6 @@ class StoreController {
             store_id
         }
     }) {
-        console.log(request.all())
         return new ActivateStoreFeature(request, response, auth).activateStore( store_id)
     }
 }
