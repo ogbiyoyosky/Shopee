@@ -59,7 +59,6 @@ module.exports = {
     //   password: Env.get('DB_PASSWORD', ''),
     //   database: Env.get('DB_DATABASE', 'adonis')
     // }
-
     connection: {
       host: Env.get('DB_HOST', CLEARDB_DATABASE_URL.host),
       port: Env.get('DB_PORT', ''),
