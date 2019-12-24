@@ -15,8 +15,7 @@ class ShopAdmin {
     // call next to advance the request
     const user_id = auth.current.user.role_id
     const role = await Role.findBy('id', user_id) 
-    console.log(role)
-
+    
     if(role.role_label == 'Shop Admin') {
       await next()
     } else {

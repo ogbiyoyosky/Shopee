@@ -15,6 +15,9 @@ class StoreSchema extends Schema {
       table.boolean('sell_outside_state').defaultTo(0)
       table.integer('sell_outside_province').defaultTo(0)
       table.dateTime('is_activated_at').defaultTo(null)
+      table.dateTime('is_deactivated_at').defaultTo(null)
+      table.integer('is_deactivated_by')
+      table.integer('is_activated_by')
       table.timestamps()
     })
   }
