@@ -51,6 +51,5 @@ class ActivateStoreFeature {
             })
 		} 
     }
-
 }
 module.exports = ActivateStoreFeature
