@@ -34,6 +34,8 @@ class RegisterUserFeature {
               length: 5,
               charset: 'numeric'
             })
+
+            
             let role_label 
             role_label = reg_type_id == 2 ? "Shop Admin": "Customer"   
             const role =await Role.findBy('role_label', role_label)
@@ -72,10 +74,10 @@ class RegisterUserFeature {
                 frontend_url: Env.get('FRONTEND_URL')
               }
 
-            const textDetails = {
-              sms_recipient,
-              user
-            }
+            // const textDetails = {
+            //   sms_recipient,
+            //   user
+            // }
              
             
               if(reg_type_id == 2) {
@@ -84,7 +86,7 @@ class RegisterUserFeature {
                 Event.fire('new::merchant', mailDetails)
               }
               
-              Event.fire('new::regtext', textDetails )
+              //Event.fire('new::regtext', textDetails )
              
             return this.response.status(201).send({
                 status: "Success",
