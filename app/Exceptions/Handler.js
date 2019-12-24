@@ -30,7 +30,7 @@ class ExceptionHandler extends BaseExceptionHandler {
 
      })
     }
-    response.status(error.status).send(error.message)
+   
   }
 
   /**

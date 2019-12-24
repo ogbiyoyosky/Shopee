@@ -32,4 +32,5 @@ Route.group(() => {
   Route.post('Auth/Authenticate',  'Authentication/AuthController.loginUser')
   Route.post('Password/SendPasswordResetLink',  'PasswordMgt/PasswordController.sendLink').validator('SendLink')
   Route.post('Password/PasswordReset',  'PasswordMgt/PasswordController.resetPassword')
+  Route.post('Store/CreateStore',  'Store/StoreController.createStore').middleware(['auth','shopAdmin']).validator('Store')
 }).prefix('api/v1')
