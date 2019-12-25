@@ -12,9 +12,6 @@
     "adonisjs",
     "adonis-app"
   ],
-  "engines": {
-    "node": "8.5.0"
-  },
   "author": "",
   "license": "UNLICENSED",
   "private": true,
