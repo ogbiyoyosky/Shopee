@@ -3,7 +3,7 @@
 class SendLink {
   get rules () {
     return {
-      email: 'required|'
+      email: 'required|email'
     }
   }
 
