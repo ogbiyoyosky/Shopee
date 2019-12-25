@@ -1,5 +1,5 @@
 'use strict'
-const FetchMetaDatumFeature = use('App/Controllers/Features/FetchMetaDatumFeature')
+const FetchMetaDatumFeature = require('../../Features/FetchMetaDatumFeature')
 // const FetchStateByCountryIdFeature = use('App/Controllers/Features/FetchStateByCountryIdFeature')
 // const FetchProvinceByStateIdFeature = use('App/Controllers/Features/FetchProvinceByStateIdFeature')
 
@@ -8,8 +8,8 @@ class MetadatumController {
         request,
         response
     }) {
-
-        return new FetchMetaDatumFeature(request,response).fetchMetaDatum()
+        const Meta = new FetchMetaDatumFeature(request,response)
+        return Meta.fetchMetaDatum()
     }
     // async fetchState({
     //     request,
