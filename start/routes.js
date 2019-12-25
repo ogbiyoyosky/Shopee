@@ -19,14 +19,20 @@ const Route = use("Route");
 // Route.on('/').render('welcome')
 Route.get("/", () => {
   return {
-    'Farmer First': 'Welcome to Shopee Api'
+    'Shopee': 'Welcome to Shopee Api'
+  }
+})
+
+Route.get("/api/v1", () => {
+  return {
+    'Shopee': 'This is the version 1 of shopee api'
   }
 })
 
 Route.group(() => {
-  Route.get('/MetaData', 'Meta/MetaDatumController.showMetadata')
-  Route.get('/MetaData/States/:country_id', 'Meta/MetaDatumController.fetchState')
-  Route.get('/MetaData/Provinces/:state_id', 'Meta/MetaDatumController.fetchProvince')
+  Route.get('MetaData', 'Meta/MetaDatumController.showMetadata')
+  Route.get('MetaData/States/:country_id', 'Meta/MetaDatumController.fetchState')
+  Route.get('MetaData/Provinces/:state_id', 'Meta/MetaDatumController.fetchProvince')
   Route.post('Auth/Register', 'Authentication/AuthController.register').validator('Register')
   Route.get('Auth/Confirm/:confirmation_token',  'Authentication/AuthController.confirmAccount')
   Route.post('Auth/Authenticate',  'Authentication/AuthController.loginUser')
