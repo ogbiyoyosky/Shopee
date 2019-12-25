@@ -8,7 +8,8 @@ class MetadatumController {
         request,
         response
     }) {
-        return new FetchMetaDatumFeature(request,response).fetchMetaDatum()
+       const MetaDataFeature = new FetchMetaDatumFeature(request,response)
+       return MetaDataFeature.fetchMetaDatum()
     }
     async fetchState({
         request,
