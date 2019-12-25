@@ -10,9 +10,8 @@ class FetchMetaDatumFeature {
 
     async fetchMetaDatum() {
       try {
-        const country_code = await CountryCode.query()
-        .select('id','dial_code', 'name', 'code')
-        .fetch()
+        const country_code = await CountryCode.
+        all()
         const serialized_country = country_code.toJSON()
 
         const meta = {
