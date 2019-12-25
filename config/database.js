@@ -7,7 +7,7 @@ const Env = use('Env')
 const Helpers = use('Helpers')
 //remove b4 hosting on vps
 const Url = require('url-parse')
-const CLEARDB_DATABASE_URL = new Url(Env.get('CLEARDB_DATABASE_URL'))
+const CLEARDB_DATABASE_URL = new Url(Env.get('DATABASE_URL'))
 
 module.exports = {
   /*
