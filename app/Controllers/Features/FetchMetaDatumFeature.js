@@ -18,7 +18,7 @@ class FetchMetaDatumFeature {
         const meta = {
           countries: serialized_country
         }
-
+        console.log('here2')
         return this.response.status(200).send({
           message: "Successfully fetch all Metadata",
           status_code: 200,
