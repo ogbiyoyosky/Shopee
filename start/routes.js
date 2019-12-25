@@ -31,7 +31,7 @@ Route.get("/api/v1", () => {
 })
 
 Route.group(() => {
-  Route.get('/MetaData', 'Meta/MetaDatumController.showMetadata')
+  Route.get('/MetaData','Meta/MetaDatumController.showMetadata')
   // Route.get('MetaData/States/:country_id', 'Meta/MetaDatumController.fetchState')
   // Route.get('MetaData/Provinces/:state_id', 'Meta/MetaDatumController.fetchProvince')
   // Route.post('Auth/Register', 'Authentication/AuthController.register').validator('Register')
