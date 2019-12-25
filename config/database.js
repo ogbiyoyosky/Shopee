@@ -53,20 +53,20 @@ module.exports = {
   */
   mysql: {
     client: 'mysql',
-    connection: {
-      host: Env.get('DB_HOST', 'localhost'),
-      port: Env.get('DB_PORT', ''),
-      user: Env.get('DB_USER', 'root'),
-      password: Env.get('DB_PASSWORD', ''),
-      database: Env.get('DB_DATABASE', 'adonis')
-    }
     // connection: {
-    //   host: 'us-cdbr-iron-east-05.cleardb.net',
-    //   port: '',
-    //   user: 'b55dce4cbb5774',
-    //   password: 'b67f3775',
-    //   database: "heroku_f9283a03bacdb27"
-    // } 
+    //   host: Env.get('DB_HOST', 'localhost'),
+    //   port: Env.get('DB_PORT', ''),
+    //   user: Env.get('DB_USER', 'root'),
+    //   password: Env.get('DB_PASSWORD', ''),
+    //   database: Env.get('DB_DATABASE', 'adonis')
+    // }
+    connection: {
+      host: 'us-cdbr-iron-east-05.cleardb.net',
+      port: '',
+      user: 'b55dce4cbb5774',
+      password: 'b67f3775',
+      database: "heroku_f9283a03bacdb27"
+    } 
   },
 
   /*
