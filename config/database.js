@@ -9,7 +9,6 @@ const Helpers = use('Helpers')
 const Url = require('url-parse')
 const CLEARDB_DATABASE_URL = new Url(Env.get('DATABASE_URL'))
 
-console.log( CLEARDB_DATABASE_URL)
 
 module.exports = {
   /*
@@ -62,11 +61,11 @@ module.exports = {
     //   database: Env.get('DB_DATABASE', 'adonis')
     // }
     connection: {
-      host: Env.get('DB_HOST', CLEARDB_DATABASE_URL.host),
-      port: Env.get('DB_PORT', ''),
-      user: Env.get('DB_USER', CLEARDB_DATABASE_URL.username),
-      password: Env.get('DB_PASSWORD', CLEARDB_DATABASE_URL.password),
-      database: Env.get('DB_DATABASE', CLEARDB_DATABASE_URL.pathname.substr(1))
+      host: 'us-cdbr-iron-east-05.cleardb.net',
+      port: '',
+      user: 'b55dce4cbb5774',
+      password: 'b67f3775',
+      database: "heroku_f9283a03bacdb27"
     } 
   },
 
