@@ -4,7 +4,7 @@ const Role = use('App/Models/Role')
 const Wallet = use('App/Models/Wallet')
 const Profile = use('App/Models/Profile')
 const Env = use('Env')
-
+const CountryCode = use('App/Models/CountryCode')
 const Event = use('Event')
 const randomString = require('randomstring')
 
@@ -30,12 +30,15 @@ class RegisterUserFeature {
                 phone_number
             } = this.request.all()
 
-            const confirmation_token = randomString.generate(32)
+            const confirmation_token = randomString.generate({
+              length: 5,
+              charset: 'numeric'
+            })
+
+            
             let role_label 
             role_label = reg_type_id == 2 ? "Shop Admin": "Customer"   
-            console.log("role_label", role_label)
             const role =await Role.findBy('role_label', role_label)
-            console.log("role", role)
 
             const user = new User()
             user.email = email
@@ -61,17 +64,29 @@ class RegisterUserFeature {
             profile.gender = gender
             await profile.save()
 
+            //phone recipient
+            const country = await CountryCode.findBy('id', country_id)
+            const sms_recipient = country.dial_code+user.phone_number.toString()
+
             const mailDetails = {
                 user,
                 profile,
                 frontend_url: Env.get('FRONTEND_URL')
               }
-              
+
+            // const textDetails = {
+            //   sms_recipient,
+            //   user
+            // }
+             
+            
               if(reg_type_id == 2) {
                 Event.fire('new::customer', mailDetails)
               } else {
                 Event.fire('new::merchant', mailDetails)
               }
+              
+              //Event.fire('new::regtext', textDetails )
              
             return this.response.status(201).send({
                 status: "Success",
