@@ -3,7 +3,7 @@ const FetchMetaDatumFeature = use('App/Controllers/Features/FetchMetaDatumFeatur
 const FetchStateByCountryIdFeature = use('App/Controllers/Features/FetchStateByCountryIdFeature')
 const FetchProvinceByStateIdFeature = use('App/Controllers/Features/FetchProvinceByStateIdFeature')
 
-class MetadatumController {
+class MetaDatumController {
     async showMetadata({
         request,
         response
@@ -30,4 +30,4 @@ class MetadatumController {
     }
 }
 
-module.exports = MetadatumController
+module.exports = MetaDatumController
