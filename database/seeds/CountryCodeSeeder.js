@@ -16,7 +16,8 @@ const Database = use('Database')
 
 class CountryCodeSeeder {
   async run () {
-		await Database.raw('SET FOREIGN_KEY_CHECKS = 0;')
+    await Database.raw('SET FOREIGN_KEY_CHECKS = 0;')
+    await Database.truncate('country_codes')
     const country_codes = await Database
       .table('country_codes')
       .insert([

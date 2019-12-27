@@ -21,7 +21,8 @@ const providers = [
 	'@adonisjs/auth/providers/AuthProvider',
 	'@adonisjs/validator/providers/ValidatorProvider',
   '@adonisjs/mail/providers/MailProvider',
-  '@adonisjs/websocket/providers/WsProvider'
+  '@adonisjs/websocket/providers/WsProvider',
+  '@adonisjs/vow/providers/VowProvider'
 ]
 
 /*
@@ -59,6 +60,6 @@ const aliases = {}
 | Here you store ace commands for your package
 |
 */
-const commands = []
+const commands = ['App/Commands/Feature']
 
 module.exports = { providers, aceProviders, aliases, commands }
