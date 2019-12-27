@@ -41,5 +41,7 @@ Route.group(() => {
   Route.post('Password/PasswordReset',  'PasswordMgt/PasswordController.resetPassword')
   Route.post('Store/CreateStore',  'Store/StoreController.createStore').middleware(['auth','shopAdmin']).validator('Store')
   Route.post('Store/ActivateStore/:store_id',  'Store/StoreController.activateStore').middleware(['auth','superAdmin']).validator('ActivateStore')
-  Route.get('Profile/:user_id', 'Profile/ProfileController.getProfile')
+  Route.get('Profile/Info', 'Profile/ProfileController.fetchProfile').middleware(['auth'])
+  Route.put('EditProfile/Info', 'Profile/ProfileController.editProfile').middleware(['auth']).validator('EditProfile')
 }).prefix('api/v1')
+
