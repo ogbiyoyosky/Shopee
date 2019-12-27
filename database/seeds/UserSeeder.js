@@ -46,6 +46,7 @@ const superAdminPassword = await Hash.make("53cr3t");
 				first_name: "Ola",
 				last_name: "Martins",
 				country_id,
+				province_id: 25,
 				state_id: 25,
 				gender: "Male"
 			},
