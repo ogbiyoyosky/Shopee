@@ -29,18 +29,19 @@ class FetchProfileFeature {
 
         const serializedResult = profile.toJSON()
 
+
         return this.response.status(200).send({
           message: 'Successfully fetched the users profile',
           status_code: 200,
           status: 'success',
-          result:  serializedResult[0]
+          result:  serializedResult
         })
       } catch (error) {
         console.log('profile Error -> ', error);
-        return this.response.status(400).send({
+        return this.response.status(500).send({
           status: 'fail',
-          status_code: 400,
-          message: 'Email Or Password Incorrect'
+          status_code: 500,
+          message: 'Internal Server Error'
         })
       }
     }
