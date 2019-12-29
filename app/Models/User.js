@@ -46,17 +46,15 @@ class User extends Model {
     return this.hasMany('App/Models/Token')
 	}
 
-	// user_role() {
-	// 	return this.hasOne("App/Models/Role", "role_id", "id")
-  // }
-
-  user_country_code() {
-    return this.belongsTo("App/Models/CountryCode", "country_id", "id")
+	user_role() {
+		return this.hasOne("App/Models/Role", "role_id", "id")
   }
 
-  // wallet_balance() {
-  //   return this.belongsTo('App/Models/Wallet','id', 'user_id')
-  // }
+  
+
+  wallet_balance() {
+    return this.belongsTo('App/Models/Wallet','id', 'user_id')
+  }
 
   profile() {
     return this.belongsTo('App/Models/Profile','id', 'user_id')
