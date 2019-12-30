@@ -22,14 +22,23 @@ class ExceptionHandler extends BaseExceptionHandler {
    */
   async handle (error, { request, response }) {
 
-    if (error.name === 'InvalidJwtToken') {
-     return response.status(401).send({
-       status_code: 401,
-       status: "Unauthorize Access",
-       message: "Please provide a valid JWT token"
-
-     })
+    if(error.name === 'ExpiredJwtToken') {
+      return response.status(401).send({
+        message:"Expired Access token",
+        status_code: 401,
+        status: 'Expired JWT'
+      })
     }
+
+    if(error.name === 'ExpiredJwtToken') {
+      return response.status(401).send({
+        message:"Expired Access token",
+        status_code: 401,
+        status: 'Expired JWT'
+      })
+    }
+   
+   
    
   }
 

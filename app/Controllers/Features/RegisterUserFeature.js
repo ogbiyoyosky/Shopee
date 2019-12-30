@@ -35,7 +35,6 @@ class RegisterUserFeature {
               charset: 'numeric'
             })
 
-            
             let role_label 
             role_label = reg_type_id == 2 ? "Shop Admin": "Customer"   
             const role =await Role.findBy('role_label', role_label)

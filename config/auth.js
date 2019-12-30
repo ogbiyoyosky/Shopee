@@ -72,20 +72,21 @@ module.exports = {
     uid: 'email',
     password: 'password',
     options: {
-      secret: Env.get('APP_KEY')
+      secret: Env.get('APP_KEY'),
+      expiresIn:'86400000s',
     }
 	},
 	
-   jwtPhone: {
-     serializer: "lucid",
-     model: "App/Models/User",
-     scheme: "jwt",
-     uid: "phone_number",
-     password: "password",
-     options: {
-       secret: Env.get("APP_KEY")
-     }
-   },
+  jwtPhone: {
+    serializer: "lucid",
+    model: "App/Models/User",
+    scheme: "jwt",
+    uid: "phone_number",
+    password: "password",
+    options: {
+      secret: Env.get("APP_KEY")
+    }
+  },
 
   /*
   |--------------------------------------------------------------------------
