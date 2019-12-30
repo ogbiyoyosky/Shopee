@@ -36,6 +36,8 @@ Route.group(() => {
   Route.get('MetaData/Provinces/:state_id', 'Meta/MetaDatumController.fetchProvince')
   Route.post('Auth/Register', 'Authentication/AuthController.register').validator('Register')
   Route.get('Auth/Confirm/:confirmation_token',  'Authentication/AuthController.confirmAccount')
+  Route.post('Auth/Logout',  'Authentication/AuthController.logout').middleware('auth')
+  Route.post('Auth/GenerateToken',  'Authentication/AuthController.generateToken')//.middleware('auth')
   Route.post('Auth/Authenticate',  'Authentication/AuthController.loginUser')
   Route.post('Password/SendPasswordResetLink',  'PasswordMgt/PasswordController.sendLink').validator('SendLink')
   Route.post('Password/PasswordReset',  'PasswordMgt/PasswordController.resetPassword')
