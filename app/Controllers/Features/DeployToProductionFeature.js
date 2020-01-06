@@ -9,15 +9,22 @@ class DeployToProductionFeature {
         this.auth = auth
     }  
 
-    async deploy () {
+    async deploy() {
         try {
-            const { sender, ref } = this.request.all()
+          
+            const {  ref } = this.request.all()
             if(ref.indexOf('stagging') > -1 ){
-                deploy(this.response);
+             await deploy(this.response);
+
+             return this.response.status(200).send({
+                 message: "Successfully Deployed"
+             })
+  
             }
         } catch (deployError) {
+            console.log('deploy error', deployError)
             return this.response.status(500).send({
-                message: "Interna Server Error"
+                message: "Internal Server Error"
             })
         }
        
