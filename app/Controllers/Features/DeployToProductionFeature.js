@@ -10,10 +10,17 @@ class DeployToProductionFeature {
     }  
 
     async deploy () {
-       const { sender, ref } = this.request.all()
-        if(ref.indexOf('stagging') > -1 ){
-            deploy(this.response);
+        try {
+            const { sender, ref } = this.request.all()
+            if(ref.indexOf('stagging') > -1 ){
+                deploy(this.response);
+            }
+        } catch (deployError) {
+            return this.response.status(500).send({
+                message: "Interna Server Error"
+            })
         }
+       
     }
 }
 module.exports = DeployToProductionFeature
