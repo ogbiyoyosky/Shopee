@@ -24,6 +24,8 @@ Route.get("/", () => {
   }
 })
 
+Route.post("/webhook/deploy", 'Webhook/WebhookController.deploy')
+
 Route.get("/api/v1", () => {
   return {
     'Shopee': 'This is the version 1 of shopee api'

@@ -8,7 +8,9 @@ class Store {
       state_id: 'required|integer',
       province_id: "required|integer",
       sell_outside_state: "required|integer",
-      sell_outside_province: "required|integer"
+      sell_outside_province: "required|integer",
+      store_address: "required|string",
+      store_formatted_adddress: "required|string"
     }
   }
 
@@ -20,7 +22,9 @@ class Store {
       'state_id.required': 'Please choose the state where the store is located',
       'province_id.required': 'Please choose the province where the store is located ',
       'sell_outside_state.required': 'Please choose if you want to sell outside your state',
-      'sell_outside_province.required': 'Please choose if you want to sell outside your province'
+      'sell_outside_province.required': 'Please choose if you want to sell outside your province',
+      'store_address.required': 'Please enter the address of thee store location',
+      'store_formatted_address': 'Pleease enter the formatted store address'
     }
   }
   
