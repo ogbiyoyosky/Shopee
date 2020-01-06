@@ -2,10 +2,11 @@
 const DeployToProductionFeature = use('App/Controllers/Features/DeployToProductionFeature')
 
 class WebhookController {
-    async({
+    async deploy ({
         request,
         response
     }){
+
         return new DeployToProductionFeature(request,response).deploy()
     }
 }

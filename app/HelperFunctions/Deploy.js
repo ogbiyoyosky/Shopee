@@ -1,11 +1,13 @@
-var childProcess = require('child_process');
-function deploy(res){
-    childProcess.exec('cd /home && ./deploy.sh', function(err, stdout, stderr){
+const childProcess = require('child_process');
+async function deploy(res){
+
+    return await childProcess.exec('bash ./deploy.sh', (err, stdout, stderr)=>{
+        console.log(err)
         if (err) {
-         console.error(err);
-         return res.send(500);
+          console.log(err)
         }
-        res.send(200);
-      });
+        console.log(`stdout: ${stdout}`);
+    
+    });
 }
 module.exports = {deploy}

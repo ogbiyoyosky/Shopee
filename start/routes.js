@@ -24,7 +24,7 @@ Route.get("/", () => {
   }
 })
 
-Route.post("/webhook/deploy", 'Webhook/WebhookController.deploy')
+Route.post("webhook/deploy", 'Webhook/WebhookController.deploy')
 
 Route.get("/api/v1", () => {
   return {
