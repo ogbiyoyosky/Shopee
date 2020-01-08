@@ -49,7 +49,7 @@ Route.group(() => {
   Route.get('Profile/Info', 'Profile/ProfileController.fetchProfile').middleware(['auth'])
   Route.put('EditProfile/Info', 'Profile/ProfileController.editProfile').middleware(['auth']).validator('EditProfile')
   //paystack integration
-  Route.get('Paystack/Pay', 'Payment/PaymentController.payWithPayStack').middleware(['auth'])
+  Route.post('Paystack/Pay', 'Payment/PaymentController.payWithPayStack').middleware(['auth']).validator('Payment')
   Route.get('Paystack/VerifyPayment', 'Payment/PaymentController.verifyPayment')
   Route.get('Transaction/ProcessTransaction', 'Payment/PaymentController.processTransaction')
 }).prefix('api/v1')
