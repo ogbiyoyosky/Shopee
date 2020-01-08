@@ -15,10 +15,10 @@
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
-const CountryCode = use('App/Models/CountryCode')
+
 
 // Route.on('/').render('welcome')
-Route.get("/", () => {
+Route.get("/", ({view}) => {
   return {
     'Shopee': 'Welcome to Shopee Api'
   }
@@ -45,7 +45,14 @@ Route.group(() => {
   Route.post('Password/PasswordReset',  'PasswordMgt/PasswordController.resetPassword')
   Route.post('Store/CreateStore',  'Store/StoreController.createStore').middleware(['auth','shopAdmin']).validator('Store')
   Route.post('Store/ActivateStore/:store_id',  'Store/StoreController.activateStore').middleware(['auth','superAdmin']).validator('ActivateStore')
+  Route.get('Store/FetchStores','Store/StoreController.fetchStoresInUsersLocation')
   Route.get('Profile/Info', 'Profile/ProfileController.fetchProfile').middleware(['auth'])
   Route.put('EditProfile/Info', 'Profile/ProfileController.editProfile').middleware(['auth']).validator('EditProfile')
+  //paystack integration
+  Route.get('Paystack/Pay', 'Payment/PaymentController.payWithPayStack').middleware(['auth'])
+  Route.get('Paystack/VerifyPayment', 'Payment/PaymentController.verifyPayment')
+  Route.get('Transaction/ProcessTransaction', 'Payment/PaymentController.processTransaction')
 }).prefix('api/v1')
+
+
 

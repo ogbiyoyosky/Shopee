@@ -16,16 +16,10 @@ const Database = use('Database')
 
 const transaction_type = [
   {
-   'transaction_type_label': 'Wallet To Wallet'
-  },
-  {
-    'transaction_type_label': 'Funds Withdrawal'
-  },
-  {
     'transaction_type_label': 'Deposit'
   },
   {
-    'transaction_type_label': 'Topup'
+    'transaction_type_label': 'Payment'
   }
 ]
 
