@@ -6,13 +6,17 @@ git pull origin stagging
 
 echo "Pulled successfully from stagging"
 
-echo "nmp installing"
+echo "npm installing"
 
 npm install
 
 echo "running migration"
 
-adonis migration:run --force
+adonis migration:refresh --force
+
+echo "seeding database"
+
+adonis seed --force
 
 echo "Restarting server..."
 

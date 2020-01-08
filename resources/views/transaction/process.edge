@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Process Payment Transaction</title>
+  {{ style('transaction') }}
+</head>
+<body>
+  <section>
+    <div class="title">
+		<b>We are done with this.</b>
+	</div>
+    <div class="subtitle"><p>This window will close automagically within <b id="countdown">12</b> seconds.</p></div>
+  </section>
+	
+	<script type="text/javascript">
+		var seconds;
+		var temp;
+ 
+		function countdown() {
+			seconds = document.getElementById('countdown').innerHTML;
+			seconds = parseInt(seconds, 10);
+
+			if (seconds == 1) {
+				var win = window.open('', '_self', '');
+				win.close();				
+				
+				return
+			}
+
+			seconds--;
+			temp = document.getElementById('countdown');
+			temp.innerHTML = seconds;
+			timeoutMyOswego = setTimeout(countdown, 1000);
+		} 
+
+		countdown();
+	</script>
+</body>
+</html>

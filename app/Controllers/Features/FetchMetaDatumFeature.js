@@ -1,5 +1,6 @@
 'use strict'
 const CountryCode = use('App/Models/CountryCode')
+const TransactionTypeSetting = use('App/Models/TransactionTypeSetting')
 
 
 class FetchMetaDatumFeature {
@@ -15,10 +16,17 @@ class FetchMetaDatumFeature {
         .fetch()
         const serialized_country = country_code.toJSON()
 
+        const transaction_type = await TransactionTypeSetting.query()
+        .select('id', 'transaction_type_label')
+        .fetch()
+
+        const serialized_transaction_type = transaction_type.toJSON()
+
         const meta = {
-          countries: serialized_country
+          countries: serialized_country,
+          transaction_type : serialized_transaction_type
         }
-        console.log('here2')
+
         return this.response.status(200).send({
           message: "Successfully fetch all Metadata",
           status_code: 200,
