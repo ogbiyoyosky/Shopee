@@ -34,6 +34,7 @@
     "axios": "^0.19.0",
     "mysql": "^2.17.1",
     "randomstring": "^1.1.5",
+    "request-promise": "^4.2.5",
     "sqlite3": "^4.0.9",
     "twilio": "^3.39.1",
     "url-parse": "^1.4.7"
