@@ -16,7 +16,7 @@ adonis migration:refresh --force
 
 echo "seeding database"
 
-adonis seed --force
+adonis seed -f
 
 echo "Restarting server..."
 
