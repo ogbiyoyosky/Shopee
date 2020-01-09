@@ -14,7 +14,14 @@
 const Factory = use("Factory");
 const Database = use("Database");
 const Hash = use("Hash");
-const moment = require('moment')
+
+const currentdate = new Date(); 
+const datetime = "Last Sync: " + currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
 
 class UserSeeder {
   async run() {
@@ -35,7 +42,7 @@ const superAdminPassword = await Hash.make("53cr3t");
 				email: "olamartins@gmail.com",
 				is_activated_at: 1,
 				role_id: 1,
-				is_activated_at:   moment().format('YYYY-MM-DD HH:MM:SS'),
+				is_activated_at:  datetime ,
 			},
 		])
 		const profiles = await Database
