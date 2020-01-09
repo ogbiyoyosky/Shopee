@@ -16,12 +16,13 @@ const Database = use("Database");
 const Hash = use("Hash");
 
 const currentdate = new Date(); 
-const datetime = "Last Sync: " + currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " @ "  
+const datetime = currentdate.getDate() + "-"
+                + (currentdate.getMonth()+1)  + "-" 
+                + currentdate.getFullYear() + " "  
                 + currentdate.getHours() + ":"  
                 + currentdate.getMinutes() + ":" 
-                + currentdate.getSeconds();
+				+ currentdate.getSeconds();
+				
 
 class UserSeeder {
   async run() {
