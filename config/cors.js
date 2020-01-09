@@ -16,7 +16,7 @@ module.exports = {
   | Function - Receives the current origin and should return one of the above values.
   |
   */
-  origin: ['https://shopeecommerce.netlify.com'],
+  origin: ['https://shopeecommerce.netlify.com', 'http//:localhost:3001', 'http://localhost:3000', 'https://timeshoppy.com', 'https://admin.timeshoppy.com'],
 
   /*
   |--------------------------------------------------------------------------
