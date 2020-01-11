@@ -1,5 +1,6 @@
 'use strict'
 const User = use('App/Models/User')
+const Config = use('Config')
 
 
 class LoginUserFeature {
@@ -24,6 +25,11 @@ class LoginUserFeature {
          if (user.is_activated_at != null) {
              token = await this.auth.withRefreshToken()
             .attempt(email, password)
+        
+            const authConfig = Config.get('auth')
+            const { expiresIn } = authConfig.jwt.options
+            token.expiresIn = expiresIn
+           
 
             return this.response.status(200).send({
               message: 'Login Successful',

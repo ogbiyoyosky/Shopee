@@ -2,6 +2,7 @@
 const CreateStoreFeature = use('App/Controllers/Features/CreateStoreFeature')
 const ActivateStoreFeature = use('App/Controllers/Features/ActivateStoreFeature')
 const FetchStoresInUsersLocationFeature = use('App/Controllers/Features/FetchStoresInUsersLocationFeature')
+const ListStoreFeature = use('App/Controllers/Features/ListStoreFeature')
 
 class StoreController {
     async createStore ({
@@ -22,11 +23,18 @@ class StoreController {
     }) {
         return new ActivateStoreFeature(request, response, auth).activateStore( store_id)
     }
+
     async fetchStoresInUsersLocation ({
         request,
         response
     }) {
         return new FetchStoresInUsersLocationFeature(request, response, auth).fetchStores()
+    }
+
+    async listStores ({
+        response
+    }) {
+        return new ListStoreFeature(response).listStores()
     }
 }
 

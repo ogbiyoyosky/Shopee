@@ -75,7 +75,6 @@ class VerifyPaymentFeature {
                "endpoints.transactions.processTransactionEndpoint"
              )}?${redirectQueryString}`;
             
-            console.log('process',redirectURL)
              return this.response.redirect(redirectURL);
            })
            .catch((e) => 

@@ -39,7 +39,7 @@ Route.group(() => {
   Route.post('Auth/Register', 'Authentication/AuthController.register').validator('Register')
   Route.get('Auth/Confirm/:confirmation_token',  'Authentication/AuthController.confirmAccount')
   Route.post('Auth/Logout',  'Authentication/AuthController.logout').middleware('auth')
-  Route.post('Auth/GenerateToken',  'Authentication/AuthController.generateToken')//.middleware('auth')
+  Route.post('Auth/GenerateToken',  'Authentication/AuthController.generateToken').middleware('auth')
   Route.post('Auth/Authenticate',  'Authentication/AuthController.loginUser')
   Route.post('Password/SendPasswordResetLink',  'PasswordMgt/PasswordController.sendLink').validator('SendLink')
   Route.post('Password/PasswordReset',  'PasswordMgt/PasswordController.resetPassword')
@@ -52,6 +52,9 @@ Route.group(() => {
   Route.post('Paystack/Pay', 'Payment/PaymentController.payWithPayStack').middleware(['auth']).validator('Payment')
   Route.get('Paystack/VerifyPayment', 'Payment/PaymentController.verifyPayment')
   Route.get('Transaction/ProcessTransaction', 'Payment/PaymentController.processTransaction')
+
+  //store
+  Route.get('Store/AllStores', 'Store/StoreController.listStores').middleware(['auth','superAdmin'])
 }).prefix('api/v1')
 
 
