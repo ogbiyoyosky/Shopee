@@ -1,13 +1,14 @@
 'use strict'
 const CountryCode = use('App/Models/CountryCode')
 const TransactionTypeSetting = use('App/Models/TransactionTypeSetting')
+const Category = use('App/Models/Category')
 
 
 class FetchMetaDatumFeature {
     constructor (  request, response  ) {
         this.request = request
         this.response = response
-      }
+    }
 
     async fetchMetaDatum() {
       try {
@@ -22,9 +23,16 @@ class FetchMetaDatumFeature {
 
         const serialized_transaction_type = transaction_type.toJSON()
 
+        const categories = await Category.query()
+        .select('id', 'category_label')
+        .fetch()
+
+        const serialized_categories = categories.toJSON()
+
         const meta = {
           countries: serialized_country,
-          transaction_type : serialized_transaction_type
+          transaction_type : serialized_transaction_type,
+          categories: serialized_categories
         }
 
         return this.response.status(200).send({
@@ -35,12 +43,12 @@ class FetchMetaDatumFeature {
         })
 
       } catch (FetchMetaDatumFeatureError) {
-              console.log("FetchMetaDatumFeatureError", FetchMetaDatumFeatureError)
-              return this.response.status(500).send({
-                  status: "Fail",
-                  message: "Internal Server Error",
-                  status_code: 500
-              })
+        console.log("FetchMetaDatumFeatureError", FetchMetaDatumFeatureError)
+        return this.response.status(500).send({
+            status: "Fail",
+            message: "Internal Server Error",
+            status_code: 500
+        })
       } 
     }
 

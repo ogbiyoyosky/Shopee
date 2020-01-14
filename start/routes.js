@@ -33,9 +33,12 @@ Route.get("/api/v1", () => {
 })
 
 Route.group(() => {
+  //meta
   Route.get('/MetaData','Meta/MetaDatumController.showMetadata')
   Route.get('MetaData/States/:country_id', 'Meta/MetaDatumController.fetchState')
   Route.get('MetaData/Provinces/:state_id', 'Meta/MetaDatumController.fetchProvince')
+  Route.get('Product/ProductSubCategory/:category_id', 'Store/StoreController.fetchProductCategory')//.middleware(['auth','shopAdmin'])
+
   Route.post('Auth/Register', 'Authentication/AuthController.register').validator('Register')
   Route.get('Auth/Confirm/:confirmation_token',  'Authentication/AuthController.confirmAccount')
   Route.post('Auth/Logout',  'Authentication/AuthController.logout').middleware('auth')
@@ -55,6 +58,7 @@ Route.group(() => {
 
   //store
   Route.get('Store/AllStores', 'Store/StoreController.listStores').middleware(['auth','superAdmin'])
+  Route.get('Store/AddProduct/:store_id', 'Store/StoreController.addProduct').middleware(['auth','superAdmin'])
 }).prefix('api/v1')
 
 
