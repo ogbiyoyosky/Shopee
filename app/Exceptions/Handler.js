@@ -21,7 +21,6 @@ class ExceptionHandler extends BaseExceptionHandler {
    * @return {void}
    */
   async handle (error, { request, response }) {
-
     if(error.name === 'InvalidJwtToken') {
       return response.status(401).send({
         message:"Please provide a valid token",
