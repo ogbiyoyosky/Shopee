@@ -26,11 +26,11 @@ class ActivateStoreFeature {
         })
 
         if(is_active == 1 ) {
-          store.is_activated_at = moment().format('YYYY-MM-DD HH:MM:SS')
+          store.is_activated_at = moment().format('YYYY-MM-DD  HH:mm:ss')
           store.is_deactivated_at = null
           store.is_deactivated_by = user_id
         } else {
-          store.is_deactivated_at = moment().format('YYYY-MM-DD HH:MM:SS')
+          store.is_deactivated_at = moment().format('YYYY-MM-DD  HH:mm:ss')
           store.is_activated_at = null
           store.is_deactivated_by = user_id
         }
