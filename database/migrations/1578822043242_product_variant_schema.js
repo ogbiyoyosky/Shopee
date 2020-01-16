@@ -10,7 +10,7 @@ class ProductVariantSchema extends Schema {
       table.integer('product_id')
       table.string('product_variant_name')
       table.string('sku')
-      table.float('price')
+      table.float('price_on_variant')
       table.timestamps()
     })
   }

@@ -58,7 +58,7 @@ Route.group(() => {
 
   //store
   Route.get('Store/AllStores', 'Store/StoreController.listStores').middleware(['auth','superAdmin'])
-  Route.get('Store/AddProduct/:store_id', 'Store/StoreController.addProduct').middleware(['auth','superAdmin'])
+  Route.post('Store/AddProduct/:store_id', 'Store/StoreController.addProduct').middleware(['auth','shopAdmin']).validator('AddProduct')
 }).prefix('api/v1')
 
 
