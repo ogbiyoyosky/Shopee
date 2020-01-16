@@ -105,6 +105,14 @@ Route.group(() => {
   );
 
   //store
+<<<<<<< HEAD
+  Route.get('Store/AllStores', 'Store/StoreController.listStores').middleware(['auth','superAdmin'])
+  Route.post('Store/AddProduct/:store_id', 'Store/StoreController.addProduct').middleware(['auth','shopAdmin']).validator('AddProduct')
+}).prefix('api/v1')
+
+
+
+=======
   Route.get("Store/AllStores", "Store/StoreController.listStores").middleware([
     "auth",
     "superAdmin"
@@ -114,3 +122,4 @@ Route.group(() => {
     "Store/StoreController.addProduct"
   ).middleware(["auth", "superAdmin"]);
 }).prefix("api/v1");
+>>>>>>> e5c31a69b6da6ad0dc00d4c68554fae6aaad5dea

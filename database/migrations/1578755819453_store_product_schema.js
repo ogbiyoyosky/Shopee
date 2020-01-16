@@ -14,6 +14,7 @@ class StoreProductSchema extends Schema {
       table.integer('category_id')
       table.integer('sub_category_id')
       table.string('short_description')
+      table.integer('image_id')
       table.boolean('is_enabled')
       table.timestamps()
     })
