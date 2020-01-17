@@ -25,7 +25,8 @@ class AddProductFeature {
                 sub_category_id,
                 short_description,
                 is_published,
-                tag
+                tag,
+                price
             } = this.request.all()
 
             const tags = JSON.parse(tag)
@@ -53,6 +54,7 @@ class AddProductFeature {
             product.store_id = user_store.id
             product.product_name = product_name
             product.description = description
+            product.price = price
             product.total_stock = total_stock
             product.category_id = category_id
             product.sub_category_id = sub_category_id

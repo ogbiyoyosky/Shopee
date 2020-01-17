@@ -1,5 +1,7 @@
 "use strict";
-const CreateStoreFeature = use("App/Controllers/Features/CreateStoreFeature");
+const CreateStoreFeature = use(
+  "App/Controllers/Features/CreateStoreFeature"
+  );
 const ActivateStoreFeature = use(
   "App/Controllers/Features/ActivateStoreFeature"
 );
@@ -11,8 +13,13 @@ const AddProductFeature = use("App/Controllers/Features/AddProductFeature");
 const FetchProductCategoryFeature = use(
   "App/Controllers/Features/FetchProductCategoryFeature"
 );
+const FetchProduceInStoreFeature = use(
+  "App/Controllers/Features/FetchProductInStoreFeature"
+);
 
 class StoreController {
+  
+  
   async createStore({ request, response, auth }) {
     return new CreateStoreFeature(request, response, auth).createStore();
   }
@@ -24,11 +31,7 @@ class StoreController {
   }
 
   async fetchStoresInUsersLocation({ request, response }) {
-    return new FetchStoresInUsersLocationFeature(
-      request,
-      response,
-      auth
-    ).fetchStores(store_id);
+    return new FetchStoresInUsersLocationFeature(request,response,auth).fetchStores(store_id);
   }
 
   async listStores({ response }) {
@@ -40,6 +43,10 @@ class StoreController {
 
   async fetchProductCategory({ response, params: { category_id } }) {
     return new FetchProductCategoryFeature(response).fetchCategory(category_id);
+  }
+
+  async listProduce ({response,  params: { store_id } }) {
+    return new FetchProductInStoreFeature(response).fetchProduct(store_id)
   }
 }
 

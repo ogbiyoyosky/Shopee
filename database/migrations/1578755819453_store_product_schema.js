@@ -11,6 +11,7 @@ class StoreProductSchema extends Schema {
       table.string('product_name')
       table.string('description')
       table.integer('total_stock')
+      table.float('price')
       table.integer('category_id')
       table.integer('sub_category_id')
       table.string('short_description')
