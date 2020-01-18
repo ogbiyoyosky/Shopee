@@ -7,12 +7,12 @@ class AddProduct {
       product_name: 'required|string',
       description: 'required|string',
       total_stock: "required|integer",
-      price: "required|number",
       category_id: "required|integer",
       sub_category_id: "required|integer",
       short_description: "required|string",
       is_published: "required|integer",
-      tag: "required"
+      tag: "required",
+      price: "required|number",
     }
   }
 
@@ -27,7 +27,7 @@ class AddProduct {
       'short_description.required': 'Please add a short description',
       'is_published.required': 'Set the publishing status',
       'tag.required': 'please add at least one tag on the product',
-      'price.required': 'please add at least one tag on the product'
+      'price.required': 'please add a price'
     }
   }
   

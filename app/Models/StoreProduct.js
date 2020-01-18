@@ -8,6 +8,11 @@ class StoreProduct extends Model {
         return this.hasOne("App/Models/Image", "image_id", "id")
     }
 
+    mainProductImages() {
+        return this.belongsToMany('App/Models/Image',"main_product_id","image_id")
+        .pivotTable('store_product_images')
+    }
+
     
 }
 

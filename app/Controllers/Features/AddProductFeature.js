@@ -28,10 +28,8 @@ class AddProductFeature {
                 tag,
                 price
             } = this.request.all()
-
+            console.log(price)
             const tags = JSON.parse(tag)
-
-            
 
             if(user_store.is_activated_at == null) {
                 return this.response.status(400).send({
@@ -41,14 +39,11 @@ class AddProductFeature {
                 }) 
             }
 
-            const product_image =  this.request.file('product_image')
-
-            const uploaded_image = await uploadImage(product_image)
-
-            const newImage = new Image()
-            newImage.image_url = uploaded_image.url
-            await newImage.save()
-    
+            const product_image =  this.request.file('product_image', {
+                types: ['image']
+            })
+            
+            const mutiple_image = product_image._files
 
             const product = new StoreProduct()
             product.store_id = user_store.id
@@ -60,16 +55,36 @@ class AddProductFeature {
             product.sub_category_id = sub_category_id
             product.short_description = short_description
             product.is_enabled = is_published
-            product.image_id =  newImage.id
             await product.save()
+            const imagesIds = []
+            if(mutiple_image == undefined) {
+                const uploaded_image = await uploadImage(product_image)
+                const newImage = new Image()
+                newImage.image_url = uploaded_image.url
+                await newImage.save()
+                imagesIds.push(newImage.id)
+               
+            } else{
+                for(var i in mutiple_image) {
+                    const uploaded_image = await uploadImage(mutiple_image[i])
+                    const newImage = new Image()
+                    newImage.image_url = uploaded_image.url
+                    await newImage.save()
+                    imagesIds.push(newImage.id)
+                }
+    
+            }
 
             for(var i in tags) {
                 const new_tag = new ProductTag()
                 new_tag.product_id = product.id
                 new_tag.tag = tags[i]
-               await new_tag.save()
+                new_tag.save()
             }
 
+            //add to pivot table
+            console.log(imagesIds)
+            await product.mainProductImages().attach(imagesIds)
            return this.response.status(200).send({
             message: "Product successfully added to store",
             status_code: 200,
