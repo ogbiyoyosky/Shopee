@@ -21,6 +21,10 @@ const AddVariantToProductFeature = use(
   "App/Controllers/Features/AddVariantToProductFeature"
 );
 
+const EditProductFeature = use(
+  "App/Controllers/Features/EditProductFeature"
+);
+
 class StoreController {
   
   
@@ -55,6 +59,10 @@ class StoreController {
 
   async addVariant ({request, response,  params: { product_id } }) {
     return new AddVariantToProductFeature(request, response).addVariant( product_id)
+  }
+
+  async editProduct ({request, response, auth,  params: { product_id } }) {
+    return new EditProductFeature(request, response, auth).editProduct( product_id)
   }
 }
 
