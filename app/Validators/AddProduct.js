@@ -3,7 +3,7 @@
 class AddProduct {
   get rules () {
     return {
-      product_image: 'required|file|file_size:2mb',
+      product_image: 'required',
       product_name: 'required|string',
       description: 'required|string',
       total_stock: "required|integer",

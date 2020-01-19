@@ -17,7 +17,9 @@
 const Route = use("Route");
 
 // Route.on('/').render('welcome')
-Route.get("/", ({ view }) => {
+Route.get("/", ({
+  view
+}) => {
   return {
     Shopee: "Welcome to Shopee Api"
   };
@@ -75,9 +77,9 @@ Route.group(() => {
     .middleware(["auth", "shopAdmin"])
     .validator("Store");
   Route.post(
-    "Store/ActivateStore/:store_id",
-    "Store/StoreController.activateStore"
-  )
+      "Store/ActivateStore/:store_id",
+      "Store/StoreController.activateStore"
+    )
     .middleware(["auth", "superAdmin"])
     .validator("ActivateStore");
   Route.get(
@@ -105,12 +107,11 @@ Route.group(() => {
   );
 
   //store
-  Route.get('Store/AllStores', 'Store/StoreController.listStores').middleware(['auth','superAdmin'])
-  Route.post('Store/AddProduct/:store_id', 'Store/StoreController.addProduct').middleware(['auth','shopAdmin']).validator('AddProduct')
+  Route.get('Store/AllStores', 'Store/StoreController.listStores').middleware(['auth', 'superAdmin'])
+  Route.post('Store/AddProduct/:store_id', 'Store/StoreController.addProduct').middleware(['auth', 'shopAdmin']).validator('AddProduct')
 
-  Route.get('Store/:store_id/Product', 'Store/StoreController.listProduct').middleware(['auth','shopAdmin'])
+  Route.get('Store/:store_id/Product', 'Store/StoreController.listProduct').middleware(['auth', 'shopAdmin'])
+
+  Route.post("Product/:product_id/AddVariant", 'Store/StoreController.addVariant').middleware(['auth', 'shopAdmin'])
 
 }).prefix('api/v1')
-
-
-
