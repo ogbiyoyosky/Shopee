@@ -11,6 +11,7 @@ class ProductDetailSchema extends Schema {
       table.integer('product_id')
       table.integer('price')
       table.integer('variant_value_id')
+      table.dateTime("is_deleted_at")
       table.timestamps()
     })
   }

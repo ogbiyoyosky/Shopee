@@ -21,6 +21,22 @@ const AddVariantToProductFeature = use(
   "App/Controllers/Features/AddVariantToProductFeature"
 );
 
+const EditProductFeature = use(
+  "App/Controllers/Features/EditProductFeature"
+);
+
+const DeleteProductFeature = use(
+  "App/Controllers/Features/DeleteProductFeature"
+);
+
+const EditVariantFeature = use(
+  "App/Controllers/Features/EditVariantFeature"
+);
+
+const DeleteVariantFeature = use(
+  "App/Controllers/Features/DeleteVariantFeature"
+);
+
 class StoreController {
   
   
@@ -56,6 +72,23 @@ class StoreController {
   async addVariant ({request, response,  params: { product_id } }) {
     return new AddVariantToProductFeature(request, response).addVariant( product_id)
   }
+
+  async editProduct ({request, response, auth,  params: { product_id } }) {
+    return new EditProductFeature(request, response, auth).editProduct( product_id)
+  }
+
+  async deleteProduct ({request, response, auth,  params: { product_id } }) {
+    return new DeleteProductFeature(request, response, auth).deleteProduct( product_id)
+  }
+
+  async editVariant ({request, response, auth,  params: { product_id, variant_id } }) {
+    return new EditVariantFeature(request, response, auth).editVariant( product_id, variant_id)
+  }
+
+  async deleteVariant ({request, response, auth,  params: { product_id, variant_id } }) {
+    return new DeleteVariantFeature(request, response, auth).deleteVariant( product_id, variant_id)
+  }
+
 }
 
 module.exports = StoreController;
