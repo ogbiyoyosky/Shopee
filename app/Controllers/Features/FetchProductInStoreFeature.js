@@ -18,9 +18,12 @@ class FetchProductInStoreFeature {
             .with("category")
             .with("sub_category")
             .with("tags")
-            .with("variant.variant_value")
-            .with("variant.variant_details", builder => {
-                builder.with("product_variant_images")
+            .with("variant", builder => {
+                builder.whereNull("is_deleted_at")
+                builder.with("variant_value")
+                builder.with("variant_details", builder => {
+                    builder.with("product_variant_images")
+                 })
             })
             .paginate(page, limit)
             

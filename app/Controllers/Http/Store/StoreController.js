@@ -33,6 +33,10 @@ const EditVariantFeature = use(
   "App/Controllers/Features/EditVariantFeature"
 );
 
+const DeleteVariantFeature = use(
+  "App/Controllers/Features/DeleteVariantFeature"
+);
+
 class StoreController {
   
   
@@ -79,6 +83,10 @@ class StoreController {
 
   async editVariant ({request, response, auth,  params: { product_id, variant_id } }) {
     return new EditVariantFeature(request, response, auth).editVariant( product_id, variant_id)
+  }
+
+  async deleteVariant ({request, response, auth,  params: { product_id, variant_id } }) {
+    return new DeleteVariantFeature(request, response, auth).deleteVariant( product_id, variant_id)
   }
 
 }

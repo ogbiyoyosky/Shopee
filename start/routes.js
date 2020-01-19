@@ -118,6 +118,8 @@ Route.group(() => {
 
   Route.delete("Product/:product_id/DeleteProduct", 'Store/StoreController.deleteProduct').middleware(['auth', 'shopAdmin'])
 
-  Route.put("Product/:product_id/:variant_id/EditVariant", 'Store/StoreController.editVariant').middleware(['auth', 'shopAdmin'])
+  Route.put("Product/:product_id/:variant_id/EditVariant", 'Store/StoreController.editVariant').middleware(['auth', 'shopAdmin']).validator("EditVariant")
+
+  Route.delete("Product/:product_id/:variant_id/DeleteVariant", 'Store/StoreController.deleteVariant').middleware(['auth', 'shopAdmin'])
 
 }).prefix('api/v1')

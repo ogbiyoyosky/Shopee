@@ -37,8 +37,7 @@ class EditVariantFeature {
 
 
         const productVariant =await ProductVariant.findBy("id", variant_id)
-
-        console.log( productVariant.toJSON())
+        
         productVariant.merge({
             product_variant_name:variant_name,
             sku,
