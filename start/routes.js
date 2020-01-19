@@ -112,6 +112,6 @@ Route.group(() => {
 
   Route.get('Store/:store_id/Product', 'Store/StoreController.listProduct').middleware(['auth', 'shopAdmin'])
 
-  Route.post("Product/:product_id/AddVariant", 'Store/StoreController.addVariant').middleware(['auth', 'shopAdmin'])
+  Route.post("Product/:product_id/AddVariant", 'Store/StoreController.addVariant').middleware(['auth', 'shopAdmin']).validator('AddVariant')
 
 }).prefix('api/v1')

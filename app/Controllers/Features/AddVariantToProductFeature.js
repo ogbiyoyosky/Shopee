@@ -57,24 +57,29 @@ class AddVariantToProductFeature {
             await productDetail.save()
 
             const imagesIds = []
-            if(mutiple_image == undefined) {
-                const uploaded_image = await uploadImage(variant_image )
-                const newImage = new Image()
-                newImage.image_url = uploaded_image.url
-                await newImage.save()
-                imagesIds.push(newImage.id)
-               
-            } else{
-                for(var i in mutiple_image) {
-                    const uploaded_image = await uploadImage(mutiple_image[i])
+            
+            if(variant_image) {
+                
+                if(mutiple_image == undefined) {
+                    const uploaded_image = await uploadImage(variant_image )
                     const newImage = new Image()
                     newImage.image_url = uploaded_image.url
                     await newImage.save()
                     imagesIds.push(newImage.id)
+                   
+                } else{
+                    for(var i in mutiple_image) {
+                        const uploaded_image = await uploadImage(mutiple_image[i])
+                        const newImage = new Image()
+                        newImage.image_url = uploaded_image.url
+                        await newImage.save()
+                        imagesIds.push(newImage.id)
+                    }
+        
                 }
-    
+               
             }
-           
+          
             await productVariant.product_variant_images().attach(imagesIds,(row)=>{
                 row.main_product_id = product_id
             })

@@ -56,24 +56,30 @@ class AddProductFeature {
             product.short_description = short_description
             product.is_enabled = is_published
             await product.save()
+
             const imagesIds = []
-            if(mutiple_image == undefined) {
-                const uploaded_image = await uploadImage(product_image)
-                const newImage = new Image()
-                newImage.image_url = uploaded_image.url
-                await newImage.save()
-                imagesIds.push(newImage.id)
-               
-            } else{
-                for(var i in mutiple_image) {
-                    const uploaded_image = await uploadImage(mutiple_image[i])
+            
+            if(product_image) {
+                
+                if(mutiple_image == undefined) {
+                    const uploaded_image = await uploadImage(product_image)
                     const newImage = new Image()
                     newImage.image_url = uploaded_image.url
                     await newImage.save()
                     imagesIds.push(newImage.id)
+                   
+                } else{
+                    for(var i in mutiple_image) {
+                        const uploaded_image = await uploadImage(mutiple_image[i])
+                        const newImage = new Image()
+                        newImage.image_url = uploaded_image.url
+                        await newImage.save()
+                        imagesIds.push(newImage.id)
+                    }
+        
                 }
-    
             }
+           
 
             for(var i in tags) {
                 const new_tag = new ProductTag()
