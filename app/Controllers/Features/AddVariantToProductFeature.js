@@ -48,9 +48,11 @@ class AddVariantToProductFeature {
             productVariant.price_on_variant = price_valuation_degree
             await productVariant.save()
 
+
             const productDetail = new ProductDetail()
             productDetail.product_variant_id = productVariant.id
-            productDetail.price = (product.price + (price_valuation_degree))
+            productDetail.product_id = product_id
+            productDetail.price = parseInt(product.price) + parseInt(price_valuation_degree)
             productDetail.variant_value_id = variantValue.id
             await productDetail.save()
 
@@ -72,8 +74,8 @@ class AddVariantToProductFeature {
                 }
     
             }
-            console.log(imagesIds)
-            await productVariant.productVariantImages().attach(imagesIds,(row)=>{
+           
+            await productVariant.product_variant_images().attach(imagesIds,(row)=>{
                 row.main_product_id = product_id
             })
 

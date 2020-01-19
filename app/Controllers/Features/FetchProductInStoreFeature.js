@@ -13,8 +13,14 @@ class FetchProductInStoreFeature {
             const {page, limit} = this.request.get()
             const produceInStore = await StoreProduct.query()
             .where("store_id", store_id)
-            .with("mainProductImages")
+            .with("main_product_images")
+            .with("category")
+            .with("sub_category")
             .with("tags")
+            .with("variant.variant_value")
+            .with("variant.variant_details", builder => {
+                builder.with("product_variant_images")
+            })
             .paginate(page, limit)
             
             this.response.status(200).send({

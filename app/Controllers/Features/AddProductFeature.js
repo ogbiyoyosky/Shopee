@@ -83,7 +83,7 @@ class AddProductFeature {
             }
 
             //add to pivot table
-            await product.mainProductImages().attach(imagesIds)
+            await product.main_product_images().attach(imagesIds)
            return this.response.status(200).send({
             message: "Product successfully added to store",
             status_code: 200,

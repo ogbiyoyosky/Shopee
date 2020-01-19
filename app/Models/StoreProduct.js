@@ -8,7 +8,7 @@ class StoreProduct extends Model {
         return this.hasOne("App/Models/Image", "image_id", "id")
     }
 
-    mainProductImages() {
+    main_product_images() {
         return this.belongsToMany('App/Models/Image',"main_product_id","image_id")
         .pivotTable('store_product_images')
     }
@@ -17,6 +17,17 @@ class StoreProduct extends Model {
         return this.hasMany("App/Models/ProductTag","id","product_id")
     }
 
+    variant() {
+        return this.hasMany("App/Models/ProductDetail", "id", "product_id")
+    }
+
+    category () {
+        return this .hasOne("App/Models/Category","category_id", "id")
+    }
+
+    sub_category () {
+        return this .hasOne("App/Models/SubCategory","sub_category_id", "id")
+    }
     
 }
 
