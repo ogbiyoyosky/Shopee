@@ -116,4 +116,8 @@ Route.group(() => {
 
   Route.post("Product/:product_id/AddVariant", 'Store/StoreController.addVariant').middleware(['auth', 'shopAdmin']).validator('AddVariant')
 
+  Route.delete("Product/:product_id/DeleteProduct", 'Store/StoreController.deleteProduct').middleware(['auth', 'shopAdmin'])
+
+  Route.put("Product/:product_id/:variant_id/EditVariant", 'Store/StoreController.editVariant').middleware(['auth', 'shopAdmin'])
+
 }).prefix('api/v1')

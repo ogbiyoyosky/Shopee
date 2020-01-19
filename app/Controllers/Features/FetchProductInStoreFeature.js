@@ -12,7 +12,8 @@ class FetchProductInStoreFeature {
         try {
             const {page, limit} = this.request.get()
             const produceInStore = await StoreProduct.query()
-            .where("store_id", store_id)
+            .whereNull("is_deleted_at")
+            .andWhere("store_id", store_id)
             .with("main_product_images")
             .with("category")
             .with("sub_category")

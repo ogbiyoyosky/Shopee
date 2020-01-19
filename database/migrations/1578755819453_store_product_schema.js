@@ -16,6 +16,7 @@ class StoreProductSchema extends Schema {
       table.integer('sub_category_id')
       table.string('short_description')
       table.boolean('is_enabled')
+      table.dateTime('is_deleted_at').defaultTo(null)
       table.timestamps()
     })
   }

@@ -25,6 +25,14 @@ const EditProductFeature = use(
   "App/Controllers/Features/EditProductFeature"
 );
 
+const DeleteProductFeature = use(
+  "App/Controllers/Features/DeleteProductFeature"
+);
+
+const EditVariantFeature = use(
+  "App/Controllers/Features/EditVariantFeature"
+);
+
 class StoreController {
   
   
@@ -64,6 +72,15 @@ class StoreController {
   async editProduct ({request, response, auth,  params: { product_id } }) {
     return new EditProductFeature(request, response, auth).editProduct( product_id)
   }
+
+  async deleteProduct ({request, response, auth,  params: { product_id } }) {
+    return new DeleteProductFeature(request, response, auth).deleteProduct( product_id)
+  }
+
+  async editVariant ({request, response, auth,  params: { product_id, variant_id } }) {
+    return new EditVariantFeature(request, response, auth).editVariant( product_id, variant_id)
+  }
+
 }
 
 module.exports = StoreController;
