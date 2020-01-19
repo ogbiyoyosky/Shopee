@@ -28,7 +28,7 @@ class AddProductFeature {
                 tag,
                 price
             } = this.request.all()
-            console.log(price)
+
             const tags = JSON.parse(tag)
 
             if(user_store.is_activated_at == null) {
@@ -56,24 +56,30 @@ class AddProductFeature {
             product.short_description = short_description
             product.is_enabled = is_published
             await product.save()
+
             const imagesIds = []
-            if(mutiple_image == undefined) {
-                const uploaded_image = await uploadImage(product_image)
-                const newImage = new Image()
-                newImage.image_url = uploaded_image.url
-                await newImage.save()
-                imagesIds.push(newImage.id)
-               
-            } else{
-                for(var i in mutiple_image) {
-                    const uploaded_image = await uploadImage(mutiple_image[i])
+            
+            if(product_image) {
+                
+                if(mutiple_image == undefined) {
+                    const uploaded_image = await uploadImage(product_image)
                     const newImage = new Image()
                     newImage.image_url = uploaded_image.url
                     await newImage.save()
                     imagesIds.push(newImage.id)
+                   
+                } else{
+                    for(var i in mutiple_image) {
+                        const uploaded_image = await uploadImage(mutiple_image[i])
+                        const newImage = new Image()
+                        newImage.image_url = uploaded_image.url
+                        await newImage.save()
+                        imagesIds.push(newImage.id)
+                    }
+        
                 }
-    
             }
+           
 
             for(var i in tags) {
                 const new_tag = new ProductTag()
@@ -83,8 +89,7 @@ class AddProductFeature {
             }
 
             //add to pivot table
-            console.log(imagesIds)
-            await product.mainProductImages().attach(imagesIds)
+            await product.main_product_images().attach(imagesIds)
            return this.response.status(200).send({
             message: "Product successfully added to store",
             status_code: 200,

@@ -8,6 +8,7 @@ class ProductDetailSchema extends Schema {
     this.create('product_details', (table) => {
       table.increments()
       table.integer('product_variant_id')
+      table.integer('product_id')
       table.integer('price')
       table.integer('variant_value_id')
       table.timestamps()

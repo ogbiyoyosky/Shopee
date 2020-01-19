@@ -17,6 +17,10 @@ const FetchProduceInStoreFeature = use(
   "App/Controllers/Features/FetchProductInStoreFeature"
 );
 
+const AddVariantToProductFeature = use(
+  "App/Controllers/Features/AddVariantToProductFeature"
+);
+
 class StoreController {
   
   
@@ -45,8 +49,12 @@ class StoreController {
     return new FetchProductCategoryFeature(response).fetchCategory(category_id);
   }
 
-  async listProduce ({response,  params: { store_id } }) {
-    return new FetchProductInStoreFeature(response).fetchProduct(store_id)
+  async listProduct ({request, response,  params: { store_id } }) {
+    return new FetchProduceInStoreFeature(request, response).fetchProduct(store_id)
+  }
+
+  async addVariant ({request, response,  params: { product_id } }) {
+    return new AddVariantToProductFeature(request, response).addVariant( product_id)
   }
 }
 
