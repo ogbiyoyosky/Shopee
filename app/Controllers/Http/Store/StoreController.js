@@ -45,8 +45,8 @@ class StoreController {
     return new FetchProductCategoryFeature(response).fetchCategory(category_id);
   }
 
-  async listProduce ({response,  params: { store_id } }) {
-    return new FetchProductInStoreFeature(response).fetchProduct(store_id)
+  async listProduct ({request, response,  params: { store_id } }) {
+    return new FetchProduceInStoreFeature(request, response).fetchProduct(store_id)
   }
 }
 

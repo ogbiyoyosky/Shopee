@@ -1,16 +1,28 @@
 'use strict'
-const StoreProduce = use("App/Models/StoreProduct")
+const StoreProduct = use("App/Models/StoreProduct")
 
 class FetchProductInStoreFeature {
-    constructor ( response ) {
+    constructor (request, response ) {
+        this.request = request
         this.response = response
     } 
 
-    async fetchProduce (store_id) {
+    async fetchProduct (store_id) {
+        
         try {
-            const produceInStore = await StoreProduce.query()
+            const {page, limit} = this.request.get()
+            const produceInStore = await StoreProduct.query()
             .where("store_id", store_id)
-            .fetch()
+            .with("mainProductImages")
+            .with("tags")
+            .paginate(page, limit)
+            
+            this.response.status(200).send({
+                message: "Successfully fetch all products",
+                status: "success",
+                status_code: 200,
+                results: produceInStore
+            })
             
         } catch (fetchProduceError) {
             console.log("fetchProduceError",fetchProduceError)

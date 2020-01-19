@@ -13,6 +13,10 @@ class StoreProduct extends Model {
         .pivotTable('store_product_images')
     }
 
+    tags() {
+        return this.hasMany("App/Models/ProductTag","id","product_id")
+    }
+
     
 }
 

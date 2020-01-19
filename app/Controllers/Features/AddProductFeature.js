@@ -28,7 +28,7 @@ class AddProductFeature {
                 tag,
                 price
             } = this.request.all()
-            console.log(price)
+
             const tags = JSON.parse(tag)
 
             if(user_store.is_activated_at == null) {
