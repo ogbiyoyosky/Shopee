@@ -110,6 +110,8 @@ Route.group(() => {
   Route.get('Store/AllStores', 'Store/StoreController.listStores').middleware(['auth', 'superAdmin'])
   Route.post('Store/AddProduct/:store_id', 'Store/StoreController.addProduct').middleware(['auth', 'shopAdmin']).validator('AddProduct')
 
+  Route.put('Store/:product_id/EditProduct', 'Store/StoreController.editProduct').middleware(['auth', 'shopAdmin']).validator('AddProduct')
+
   Route.get('Store/:store_id/Product', 'Store/StoreController.listProduct').middleware(['auth', 'shopAdmin'])
 
   Route.post("Product/:product_id/AddVariant", 'Store/StoreController.addVariant').middleware(['auth', 'shopAdmin']).validator('AddVariant')
