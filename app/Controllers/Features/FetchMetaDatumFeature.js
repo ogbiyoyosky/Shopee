@@ -1,7 +1,6 @@
 'use strict'
 const CountryCode = use('App/Models/CountryCode')
 const TransactionTypeSetting = use('App/Models/TransactionTypeSetting')
-const Category = use('App/Models/Category')
 
 
 class FetchMetaDatumFeature {
@@ -23,16 +22,9 @@ class FetchMetaDatumFeature {
 
         const serialized_transaction_type = transaction_type.toJSON()
 
-        const categories = await Category.query()
-        .select('id', 'category_label')
-        .fetch()
-
-        const serialized_categories = categories.toJSON()
-
         const meta = {
           countries: serialized_country,
           transaction_type : serialized_transaction_type,
-          categories: serialized_categories
         }
 
         return this.response.status(200).send({

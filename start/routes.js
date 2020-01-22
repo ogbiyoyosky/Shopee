@@ -122,4 +122,6 @@ Route.group(() => {
 
   Route.delete("Product/:product_id/:variant_id/DeleteVariant", 'Store/StoreController.deleteVariant').middleware(['auth', 'shopAdmin'])
 
+  Route.get("Product/categories", 'Product/ProductController.getCategories')
+
 }).prefix('api/v1')
