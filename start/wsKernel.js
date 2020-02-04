@@ -10,8 +10,7 @@ const Ws = use('Ws')
 | Global middleware are executed on each Websocket channel subscription.
 |
 */
-const globalMiddleware = [
-]
+const globalMiddleware = []
 
 
 /*
@@ -19,8 +18,7 @@ const globalMiddleware = [
 | Named middleware
 |--------------------------------------------------------------------------
 |
-| Named middleware are defined as key/value pairs. Later you can use the
-| keys to run selected middleware on a given channel.
+2``````````````````````| keys to run selected middleware on a given channel.
 |
 | // define
 | {

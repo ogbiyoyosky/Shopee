@@ -7,7 +7,7 @@ class FetchMetaDatumFeature {
     constructor (  request, response  ) {
         this.request = request
         this.response = response
-      }
+    }
 
     async fetchMetaDatum() {
       try {
@@ -24,7 +24,7 @@ class FetchMetaDatumFeature {
 
         const meta = {
           countries: serialized_country,
-          transaction_type : serialized_transaction_type
+          transaction_type : serialized_transaction_type,
         }
 
         return this.response.status(200).send({
@@ -35,12 +35,12 @@ class FetchMetaDatumFeature {
         })
 
       } catch (FetchMetaDatumFeatureError) {
-              console.log("FetchMetaDatumFeatureError", FetchMetaDatumFeatureError)
-              return this.response.status(500).send({
-                  status: "Fail",
-                  message: "Internal Server Error",
-                  status_code: 500
-              })
+        console.log("FetchMetaDatumFeatureError", FetchMetaDatumFeatureError)
+        return this.response.status(500).send({
+            status: "Fail",
+            message: "Internal Server Error",
+            status_code: 500
+        })
       } 
     }
 
