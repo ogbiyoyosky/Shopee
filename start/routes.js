@@ -151,4 +151,6 @@ Route.group(() => {
     "Store/StoreController.deleteVariant"
   ).middleware(["auth", "shopAdmin"]);
 
+  Route.get("Products", 'Product/ProductController.fetchProduct' )
+
 }).prefix('api/v1')
