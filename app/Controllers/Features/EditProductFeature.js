@@ -1,7 +1,9 @@
 "use strict";
 const StoreProduct = use("App/Models/StoreProduct");
 const Store = use("App/Models/Store");
-const { uploadImage } = use("App/HelperFunctions/UploadImage");
+const {
+  uploadImage
+} = use("App/HelperFunctions/UploadImage");
 const Image = use("App/Models/Image");
 const ProductTag = use("App/Models/ProductTag");
 
@@ -12,12 +14,30 @@ class EditProductFeature {
     this.auth = auth;
   }
 
+  async processTags({
+    tags,
+    productId
+  }) {
+    if (tags) {
+      const existingTags = await ProductTag.findBy("product_id", productId);
+      await existingTags.delete();
+      for (var tag in tags) {
+        const productTag = new ProductTag()
+
+        productTag.product_id = productId
+        productTag.tag = tags[tag]
+
+        await productTag.save()
+      }
+    }
+  }
+
   /**
    *
    * @param {Integer} product_id - id of the product
    * @return {Object} -response -ctx
    */
-  async editProduct(product_id) {
+  async editProduct(productId) {
     try {
       const user = this.auth.current.user;
       const user_id = user.id;
@@ -25,10 +45,9 @@ class EditProductFeature {
       const {
         product_name,
         description,
-        total_stock,
+        stock,
         category_id,
-        sub_category_id,
-        short_description,
+        subcategory_id,
         is_published,
         tag,
         price
@@ -41,37 +60,36 @@ class EditProductFeature {
           status_code: 400
         });
       }
-
-      const product_image = this.request.file("product_image", {
+      const tags = JSON.parse(tag);
+      const productImage = this.request.file("product_image", {
         types: ["image"]
       });
 
-      const product = await StoreProduct.findBy("id", product_id);
+      const product = await StoreProduct.findBy("id", productId);
       product.merge({
         product_name,
         description,
         price,
-        total_stock,
+        stock,
         category_id,
-        sub_category_id,
-        short_description,
+        subcategory_id,
         is_enabled: is_published
       });
       await product.save();
 
       const imagesIds = [];
 
-      if (product_image) {
-        const mutiple_image = product_image._files;
-        if (mutiple_image == undefined) {
-          const uploaded_image = await uploadImage(product_image);
+      if (productImage) {
+        const mutipleImage = productImage._files;
+        if (!mutipleImage) {
+          const uploadedImage = await uploadImage(productImage);
           const newImage = new Image();
-          newImage.image_url = uploaded_image.url;
+          newImage.image_url = uploadedImage.url;
           await newImage.save();
           imagesIds.push(newImage.id);
         } else {
-          for (var i in mutiple_image) {
-            const uploaded_image = await uploadImage(mutiple_image[i]);
+          for (var image in mutipleImage) {
+            const uploaded_image = await uploadImage(mutiple_image[image]);
             const newImage = new Image();
             newImage.image_url = uploaded_image.url;
             await newImage.save();
@@ -80,18 +98,10 @@ class EditProductFeature {
         }
       }
 
-      if (tag) {
-        const tags = JSON.parse(tag);
-        const existingTags = await ProductTag.findBy("product_id", product_id);
-        await existingTags.delete();
-        //add new entry
-        for (var i in tags) {
-          const new_tag = new ProductTag();
-          new_tag.product_id = product.id;
-          new_tag.tag = tags[i];
-          new_tag.save();
-        }
-      }
+      await this.processTags({
+        tags,
+        productId
+      })
 
       //add to pivot table
       await product.main_product_images().sync(imagesIds);
