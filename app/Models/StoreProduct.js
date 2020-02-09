@@ -21,6 +21,10 @@ class StoreProduct extends Model {
     return this.hasOne("App/Models/Category", "category_id", "id")
   }
 
+  variant() {
+    return this.hasOne("App/Models/ProductVariant", "id", "product_id")
+  }
+
   sub_category() {
     return this.hasOne("App/Models/SubCategory", "subcategory_id", "id")
   }
