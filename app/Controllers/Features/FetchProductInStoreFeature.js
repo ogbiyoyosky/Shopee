@@ -7,22 +7,22 @@ class FetchProductInStoreFeature {
     this.response = response;
   }
 
-  async fetchProduct(store_id) {
+  async fetchProduct(storeId) {
     try {
-      const { page, limit } = this.request.get();
+      const {
+        page,
+        limit
+      } = this.request.get();
       const produceInStore = await StoreProduct.query()
-        .whereNull("is_deleted_at")
-        .andWhere("store_id", store_id)
+        .whereNull("deleted_at")
+        .andWhere("store_id", storeId)
         .with("main_product_images")
         .with("category")
         .with("sub_category")
         .with("tags")
         .with("variant", builder => {
-          builder.whereNull("is_deleted_at");
-          builder.with("variant_value");
-          builder.with("variant_details", builder => {
-            builder.with("product_variant_images");
-          });
+          builder.whereNull("deleted_at");
+          builder.with('product_variant_images')
         })
         .paginate(page, limit);
 

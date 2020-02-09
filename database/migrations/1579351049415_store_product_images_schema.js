@@ -4,16 +4,16 @@
 const Schema = use('Schema')
 
 class StoreProductImagesSchema extends Schema {
-  up () {
+  up() {
     this.create('store_product_images', (table) => {
       table.increments()
-      table.integer('main_product_id')
+      table.integer('product_id')
       table.integer("image_id")
       table.timestamps()
     })
   }
 
-  down () {
+  down() {
     this.drop('store_product_images')
   }
 }

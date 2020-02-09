@@ -17,7 +17,9 @@
 const Route = use("Route");
 
 // Route.on('/').render('welcome')
-Route.get("/", ({ view }) => {
+Route.get("/", ({
+  view
+}) => {
   return {
     Shopee: "Welcome to Shopee Api"
   };
@@ -75,9 +77,9 @@ Route.group(() => {
     .middleware(["auth", "shopAdmin"])
     .validator("Store");
   Route.post(
-    "Store/ActivateStore/:store_id",
-    "Store/StoreController.activateStore"
-  )
+      "Store/ActivateStore/:store_id",
+      "Store/StoreController.activateStore"
+    )
     .middleware(["auth", "superAdmin"])
     .validator("ActivateStore");
   Route.get(
@@ -114,9 +116,9 @@ Route.group(() => {
     .validator("AddProduct");
 
   Route.put(
-    "Store/:product_id/EditProduct",
-    "Store/StoreController.editProduct"
-  )
+      "Store/:product_id/EditProduct",
+      "Store/StoreController.editProduct"
+    )
     .middleware(["auth", "shopAdmin"])
     .validator("EditProduct");
 
@@ -126,9 +128,9 @@ Route.group(() => {
   ).middleware(["auth", "shopAdmin"]);
 
   Route.post(
-    "Product/:product_id/AddVariant",
-    "Store/StoreController.addVariant"
-  )
+      "Product/:product_id/AddVariant",
+      "Store/StoreController.addVariant"
+    )
     .middleware(["auth", "shopAdmin"])
     .validator("AddVariant");
 
@@ -138,9 +140,9 @@ Route.group(() => {
   ).middleware(["auth", "shopAdmin"]);
 
   Route.put(
-    "Product/:product_id/:variant_id/EditVariant",
-    "Store/StoreController.editVariant"
-  )
+      "Product/:product_id/variant/:variant_id",
+      "Store/StoreController.editVariant"
+    )
     .middleware(["auth", "shopAdmin"])
     .validator("EditVariant");
 
@@ -150,5 +152,7 @@ Route.group(() => {
     "Product/:product_id/:variant_id/DeleteVariant",
     "Store/StoreController.deleteVariant"
   ).middleware(["auth", "shopAdmin"]);
+
+  Route.get("Products", 'Product/ProductController.fetchProduct')
 
 }).prefix('api/v1')
