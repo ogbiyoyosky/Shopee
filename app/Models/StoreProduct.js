@@ -6,12 +6,12 @@ const Model = use('Model')
 class StoreProduct extends Model {
 
 	static get computed() {
-		return ['discount']
+		return ['discount_price']
 	}
 
-	getDiscount({ discount, price }) {
-		const value = (discount * price) / 100
-		return `${value}%`
+	getDiscountPrice({ discount, price }) {
+		const value = price - ((discount / 100) * price)
+		return value
 	}
 
 	image() {
