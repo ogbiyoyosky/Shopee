@@ -12,7 +12,7 @@ class StoreProductSchema extends Schema {
 			table.string('description')
 			table.integer('stock')
 			table.float('price')
-			table.integer(0)
+			table.integer("discount").defaultTo(0)
 			table.integer('category_id')
 			table.integer('subcategory_id')
 			table.boolean('is_enabled')
