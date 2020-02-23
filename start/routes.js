@@ -151,6 +151,11 @@ Route.group(() => {
     "Store/StoreController.deleteVariant"
   ).middleware(["auth", "shopAdmin"]);
 
+  Route.get("products", 'Product/ProductController.fetchProduct')
+
+  Route.post("orders", 'Order/OrderController.createOrder').middleware(['auth'])
   Route.get("products", "Product/ProductController.fetchProduct");
   Route.get("search", "SearchController.index");
-}).prefix("api/v1");
+
+}).prefix('api/v1')
+

@@ -30,7 +30,6 @@ class AddVariantToProductFeature {
       const {
         variant_name,
         sku,
-        color,
         size,
         price_addon,
       } = this.request.all()
@@ -55,7 +54,6 @@ class AddVariantToProductFeature {
       productVariant.sku = sku
       productVariant.price_addon = price_addon
       productVariant.size = size
-      productVariant.color = color
 
       await productVariant.save()
 
