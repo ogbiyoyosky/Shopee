@@ -65,13 +65,15 @@ class OrderCreateOrderFeature {
 
             for (var item in cart_items )  {
 
-                const storeId = await this.findStore(item.product_id)
+                console.log(cart_items[item].product_id)
+
+                const storeId = await this.findStore(cart_items[item].product_id)
 
                 const newOrderItem = new OrderProduct()
-                newOrderItem.product_id = item.product_id
-                newOrderItem.store_id = item.store_id
-                newOrderItem.variant_id = item.variant_id
-                newOrderItem.qty = item.qty
+                newOrderItem.product_id = cart_items[item].product_id
+                newOrderItem.store_id = cart_items[item].store_id
+                newOrderItem.variant_id = cart_items[item].variant_id
+                newOrderItem.qty = cart_items[item].qty
                 newOrderItem.save()
                 
             }
@@ -82,7 +84,7 @@ class OrderCreateOrderFeature {
                     order: newOrder
                 }
             })
-            
+
         } catch (createOrderError) {
            console.log("createOrderError",createOrderError) 
         }
