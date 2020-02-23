@@ -111,9 +111,11 @@ class AddProductFeature {
 			// Parse variants and create a new ProductVariant instance
 			// for each variant alongside its images.
 			if (variants) {
-				const parsedVariant = variants;
+				const parsedVariant = JSON.parse(variants);
 				let currentVariant;
 				let newVariant;
+
+				
 
 				for (var variant in parsedVariant) {
 					currentVariant = parsedVariant[variant];
@@ -124,7 +126,6 @@ class AddProductFeature {
 					newVariant.sku = parsedVariant[variant].sku;
 					newVariant.price_addon = parsedVariant[variant].price_addon;
 					newVariant.size = parsedVariant[variant].size;
-					newVariant.color = parsedVariant[variant].color;
 
 					await newVariant.save();
 

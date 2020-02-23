@@ -155,4 +155,6 @@ Route.group(() => {
 
   Route.get("products", 'Product/ProductController.fetchProduct')
 
+  Route.post("orders", 'Order/OrderController.createOrder').middleware(['auth'])
+
 }).prefix('api/v1')
