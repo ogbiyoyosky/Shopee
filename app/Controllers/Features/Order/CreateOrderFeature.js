@@ -65,16 +65,16 @@ class OrderCreateOrderFeature {
 
             for (var item in cart_items )  {
 
-                console.log(cart_items[item].product_id)
-
                 const storeId = await this.findStore(cart_items[item].product_id)
 
                 const newOrderItem = new OrderProduct()
+                newOrderItem.order_id = newOrder.id
                 newOrderItem.product_id = cart_items[item].product_id
                 newOrderItem.store_id = cart_items[item].store_id
                 newOrderItem.variant_id = cart_items[item].variant_id
                 newOrderItem.qty = cart_items[item].qty
-                newOrderItem.save()
+                newOrderItem.store_id = storeId
+                await newOrderItem.save()
                 
             }
 
