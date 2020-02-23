@@ -30,6 +30,7 @@
     "@adonisjs/validator": "^5.0.6",
     "@adonisjs/vow": "^1.0.17",
     "@adonisjs/websocket": "^1.0.12",
+    "adonis-search": "^1.0.3",
     "africastalking": "^0.4.0",
     "axios": "^0.19.0",
     "cloudinary": "^1.18.1",

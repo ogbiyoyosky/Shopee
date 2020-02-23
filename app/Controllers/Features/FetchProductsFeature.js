@@ -34,7 +34,6 @@ class FetchProductsFeature {
 					})
 					.paginate(page, limit);
 			} else {
-				console.log('here')
 				produceInStore = await StoreProduct.query()
 					.whereNull("deleted_at")
 					.with("main_product_images")
