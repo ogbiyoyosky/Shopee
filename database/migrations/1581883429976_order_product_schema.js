@@ -7,6 +7,11 @@ class OrderProductSchema extends Schema {
   up () {
     this.create('order_products', (table) => {
       table.increments()
+      table.integer("store_id")
+      table.integer("order_id")
+      table.integer("product_id")
+      table.integer("variant_id")
+      table.integer("qty")
       table.timestamps()
     })
   }

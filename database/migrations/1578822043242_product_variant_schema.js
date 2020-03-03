@@ -12,7 +12,6 @@ class ProductVariantSchema extends Schema {
       table.string('sku').nullable()
       table.float('price_addon').defaultTo(0)
       table.string('size').nullable()
-      table.string('color').nullable()
       table.dateTime('deleted_at').defaultTo(null)
       table.timestamps()
     })
