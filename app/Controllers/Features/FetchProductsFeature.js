@@ -28,10 +28,6 @@ class FetchProductsFeature {
 					.with("category")
 					.with("sub_category")
 					.with("tags")
-					.with("variants", builder => {
-						builder.whereNull("deleted_at");
-						builder.with('product_variant_images')
-					})
 					.paginate(page, limit);
 			} else {
 				produceInStore = await StoreProduct.query()
@@ -40,10 +36,6 @@ class FetchProductsFeature {
 					.with("category")
 					.with("sub_category")
 					.with("tags")
-					.with("variants", builder => {
-						builder.whereNull("deleted_at");
-						builder.with('product_variant_images')
-					})
 					.paginate(page, limit);
 
 			}

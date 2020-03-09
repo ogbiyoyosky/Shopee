@@ -16,6 +16,9 @@ module.exports = {
   | Function - Receives the current origin and should return one of the above values.
   |
   */
+<<<<<<< HEAD
+  origin: ['https://shopeecommerce.netlify.com', 'http://localhost:3001', 'http://localhost:3000', 'https://timeshoppy.com', 'https://admin.timeshoppy.com','https://checkout.paystack.com'],
+=======
   origin: [
     "https://shopeecommerce.netlify.com",
     "http://localhost:3001",
@@ -24,6 +27,7 @@ module.exports = {
     "https://admin.timeshoppy.com",
     "https://*.paystack.com"
   ],
+>>>>>>> 6d3364e2faf687d379617d3f8b84375a2b2024b9
 
   /*
   |--------------------------------------------------------------------------

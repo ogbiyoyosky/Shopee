@@ -125,31 +125,13 @@ Route.group(() => {
     "Store/StoreController.listProduct"
   ).middleware(["auth", "shopAdmin"]);
 
-  Route.post(
-    "Product/:product_id/AddVariant",
-    "Store/StoreController.addVariant"
-  )
-    .middleware(["auth", "shopAdmin"])
-    .validator("AddVariant");
-
   Route.delete(
     "Product/:product_id/DeleteProduct",
     "Store/StoreController.deleteProduct"
   ).middleware(["auth", "shopAdmin"]);
 
-  Route.put(
-    "Product/:product_id/variant/:variant_id",
-    "Store/StoreController.editVariant"
-  )
-    .middleware(["auth", "shopAdmin"])
-    .validator("EditVariant");
 
   Route.get("Product/categories", "Product/ProductController.getCategories");
-
-  Route.delete(
-    "product/:product_id/:variant_id/DeleteVariant",
-    "Store/StoreController.deleteVariant"
-  ).middleware(["auth", "shopAdmin"]);
 
   Route.get("products", 'Product/ProductController.fetchProduct')
 
