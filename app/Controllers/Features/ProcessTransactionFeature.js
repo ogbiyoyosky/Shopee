@@ -37,8 +37,6 @@ class ProcessTransactionFeature {
             }); 
         }
         const transaction_type = await TransactionTypeSetting.findBy('transaction_type_label',type)
-
-        console.log('type', transaction_type)
         
         foundToken.is_revoked = 1
         await foundToken.save()
@@ -63,6 +61,10 @@ class ProcessTransactionFeature {
         transaction_description: memo,
         transaction_type_id: transaction_type.id
         });
+
+        //if payment for an order 
+
+        //notify seller about the order.
 
         return this.response.redirect(`${frontend_url}/success_payment`)
     }

@@ -13,6 +13,7 @@ class FetchProductInStoreFeature {
 				page,
 				limit
 			} = this.request.get();
+			
 			const produceInStore = await StoreProduct.query()
 				.whereNull("deleted_at")
 				.andWhere("store_id", storeId)
@@ -20,10 +21,6 @@ class FetchProductInStoreFeature {
 				.with("category")
 				.with("sub_category")
 				.with("tags")
-				.with("variants", builder => {
-					builder.whereNull("deleted_at");
-					builder.with('product_variant_images')
-				})
 				.paginate(page, limit);
 
 			const serializedProduct = produceInStore.toJSON()

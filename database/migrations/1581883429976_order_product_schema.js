@@ -10,7 +10,6 @@ class OrderProductSchema extends Schema {
       table.integer("store_id")
       table.integer("order_id")
       table.integer("product_id")
-      table.integer("variant_id")
       table.integer("qty")
       table.timestamps()
     })

@@ -99,7 +99,9 @@ class InitializePaymentFeature {
           })
         }
        console.log('redirect url',apiResponse.data.authorization_url)
-        return this.response.redirect(apiResponse.data.authorization_url);
+        return this.response.status(200).send({
+          authorization_url: apiResponse.data.authorization_url
+        })
       })
       .catch((e) => 
         {
