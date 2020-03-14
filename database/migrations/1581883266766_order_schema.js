@@ -4,18 +4,19 @@
 const Schema = use('Schema')
 
 class OrderSchema extends Schema {
-  up () {
+  up() {
     this.create('orders', (table) => {
       table.increments()
       table.integer('user_id')
       table.integer('amount')
       table.dateTime('is_paid_at').nullable()
+      table.string("placement_code")
       table.dateTime('is_deleted_at').nullable()
       table.timestamps()
     })
   }
 
-  down () {
+  down() {
     this.drop('orders')
   }
 }
