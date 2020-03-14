@@ -4,24 +4,20 @@
 const Schema = use('Schema')
 
 class AddressSchema extends Schema {
-  up () {
+  up() {
     this.create('addresses', (table) => {
       table.increments()
       table.integer('user_id')
-      table.boolean('primary')
+      table.boolean('primary').default(0)
       table.string('address')
-      table.string('locality_id')
-      table.string('state_id')
-      table.integer('postcode')
+      table.integer('province_id')
+      table.integer('state_id')
       table.string('country_id')
-
-
-
       table.timestamps()
     })
   }
 
-  down () {
+  down() {
     this.drop('addresses')
   }
 }
