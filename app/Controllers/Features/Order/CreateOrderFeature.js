@@ -23,11 +23,6 @@ class OrderCreateOrderFeature {
         return value
     }
 
-    async pay(amount, user_id) {
-        const wallet = await Wallet.findBy('user_id', user_id)
-        wallet.balance = wallet.balance - amount
-        wallet.save()
-    }
 
     async validBalance(amountOnCart) {
         const userId = this.auth.current.user.id
@@ -77,80 +72,66 @@ class OrderCreateOrderFeature {
                 })
             }
 
-
             const totalAmount = itemsToBeCalculated.map(item => item.itemPrice * item.selectedQty)
                 .reduce(function (accumulator, item) {
                     return accumulator + item
                 }, 0);
 
-            const valid = await this.validBalance(totalAmount)
             const token = randomString.generate(15)
 
-            if (valid) {
-                const newOrder = new Order()
-                newOrder.user_id = userId
-                newOrder.amount = totalAmount
-                newOrder.placement_code = token
-                product.is_paid_at = moment().format('YYYY-MM-DD HH:mm:ss')
-                await newOrder.save()
 
-                for (var item in cart_items) {
+            const newOrder = new Order()
+            newOrder.user_id = userId
+            newOrder.amount = totalAmount
+            newOrder.placement_code = token
+            product.is_paid_at = moment().format('YYYY-MM-DD HH:mm:ss')
+            await newOrder.save()
 
-                    const storeId = await this.findStore(cart_items[item].product_id)
+            for (var item in cart_items) {
 
-                    const newOrderItem = new OrderProduct()
-                    newOrderItem.order_id = newOrder.id
-                    newOrderItem.product_id = cart_items[item].product_id
-                    newOrderItem.store_id = cart_items[item].store_id
-                    newOrderItem.qty = cart_items[item].qty
-                    newOrderItem.store_id = storeId
-                    await newOrderItem.save()
+                const storeId = await this.findStore(cart_items[item].product_id)
 
-                }
+                const newOrderItem = new OrderProduct()
+                newOrderItem.order_id = newOrder.id
+                newOrderItem.product_id = cart_items[item].product_id
+                newOrderItem.store_id = cart_items[item].store_id
+                newOrderItem.qty = cart_items[item].qty
+                newOrderItem.store_id = storeId
+                await newOrderItem.save()
 
-                const itemId = cart_items[0].product_id
-                const product = await StoreProduct.findBy("id", itemId)
-                const sellerStoreId = product.store_id
-
-                const seller = await Store.findBy("id", sellerStoreId)
-                const sellerId = seller.user_id
-
-                //save billing address
-                const newAddress = await Address.findOrCreate({
-                    user_id: this.auth.user.id,
-                    address,
-                    province_id,
-                    state_id,
-                    country_id
-                })
-
-                const orderAddress = new OrderAddress()
-                orderAddress.address_id = newAddress.id
-                orderAddress.order_id = newOrder.id
-                await orderAddress.save()
-
-                await this.contactSeller(sellerId, newOrder.id)
-
-                await this.pay(totalAmount, this.auth.current.user.id)
-
-                return this.response.status(200).send({
-                    message: "successfully placed the order",
-                    status_code: 200,
-                    results: {
-                        order: newOrder,
-                        placement_code: newOrder.placement_code
-                    }
-                })
-
-            } else {
-                return this.response.status(400).send({
-                    status: "fail",
-                    message: "Insufficient balance on account",
-                    status_code: 400
-
-                })
             }
 
+            const itemId = cart_items[0].product_id
+            const product = await StoreProduct.findBy("id", itemId)
+            const sellerStoreId = product.store_id
+
+            const seller = await Store.findBy("id", sellerStoreId)
+            const sellerId = seller.user_id
+
+            //save billing address
+            const newAddress = await Address.findOrCreate({
+                user_id: this.auth.user.id,
+                address,
+                province_id,
+                state_id,
+                country_id
+            })
+
+            const orderAddress = new OrderAddress()
+            orderAddress.address_id = newAddress.id
+            orderAddress.order_id = newOrder.id
+            await orderAddress.save()
+
+            await this.contactSeller(sellerId, newOrder.id)
+
+            return this.response.status(200).send({
+                message: " A message is sent to the seller",
+                status_code: 200,
+                results: {
+                    order: newOrder,
+                    placement_code: newOrder.placement_code
+                }
+            })
 
 
         } catch (createOrderError) {

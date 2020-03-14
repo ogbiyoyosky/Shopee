@@ -2,6 +2,8 @@
 const CreateOrderFeature = use("App/Controllers/Features/Order/CreateOrderFeature")
 const FetchSellerOrderNotificationFeature = use("App/Controllers/Features/Notification/FetchSellerOrderNotificationFeature")
 const ViewOrderFeature = use("App/Controllers/Features/Order/ViewOrderFeature")
+const EditOrderFeature = use("App/Controllers/Features/Order/EditOrderFeature")
+const AddShippingCostOnOrderFeature = use("App/Controllers/Features/Order/AddShippingCostOnOrderFeature")
 
 class OrderController {
     async createOrder({ request, response, auth }) {
@@ -14,6 +16,14 @@ class OrderController {
 
     async viewOrder({ request, response, auth, params: { order_id } }) {
         return new ViewOrderFeature(request, response, auth).viewOrder(order_id)
+    }
+
+    async editOrder({ request, response, auth, params: { order_id } }) {
+        return new EditOrderFeature(request, response, auth).editOrder(order_id)
+    }
+
+    async addShippigCost({ request, response, auth, params: { order_id } }) {
+        return new AddShippingCostOnOrderFeature(request, response, auth).addShippigCost(order_id)
     }
 }
 
