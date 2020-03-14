@@ -7,6 +7,8 @@ const OrderNotification = use("App/Models/OrderNotification")
 const Wallet = use("App/Models/Wallet");
 const Address = use("App/Models/Address")
 const OrderAddress = use("App/Models/OrderAddress")
+const randomString = require('randomstring')
+const moment = require("moment")
 
 
 class OrderCreateOrderFeature {
@@ -82,11 +84,14 @@ class OrderCreateOrderFeature {
                 }, 0);
 
             const valid = await this.validBalance(totalAmount)
+            const token = randomString.generate(15)
 
             if (valid) {
                 const newOrder = new Order()
                 newOrder.user_id = userId
                 newOrder.amount = totalAmount
+                newOrder.placement_code = token
+                product.is_paid_at = moment().format('YYYY-MM-DD HH:mm:ss')
                 await newOrder.save()
 
                 for (var item in cart_items) {
@@ -132,7 +137,8 @@ class OrderCreateOrderFeature {
                     message: "successfully placed the order",
                     status_code: 200,
                     results: {
-                        order: newOrder
+                        order: newOrder,
+                        placement_code: newOrder.placement_code
                     }
                 })
 
