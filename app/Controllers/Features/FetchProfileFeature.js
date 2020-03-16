@@ -16,7 +16,7 @@ class FetchProfileFeature {
         .query()
         .select('users.id', 'email', 'phone_number',
           'is_activated_at', 'country_codes.dial_code', 'users.phone_number ', 'role_label', 'first_name',
-          'last_name', 'states.state_label', 'states.id', 'provinces.id', 'country_codes.id', 'provinces.province_label', 'country_codes.name as country',
+          'last_name', 'states.state_label', 'states.id as state_id', 'provinces.id as province_id', 'country_codes.id as country_id', 'provinces.province_label', 'country_codes.name as country',
           'gender', 'balance as wallet_balance')
         .where('users.id', user_id)
         .innerJoin('roles', 'users.role_id', 'roles.id')

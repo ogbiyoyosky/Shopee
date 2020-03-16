@@ -84,7 +84,6 @@ class OrderCreateOrderFeature {
             newOrder.user_id = userId
             newOrder.amount = totalAmount
             newOrder.placement_code = token
-            product.is_paid_at = moment().format('YYYY-MM-DD HH:mm:ss')
             await newOrder.save()
 
             for (var item in cart_items) {

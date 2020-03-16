@@ -139,7 +139,7 @@ Route.group(() => {
   Route.get("orders/notifications", "Order/OrderController.fetchSellerOrderNotifications").middleware(["auth", "shopAdmin"])
   Route.get("orders/:order_id", "Order/OrderController.viewOrder").middleware(["auth"])
   Route.put("orders/:order_id", "Order/OrderController.editOrder").middleware(["auth"])
-  Route.patch("orders/:order_id/add-shiping-cost", "Order/OrderController.addShippigCost").middleware(["auth", "shopAdmin"])
+  Route.patch("orders/:order_id/add-shipping-cost", "Order/OrderController.addShippigCost").middleware(["auth", "shopAdmin"])
   Route.get("products", "Product/ProductController.fetchProduct");
   Route.get("search", "SearchController.index");
 

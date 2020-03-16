@@ -8,6 +8,10 @@ class OrderAddShippingCostOnOrderFeature {
         this.auth = auth
     }
 
+    async contactBuyer() {
+
+    }
+
     async addShippigCost(orderId) {
         try {
             const { shipping_cost } = this.request.all()
