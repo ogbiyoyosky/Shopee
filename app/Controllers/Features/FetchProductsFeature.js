@@ -1,35 +1,62 @@
 'use strict'
-const Database = use("Database")
+const StoreProduct = use("App/Models/StoreProduct")
 
 class FetchProductsFeature {
-    constructor (  request, response, auth ) {
-        this.request = request
-        this.response = response
-        this.auth = auth
-    }
+	constructor(request, response, auth) {
+		this.request = request
+		this.response = response
+		this.auth = auth
+	}
 
-    async fetchProduct() {
-        try {
+	async fetchProduct() {
+		try {
+			const {
+				page,
+				limit,
+				category_id
+			} = this.request.get();
 
-            const {province, region} = this.request.all()
+			let produceInStore
 
-            const products = await Database.from("store_products")    
-            .select('*') 
-            .whereIn('store_id', (
-                await Database.from("stores")    
-                .select('id') 
-                .where("province_id", 1)
-                .andWhere("state_id", 1))
-            )
+			console.log(category_id)
+
+			if (category_id) {
+				produceInStore = await StoreProduct.query()
+					.whereNull("deleted_at")
+					.andWhere('category_id', category_id)
+					.with("main_product_images")
+					.with("category")
+					.with("sub_category")
+					.with("tags")
+					.paginate(page, limit);
+			} else {
+				produceInStore = await StoreProduct.query()
+					.whereNull("deleted_at")
+					.with("main_product_images")
+					.with("category")
+					.with("sub_category")
+					.with("tags")
+					.paginate(page, limit);
+
+			}
 
 
-            console.log(products)
+			this.response.status(200).send({
+				message: "Successfully fetch all products",
+				status: "success",
+				status_code: 200,
+				results: produceInStore
+			});
 
-        } catch (fetchProductError) {
-            
-        }
-    }
 
-  
+		} catch (fetchProductError) {
+			console.log('fetchProduct Error -> ', fetchProductError);
+			return this.response.status(500).send({
+				status: 'fail',
+				status_code: 500,
+				message: 'Internal Server Error'
+			})
+		}
+	}
 }
 module.exports = FetchProductsFeature

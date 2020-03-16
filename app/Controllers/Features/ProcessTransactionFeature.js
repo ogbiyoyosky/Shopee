@@ -9,63 +9,69 @@ const frontend_url = Env.get('FRONTEND_URL')
 
 
 class ProcessTransactionFeature {
-    constructor (  request, response) {
+    constructor(request, response) {
         this.request = request
         this.response = response
     }
 
     async processTransaction() {
-         const amount = this.request.input("amt");
-         const token = this.request.input("tkn") ? this.request.input("tkn") : "";
-         const userID = Number(this.request.input("uid"));
-         const type =this.request.input("type");
-         const memo = decodeURI(this.request.input("memo"));
-    
 
-        let foundToken = await TransactionToken
-        .query()
-        .where('user_id', userID)
-        .andWhere('token', token)
-        .andWhere('is_revoked', 0)
-        .first();
+        try {
+            const amount = this.request.input("amt");
+            const token = this.request.input("tkn") ? this.request.input("tkn") : "";
+            const userID = Number(this.request.input("uid"));
+            const type = this.request.input("type");
+            const memo = decodeURI(this.request.input("memo"));
 
-        if (!foundToken) {
-            return response.status(401).send({
-               status: 'fail',
-               status_code: 401,
-               message: "invalid token"
-            }); 
-        }
-        const transaction_type = await TransactionTypeSetting.findBy('transaction_type_label',type)
 
-        console.log('type', transaction_type)
-        
-        foundToken.is_revoked = 1
-        await foundToken.save()
+            let foundToken = await TransactionToken
+                .query()
+                .where('user_id', userID)
+                .andWhere('token', token)
+                .andWhere('is_revoked', 0)
+                .first();
 
-        let wallet = await Wallet.query()
-        .where('user_id', userID)
-        .first();
+            if (!foundToken) {
+                return response.status(401).send({
+                    status: 'fail',
+                    status_code: 401,
+                    message: "invalid token"
+                });
+            }
+            const transaction_type = await TransactionTypeSetting.findBy('transaction_type_label', type)
 
-        if (type == 'Deposit') {
+            foundToken.is_revoked = 1
+            await foundToken.save()
+
+            let wallet = await Wallet.query()
+                .where('user_id', userID)
+                .first();
+
             let balance = Number(wallet.balance) + Number(amount);
-
             wallet.balance = balance
             await wallet.save()
+
+            await Transaction.create({
+                sender_id: userID,
+                recipient_id: userID,
+                amount,
+                status: 'success',
+                transaction_reference: token,
+                transaction_description: memo,
+                transaction_type_id: transaction_type.id
+            });
+            return this.response.redirect(`${frontend_url}/checkout?successful_operation=${type}`)
+
+        } catch (processTransactionError) {
+            console.log("processTransactionError", processTransactionError)
+            return this.response.status(500).send({
+                status: "Fail",
+                message: "Internal Server Error",
+                status_code: 500
+            })
         }
 
-        await Transaction.create({
-        sender_id: userID,
-        recipient_id: userID,
-        amount,
-        status: 'success',
-        transaction_reference: token,
-        transaction_description: memo,
-        transaction_type_id: transaction_type.id
-        });
-
-        return this.response.redirect(`${frontend_url}/success_payment`)
     }
-  
+
 }
 module.exports = ProcessTransactionFeature

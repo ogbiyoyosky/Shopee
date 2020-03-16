@@ -5,10 +5,9 @@ class EditProduct {
     return {
       product_name: "string",
       description: "string",
-      total_stock: "integer",
+      stock: "integer",
       category_id: "integer",
-      sub_category_id: "integer",
-      short_description: "string",
+      subcategory_id: "integer",
       is_published: "integer",
       price: "number"
     };

@@ -1,20 +1,20 @@
 'use strict'
 
 class EditVariant {
-  get rules () {
+  get rules() {
     return {
       variant_image: 'required',
       variant_name: 'string',
       sku: 'string',
-      price_valuation_degree: "integer",
+      price_addon: "integer",
       variant_id: "integer",
-      
+
     }
   }
 
-  
-  
-  async fails (errorMessages) { 
+
+
+  async fails(errorMessages) {
     return this.ctx.response.status(400).json({
       status: "invalid",
       message: "Invalid data",

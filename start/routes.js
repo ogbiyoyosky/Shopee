@@ -125,32 +125,23 @@ Route.group(() => {
     "Store/StoreController.listProduct"
   ).middleware(["auth", "shopAdmin"]);
 
-  Route.post(
-    "Product/:product_id/AddVariant",
-    "Store/StoreController.addVariant"
-  )
-    .middleware(["auth", "shopAdmin"])
-    .validator("AddVariant");
-
   Route.delete(
     "Product/:product_id/DeleteProduct",
     "Store/StoreController.deleteProduct"
   ).middleware(["auth", "shopAdmin"]);
 
-  Route.put(
-    "Product/:product_id/:variant_id/EditVariant",
-    "Store/StoreController.editVariant"
-  )
-    .middleware(["auth", "shopAdmin"])
-    .validator("EditVariant");
 
-  Route.get("Product/categories", 'Product/ProductController.getCategories')
+  Route.get("Product/categories", "Product/ProductController.getCategories");
 
-  Route.delete(
-    "Product/:product_id/:variant_id/DeleteVariant",
-    "Store/StoreController.deleteVariant"
-  ).middleware(["auth", "shopAdmin"]);
+  Route.get("products", 'Product/ProductController.fetchProduct')
 
-  Route.get("Products", 'Product/ProductController.fetchProduct' )
+  Route.post("orders", 'Order/OrderController.createOrder').middleware(['auth'])
+  Route.get("orders/notifications", "Order/OrderController.fetchSellerOrderNotifications").middleware(["auth", "shopAdmin"])
+  Route.get("orders/:order_id", "Order/OrderController.viewOrder").middleware(["auth"])
+  Route.put("orders/:order_id", "Order/OrderController.editOrder").middleware(["auth"])
+  Route.patch("orders/:order_id/add-shipping-cost", "Order/OrderController.addShippigCost").middleware(["auth", "shopAdmin"])
+  Route.get("products", "Product/ProductController.fetchProduct");
+  Route.get("search", "SearchController.index");
 
 }).prefix('api/v1')
+
