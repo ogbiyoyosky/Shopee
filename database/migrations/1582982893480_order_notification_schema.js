@@ -4,18 +4,18 @@
 const Schema = use('Schema')
 
 class OrderNotificationSchema extends Schema {
-  up () {
+  up() {
     this.create('order_notifications', (table) => {
       table.increments()
       table.integer("seller_id")
       table.integer("buyer_id")
       table.integer("order_id")
-      table.dateTime("is_accepted_at")
+      table.dateTime("is_completed_at")
       table.timestamps()
     })
   }
 
-  down () {
+  down() {
     this.drop('order_notifications')
   }
 }

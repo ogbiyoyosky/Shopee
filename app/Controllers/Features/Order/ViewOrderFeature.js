@@ -11,7 +11,7 @@ class OrderViewOrderFeature {
     async viewOrder(orderId) {
         try {
             const orderDetails = await Database.from("orders")
-                .select("orders.id", "orders.amount as order_price", "orders.is_paid_at as payment_time", "orders.user_id", "addresses.address as delivery_address", "provinces.id", "states.state_label", "country_codes.name")
+                .select("orders.id", "orders.amount as order_price", "orders.is_paid_at as payment_time", "orders.user_id", "addresses.address as delivery_address", "provinces.id", "states.state_label", "country_codes.name", "orders.shipping_cost", "orders.seller_accepted_at", "orders.seller_declined_at", "orders.buyer_accepted_at", "orders.buyer_declined_at")
                 .where("orders.id", orderId)
                 .innerJoin("users", "orders.user_id", "users.id")
                 .innerJoin("order_addresses", "orders.id", "order_addresses.order_id")
