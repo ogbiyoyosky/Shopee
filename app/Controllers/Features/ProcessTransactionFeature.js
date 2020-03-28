@@ -60,6 +60,7 @@ class ProcessTransactionFeature {
                 transaction_description: memo,
                 transaction_type_id: transaction_type.id
             });
+
             return this.response.redirect(`${frontend_url}/checkout?successful_operation=${type}`)
 
         } catch (processTransactionError) {

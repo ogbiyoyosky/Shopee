@@ -1,6 +1,7 @@
 'use strict'
 const CreateOrderFeature = use("App/Controllers/Features/Order/CreateOrderFeature")
 const FetchSellerOrderNotificationFeature = use("App/Controllers/Features/Notification/FetchSellerOrderNotificationFeature")
+const FetchBuyerNotificationFeature = use("App/Controllers/Features/Notification/FetchBuyerNotificationFeature")
 const ViewOrderFeature = use("App/Controllers/Features/Order/ViewOrderFeature")
 const EditOrderFeature = use("App/Controllers/Features/Order/EditOrderFeature")
 const AddShippingCostOnOrderFeature = use("App/Controllers/Features/Order/AddShippingCostOnOrderFeature")
@@ -22,9 +23,15 @@ class OrderController {
         return new EditOrderFeature(request, response, auth).editOrder(order_id)
     }
 
-    async addShippigCost({ request, response, auth, params: { order_id } }) {
-        return new AddShippingCostOnOrderFeature(request, response, auth).addShippigCost(order_id)
+    async addShippingCost({ request, response, auth, params: { order_id } }) {
+        return new AddShippingCostOnOrderFeature(request, response, auth).addShippingCost(order_id)
     }
+
+    async fetchBuyerOrderNotification({ request, response, auth }) {
+        return new FetchBuyerNotificationFeature(request, response, auth).fetchBuyerOrderNotification()
+    }
+
+
 }
 
 module.exports = OrderController

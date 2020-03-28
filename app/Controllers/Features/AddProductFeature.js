@@ -50,7 +50,7 @@ class AddProductFeature {
 				});
 			}
 
-			const tags = tag;
+			const tags = JSON.parse(tag);
 			const productImage = this.request.file("product_image", {
 				types: ["image"]
 			});
@@ -105,7 +105,7 @@ class AddProductFeature {
 				productId: product.id
 			});
 
-	
+
 			await product.main_product_images().attach(imageIds);
 
 			return this.response.status(200).send({

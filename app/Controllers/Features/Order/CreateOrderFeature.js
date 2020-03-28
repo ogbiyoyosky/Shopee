@@ -83,6 +83,7 @@ class OrderCreateOrderFeature {
             const newOrder = new Order()
             newOrder.user_id = userId
             newOrder.amount = totalAmount
+            newOrder.service_charge = 220
             newOrder.placement_code = token
             await newOrder.save()
 
