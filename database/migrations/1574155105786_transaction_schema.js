@@ -4,12 +4,12 @@
 const Schema = use('Schema')
 
 class TransactionSchema extends Schema {
-  up () {
+  up() {
     this.create('transactions', (table) => {
       table.increments()
       table.integer('sender_id')
       table.integer('recipient_id')
-      table.integer('amount')
+      table.float('amount')
       table.string('status')
       table.string('transaction_reference')
       table.string('transaction_description').nullable()
@@ -18,7 +18,7 @@ class TransactionSchema extends Schema {
     })
   }
 
-  down () {
+  down() {
     this.drop('transactions')
   }
 }

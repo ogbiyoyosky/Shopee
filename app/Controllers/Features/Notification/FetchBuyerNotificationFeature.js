@@ -1,19 +1,19 @@
 'use strict'
 const Database = use("Database")
 
-class NotificationFetchSellerOrderNotificationFeature {
+class NotificationFetchBuyerNotificationFeature {
     constructor(request, response, auth) {
         this.request = request
         this.response = response
         this.auth = auth
     }
 
-    async fetchSellerOrderNotifications() {
+    async fetchBuyerOrderNotification() {
         try {
             const userId = this.auth.current.user.id
             const orderNotification = await Database.from("order_notifications")
-                .select("orders.id as id", "buyer_id", "orders.amount", "orders.declined_at", "orders.declined_at", "orders.created_at", "orders.buyer_accepted_at", "orders.shipping_cost", "store_products.product_name", "order_products.product_id")
-                .where("seller_id", userId)
+                .select("orders.id as id", "seller_id", "orders.amount", "orders.declined_at", "orders.declined_at", "orders.created_at", "orders.buyer_accepted_at", "orders.shipping_cost", "store_products.product_name", "order_products.product_id")
+                .where("buyer_id", userId)
                 .innerJoin("users", "order_notifications.buyer_id", "users.id")
                 .innerJoin("order_products", "order_notifications.order_id", "order_products.id")
                 .innerJoin("orders", "order_notifications.order_id", "orders.id")
@@ -27,8 +27,8 @@ class NotificationFetchSellerOrderNotificationFeature {
                 results: orderNotification
             })
 
-        } catch (fetchSellerOrderNotificationsError) {
-            console.log("fetchSellerOrderNotificationsError", fetchSellerOrderNotificationsError)
+        } catch (fetchBuyerOrderNotificationError) {
+            console.log("fetchBuyerOrderNotification", fetchBuyerOrderNotificationError)
             return this.response.status(500).send({
                 status: "Fail",
                 message: "Internal Server Error",
@@ -37,6 +37,5 @@ class NotificationFetchSellerOrderNotificationFeature {
         }
     }
 
-
 }
-module.exports = NotificationFetchSellerOrderNotificationFeature
+module.exports = NotificationFetchBuyerNotificationFeature
