@@ -5,6 +5,7 @@ const FetchBuyerNotificationFeature = use("App/Controllers/Features/Notification
 const ViewOrderFeature = use("App/Controllers/Features/Order/ViewOrderFeature")
 const EditOrderFeature = use("App/Controllers/Features/Order/EditOrderFeature")
 const AddShippingCostOnOrderFeature = use("App/Controllers/Features/Order/AddShippingCostOnOrderFeature")
+const PayForOrderFeature = use("App/Controllers/Features/PayForOrderFeature")
 
 class OrderController {
     async createOrder({ request, response, auth }) {
@@ -29,6 +30,10 @@ class OrderController {
 
     async fetchBuyerOrderNotification({ request, response, auth }) {
         return new FetchBuyerNotificationFeature(request, response, auth).fetchBuyerOrderNotification()
+    }
+
+    async payForOrder({ request, response, auth }) {
+        return new PayForOrderFeature(request, response, auth).payForOrder()
     }
 
 

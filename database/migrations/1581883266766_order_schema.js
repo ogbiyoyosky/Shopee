@@ -12,7 +12,7 @@ class OrderSchema extends Schema {
       table.dateTime('is_paid_at').nullable()
       table.string("placement_code")
       table.dateTime("declined_at")
-      table.integer("is_completed")
+      table.integer("is_delivered")
       table.float("service_charge")
       table.dateTime("buyer_accepted_at")
       table.dateTime("seller_accepted_at")
