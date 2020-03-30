@@ -136,6 +136,7 @@ Route.group(() => {
   Route.get("products", 'Product/ProductController.fetchProduct')
 
   Route.post("orders", 'Order/OrderController.createOrder').middleware(['auth'])
+  Route.post("order/pay", 'Order/OrderController.payForOrder').middleware(['auth'])
   Route.get("seller/orders", "Order/OrderController.fetchSellerOrderNotifications").middleware(["auth", "shopAdmin"])
   Route.get("buyer/orders", "Order/OrderController.fetchBuyerOrderNotification").middleware(["auth"])
   Route.get("orders/:order_id", "Order/OrderController.viewOrder").middleware(["auth"])
