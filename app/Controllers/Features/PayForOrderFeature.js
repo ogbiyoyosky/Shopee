@@ -1,6 +1,7 @@
 'use strict'
 const Order = use("App/Models/Order")
 const moment = require("moment")
+const Wallet = use("App/Models/Wallet")
 
 class PayForOrderFeature {
     constructor(request, response, auth) {
@@ -12,10 +13,23 @@ class PayForOrderFeature {
     async payForOrder() {
         try {
             const { order_id } = this.request.all()
+            const { id } = this.auth.current.user
 
             const order = await Order.findBy('Id', order_id)
 
             if (order) {
+                const userWallet = await Wallet.findBy("user_id", id)
+                if (userWallet.balance < order.amount) {
+                    return this.response.status(400).send({
+                        message: "Insufficient balance",
+                        status_code: 400,
+                        status: "fail"
+                    })
+                }
+
+                userWallet.balance = userWallet.balance - order.amount
+                await userWallet.save()
+
                 order.is_paid_at = moment().format('YYYY-MM-DD HH:mm:ss')
                 await order.save()
 

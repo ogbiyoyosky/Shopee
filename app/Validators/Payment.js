@@ -1,21 +1,23 @@
 'use strict'
 
 class Payment {
-  get rules () {
+  get rules() {
     return {
       transaction_type_id: 'required|integer',
-      amount: 'required|integer'
+      amount: 'required|integer',
+      redirect_url: 'required|string'
     }
   }
 
-  get messages () {
+  get messages() {
     return {
-			'transaction_type_id.required': 'Transactiontype is required',
-			'eamount.required': 'Please provide the amount for the transaction',
+      'transaction_type_id.required': 'Transactiontype is required',
+      'amount.required': 'Please provide the amount for the transaction',
+      'redirect_url.required': 'Please provide the redirect url',
     }
   }
-  
-  async fails (errorMessages) { 
+
+  async fails(errorMessages) {
     return this.ctx.response.status(400).json({
       status: "invalid",
       message: "Invalid data",
