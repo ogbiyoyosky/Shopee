@@ -61,6 +61,7 @@ class VerifyPaymentFeature {
           if (item.variable_name == 'uid') {
             user_id = item.value
           }
+
         })
 
 

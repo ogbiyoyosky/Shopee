@@ -22,6 +22,7 @@ class ProcessTransactionFeature {
             const userID = Number(this.request.input("uid"));
             const type = this.request.input("type");
             const memo = decodeURI(this.request.input("memo"));
+            const redirectUrl = this.request.input("redirect_url")
 
 
             let foundToken = await TransactionToken
@@ -61,7 +62,7 @@ class ProcessTransactionFeature {
                 transaction_type_id: transaction_type.id
             });
 
-            return this.response.redirect(`${frontend_url}/checkout?successful_operation=${type}`)
+            return this.response.redirect(`${frontend_url}/${redirectUrl}`)
 
         } catch (processTransactionError) {
             console.log("processTransactionError", processTransactionError)
