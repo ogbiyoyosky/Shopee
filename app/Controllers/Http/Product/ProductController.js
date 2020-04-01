@@ -18,6 +18,8 @@ class ProductController {
   }) {
     return new FetchProductsFeature(request, response, auth).fetchProduct()
   }
+
+
 }
 
 module.exports = ProductController
