@@ -7,6 +7,10 @@ class Conversation extends Model {
     conversationMessage() {
         return this.hasMany("App/Models/ConversationMessage", "id", "conversation_id")
     }
+
+    user() {
+        return this.hasOne('App/Models/User', 'user_id', 'id')
+    }
 }
 
 module.exports = Conversation

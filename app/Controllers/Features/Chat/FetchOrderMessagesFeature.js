@@ -15,6 +15,7 @@ class ChatFetchOrderMessagesFeature {
             const message = await Conversation.query()
                 .where("order_id", orderId)
                 .with("conversationMessage")
+                .with('user.user_role')
                 .fetch()
 
             return this.response.status(200).send({
