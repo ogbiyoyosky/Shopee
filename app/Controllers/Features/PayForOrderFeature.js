@@ -2,6 +2,8 @@
 const Order = use("App/Models/Order")
 const moment = require("moment")
 const Wallet = use("App/Models/Wallet")
+const User = use("App/Models/User")
+const Role = use("App/Models/Role")
 
 class PayForOrderFeature {
     constructor(request, response, auth) {
@@ -30,8 +32,18 @@ class PayForOrderFeature {
                 userWallet.balance = userWallet.balance - order.amount
                 await userWallet.save()
 
+
                 order.is_paid_at = moment().format('YYYY-MM-DD HH:mm:ss')
                 await order.save()
+
+                const userRole = await Role.findBy("role_label", "Super Admin")
+
+                const user = await User.findBy("role_id", userRole.id)
+
+                const escrowWallet = Wallet.findBy("user_id", user.id)
+
+                escrowWallet.balance += order.amount
+                await escrowWallet.save()
 
                 return this.response.status(200).send({
                     message: `Successfully paid for order  ${order.placement_code}`,
