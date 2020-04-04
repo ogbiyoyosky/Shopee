@@ -13,7 +13,9 @@ class OrderNotification extends Model {
     }
 
     order_items() {
-        return this.belongsToMany("App/Models/StoreProduct", "order_id", "product_id").pivotTable('order_products')
+        return this.belongsToMany("App/Models/StoreProduct", "order_id", "product_id")
+            .pivotTable('order_products')
+            .withPivot(['qty'])
     }
 
     order_address() {
