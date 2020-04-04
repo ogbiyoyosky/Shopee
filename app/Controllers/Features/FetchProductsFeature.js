@@ -28,6 +28,7 @@ class FetchProductsFeature {
 					.with("category")
 					.with("sub_category")
 					.with("tags")
+					.with("store")
 					.paginate(page, limit);
 			} else if (store_id) {
 				produceInStore = await StoreProduct.query()
@@ -37,6 +38,7 @@ class FetchProductsFeature {
 					.with("category")
 					.with("sub_category")
 					.with("tags")
+					.with("store")
 					.paginate(page, limit);
 
 			} else if (store_id && category_id) {
@@ -48,6 +50,7 @@ class FetchProductsFeature {
 					.with("category")
 					.with("sub_category")
 					.with("tags")
+					.with("store")
 					.paginate(page, limit);
 
 			} else {
@@ -57,6 +60,7 @@ class FetchProductsFeature {
 					.with("category")
 					.with("sub_category")
 					.with("tags")
+					.with("store")
 					.paginate(page, limit);
 			}
 
