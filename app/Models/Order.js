@@ -12,20 +12,19 @@ class Order extends Model {
     getExpiringTime({ is_paid_at, delivery_time_addon }) {
         if (is_paid_at) {
             if (delivery_time_addon == "24H") {
-                const paidTime = is_paid_at.getTIme()
+                const paidTime = is_paid_at.getTime()
                 const extendedTime = 24 * 3600000
                 return paidTime + extendedTime
 
             } else if (delivery_time_addon == "24H") {
-                const paidTime = is_paid_at.getTIme()
+                const paidTime = is_paid_at.getTime()
                 const extendedTime = 48 * 3600000
-                return extendedTime + paidTime
+                return new Date(extendedTime + paidTime)
 
             } else {
-                const paidTime = is_paid_at.getTIme()
+                const paidTime = is_paid_at.getTime()
                 const extendedTime = 0
-                return extendedTime + paidTime
-
+                return new Date(extendedTime + paidTime)
             }
 
         } else {

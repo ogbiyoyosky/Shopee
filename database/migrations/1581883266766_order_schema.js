@@ -14,7 +14,7 @@ class OrderSchema extends Schema {
       table.dateTime("declined_at")
       table.dateTime("is_delivered_at")
       table.dateTime("buyer_confirms_delivery_at")
-      table.string("delivering_time_addon").defaultTo('0H')
+      table.string("delivery_time_addon").defaultTo('0H')
       table.float("service_charge")
       table.dateTime("buyer_accepted_at")
       table.dateTime("seller_accepted_at")

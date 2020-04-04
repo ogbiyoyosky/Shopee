@@ -18,8 +18,11 @@ class OrderViewOrderFeature {
                 orderDetails = await Order.query()
                     .where("id", orderId)
                     .with("order_notification", builder => {
-                        builder.with("buyer_details")
-                        builder.with("seller_details")
+                        builder.with("buyer_details.profile")
+                        builder.with("seller_details.profile")
+                        builder.with("order_address.country_code")
+                        builder.with("order_address.state")
+                        builder.with("order_address.province")
                         builder.with("order_items")
                     })
                     .fetch()
@@ -28,15 +31,14 @@ class OrderViewOrderFeature {
                     message: "Successfully returned the order details",
                     status_code: 200,
                     status: "success",
-                    results: orderDetailsSummary
+                    results: orderDetails
                 })
             } else {
                 orderDetails = await Order.query()
                     .where("id", orderId)
                     .with("order_notification", builder => {
-                        builder.with("buyer_details")
-                        builder.with("seller_details")
                         builder.with("order_items")
+
                     })
                     .fetch()
 
@@ -44,7 +46,7 @@ class OrderViewOrderFeature {
                     message: "Successfully returned the order details",
                     status_code: 200,
                     status: "success",
-                    results: orderDetailsSummary
+                    results: orderDetails
                 })
             }
 
