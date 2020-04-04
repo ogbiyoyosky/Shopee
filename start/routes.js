@@ -146,7 +146,7 @@ Route.group(() => {
   Route.patch("orders/:order_id/add-shipping-cost", "Order/OrderController.addShippingCost").middleware(["auth", "shopAdmin"])
   Route.get("products", "Product/ProductController.fetchProduct");
   Route.get("search", "SearchController.index");
-  Route.get("order/delivered/order_id", "Order/OrderController.delivered").middleware(["auth", "shopAdmin"]);
+  Route.get("order/delivered/:order_id", "Order/OrderController.delivered").middleware(["auth", "shopAdmin"]);
   Route.get("order/confirmDelivery/:order_id", "Order/OrderController.confirmDelivered").middleware(["auth"]);
   Route.post("order/extendTime/:order_id", "Order/OrderController.extendTime").middleware(["auth"]);
 

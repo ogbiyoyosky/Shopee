@@ -48,7 +48,7 @@ class OrderController {
                 })
             }
 
-            const order = await Order.findBy("id", orderId)
+            const order = await Order.findBy("id", order_id)
 
             if (order) {
                 order.delivered_at = moment().format('YYYY-MM-DD HH:mm:ss')
@@ -70,7 +70,7 @@ class OrderController {
 
 
         } catch (error) {
-
+            console.log(error)
         }
     }
 
@@ -84,7 +84,7 @@ class OrderController {
                 })
             }
 
-            const order = await Order.findBy("id", orderId)
+            const order = await Order.findBy("id", order_id)
 
             if (order) {
 
@@ -105,7 +105,7 @@ class OrderController {
                 status_code: 400
             })
         } catch (error) {
-
+            console.log(error)
         }
     }
 
@@ -119,17 +119,29 @@ class OrderController {
                     status_code: 400
                 })
             }
-            const order = await Order.findBy("id", orderId)
+            const order = await Order.findBy("id", order_id)
 
             if (order) {
                 if (time == "24H") {
                     order.delivery_time_addon = time
                     await order.save()
 
+                    return response.status(200).send({
+                        message: "successfully exxtended the sellers time",
+                        status: "success",
+                        status_code: 200
+                    })
+
 
                 } else if (time == "48H") {
-                    order.delivering_time_addon = time
+                    order.delivery_time_addon = time
                     await order.save()
+
+                    return response.status(200).send({
+                        message: "successfully exxtended the sellers time",
+                        status: "success",
+                        status_code: 200
+                    })
 
 
                 } else {
@@ -149,7 +161,7 @@ class OrderController {
             })
 
         } catch (error) {
-
+            console.log(error)
         }
     }
 

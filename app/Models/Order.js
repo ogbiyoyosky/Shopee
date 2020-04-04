@@ -14,7 +14,7 @@ class Order extends Model {
             if (delivery_time_addon == "24H") {
                 const paidTime = is_paid_at.getTime()
                 const extendedTime = 24 * 3600000
-                return paidTime + extendedTime
+                return new Date(extendedTime + paidTime)
 
             } else if (delivery_time_addon == "24H") {
                 const paidTime = is_paid_at.getTime()
