@@ -38,14 +38,14 @@ class UserSeeder {
 				},
 				{
 					password: 'secret',
-					phone_number: 8101075052,
+					phone_number: 8101075051,
 					email: "ogbiyoyosky.gmail.com",
 					role_id: 2,
 					is_activated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
 				},
 				{
 					password: 'secret',
-					phone_number: 8101075052,
+					phone_number: 8101075054,
 					email: "ogbiyoyosky.yahoo.com",
 					role_id: 3,
 					is_activated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -70,6 +70,14 @@ class UserSeeder {
 			.insert([
 				{
 					user_id: 1,
+					balance: 0
+				},
+				{
+					user_id: 2,
+					balance: 0
+				},
+				{
+					user_id: 3,
 					balance: 0
 				},
 			])
