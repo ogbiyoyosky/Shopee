@@ -12,7 +12,7 @@ class AddressSchema extends Schema {
       table.string('address')
       table.integer('province_id')
       table.integer('state_id')
-      table.string('country_id')
+      table.integer('country_id')
       table.timestamps()
     })
   }

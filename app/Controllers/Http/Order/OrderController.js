@@ -106,6 +106,11 @@ class OrderController {
             })
         } catch (error) {
             console.log(error)
+            return response.status(500).send({
+                status: "Fail",
+                message: "Internal Server Error",
+                status_code: 500
+            })
         }
     }
 
@@ -162,6 +167,41 @@ class OrderController {
 
         } catch (error) {
             console.log(error)
+            return response.status(500).send({
+                status: "Fail",
+                message: "Internal Server Error",
+                status_code: 500
+            })
+        }
+    }
+
+    async allOrders({ response }) {
+        try {
+            const orderDetails = await Order.query()
+                .with("order_notification", builder => {
+                    builder.with("buyer_details.profile")
+                    builder.with("seller_details.profile")
+                    builder.with("order_address.country_code")
+                    builder.with("order_address.state")
+                    builder.with("order_address.province")
+                    builder.with("order_items")
+                })
+                .fetch()
+
+            return response.status(200).send({
+                message: "Successfully returned the order details",
+                status_code: 200,
+                status: "success",
+                results: orderDetails
+            })
+
+        } catch (error) {
+            console.log("allOrderError", error)
+            return response.status(500).send({
+                status: "Fail",
+                message: "Internal Server Error",
+                status_code: 500
+            })
         }
     }
 

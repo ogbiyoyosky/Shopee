@@ -55,6 +55,11 @@ Route.group(() => {
     "Auth/Confirm/:confirmation_token",
     "Authentication/AuthController.confirmAccount"
   );
+  Route.get(
+    "/users/:user_id/ban",
+    "Authentication/AuthController.ban"
+  ).middleware(["auth", "superAdmin"]);;
+
   Route.post("Auth/Logout", "Authentication/AuthController.logout").middleware(
     "auth"
   );
@@ -78,7 +83,7 @@ Route.group(() => {
     "Store/ActivateStore/:store_id",
     "Store/StoreController.activateStore"
   )
-    .middleware(["auth", "superAdmin"])
+    .middleware(["auth",])
     .validator("ActivateStore");
   Route.get(
     "Store/FetchStores",
@@ -147,6 +152,7 @@ Route.group(() => {
   Route.get("products", "Product/ProductController.fetchProduct");
   Route.get("search", "SearchController.index");
   Route.get("order/delivered/:order_id", "Order/OrderController.delivered").middleware(["auth", "shopAdmin"]);
+  Route.get("admin/orders/", "Order/OrderController.allOrders").middleware(["auth", "superAdmin"]);
   Route.get("order/confirmDelivery/:order_id", "Order/OrderController.confirmDelivered").middleware(["auth"]);
   Route.post("order/extendTime/:order_id", "Order/OrderController.extendTime").middleware(["auth"]);
 
