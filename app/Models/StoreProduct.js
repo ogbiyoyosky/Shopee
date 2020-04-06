@@ -14,6 +14,10 @@ class StoreProduct extends Model {
 		return value
 	}
 
+	store() {
+		return this.hasOne("App/Models/Store", "store_id", "id")
+	}
+
 	image() {
 		return this.hasOne("App/Models/Image", "image_id", "id")
 	}

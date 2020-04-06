@@ -13,13 +13,14 @@ class FetchProductInStoreFeature {
 				page,
 				limit
 			} = this.request.get();
-			
+
 			const produceInStore = await StoreProduct.query()
 				.whereNull("deleted_at")
 				.andWhere("store_id", storeId)
 				.with("main_product_images")
 				.with("category")
 				.with("sub_category")
+				.with("store")
 				.with("tags")
 				.paginate(page, limit);
 

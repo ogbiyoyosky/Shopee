@@ -4,10 +4,7 @@
 const Model = use('Model')
 
 class ProductVariant extends Model {
-  product_variant_images() {
-    return this.belongsToMany('App/Models/Image', "variant_id", "image_id")
-      .pivotTable('product_variant_images')
-  }
+
 
   static get hidden() {
     return [
