@@ -4,13 +4,14 @@ const ConfirmAccountFeature = use('App/Controllers/Features/ConfirmAccountFeatur
 const LoginUserFeature = use('App/Controllers/Features/LoginUserFeature')
 const LogoutUserFeature = use('App/Controllers/Features/LogoutUserFeature')
 const GenerateTokenFeature = use('App/Controllers/Features/GenerateTokenFeature')
+const User = use("App/Models/User")
 
 class AuthController {
     register({
         request,
         response
     }) {
-      return new RegisterUserFeature(request,response).registerUser()
+        return new RegisterUserFeature(request, response).registerUser()
     }
 
     confirmAccount({
@@ -20,31 +21,53 @@ class AuthController {
             confirmation_token
         }
     }) {
-      return new ConfirmAccountFeature(request,response).confirmUserAccount(confirmation_token)
+        return new ConfirmAccountFeature(request, response).confirmUserAccount(confirmation_token)
     }
 
     loginUser({
         request,
         response,
         auth
-    }){
-        return new LoginUserFeature(request,response, auth).login()
+    }) {
+        return new LoginUserFeature(request, response, auth).login()
     }
 
     logout({
         request,
         response,
         auth
-    }){
-        return new LogoutUserFeature(request,response, auth).logout()
+    }) {
+        return new LogoutUserFeature(request, response, auth).logout()
     }
 
     generateToken({
         request,
         response,
         auth
-    }){
-        return new GenerateTokenFeature(request,response, auth).generateToken()
+    }) {
+        return new GenerateTokenFeature(request, response, auth).generateToken()
+    }
+
+    async ban({ response, params: { user_id } }) {
+        try {
+            const user = await User.findBy("id", user_id)
+            user.is_ban = 1
+            await user.save()
+
+            return response.status(200).send({
+                message: "Successfully ban the user",
+                status: "success",
+                status_code: 200
+            })
+        } catch (error) {
+            console.log(error)
+            return response.status(500).send({
+                status: "Fail",
+                message: "Internal Server Error",
+                status_code: 500
+            })
+
+        }
     }
 }
 

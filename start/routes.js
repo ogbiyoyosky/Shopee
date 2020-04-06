@@ -55,6 +55,11 @@ Route.group(() => {
     "Auth/Confirm/:confirmation_token",
     "Authentication/AuthController.confirmAccount"
   );
+  Route.get(
+    "/users/:user_id/ban",
+    "Authentication/AuthController.ban"
+  ).middleware(["auth", "superAdmin"]);
+
   Route.post("Auth/Logout", "Authentication/AuthController.logout").middleware(
     "auth"
   );
@@ -78,7 +83,7 @@ Route.group(() => {
     "Store/ActivateStore/:store_id",
     "Store/StoreController.activateStore"
   )
-    .middleware(["auth", "superAdmin"])
+    .middleware(["auth"])
     .validator("ActivateStore");
   Route.get(
     "Store/FetchStores",
@@ -130,18 +135,54 @@ Route.group(() => {
     "Store/StoreController.deleteProduct"
   ).middleware(["auth", "shopAdmin"]);
 
-
   Route.get("Product/categories", "Product/ProductController.getCategories");
 
-  Route.get("products", 'Product/ProductController.fetchProduct')
+  Route.get("products", "Product/ProductController.fetchProduct");
 
-  Route.post("orders", 'Order/OrderController.createOrder').middleware(['auth'])
-  Route.get("orders/notifications", "Order/OrderController.fetchSellerOrderNotifications").middleware(["auth", "shopAdmin"])
-  Route.get("orders/:order_id", "Order/OrderController.viewOrder").middleware(["auth"])
-  Route.put("orders/:order_id", "Order/OrderController.editOrder").middleware(["auth"])
-  Route.patch("orders/:order_id/add-shipping-cost", "Order/OrderController.addShippigCost").middleware(["auth", "shopAdmin"])
+  Route.post("orders", "Order/OrderController.createOrder").middleware([
+    "auth"
+  ]);
+  Route.post("order/pay", "Order/OrderController.payForOrder").middleware([
+    "auth"
+  ]);
+  Route.get(
+    "seller/orders",
+    "Order/OrderController.fetchSellerOrderNotifications"
+  ).middleware(["auth", "shopAdmin"]);
+  Route.get(
+    "buyer/orders",
+    "Order/OrderController.fetchBuyerOrderNotification"
+  ).middleware(["auth"]);
+  Route.get("orders/:order_id", "Order/OrderController.viewOrder").middleware([
+    "auth"
+  ]);
+  Route.post("chat", "Chat/ChatController.sendMessage").middleware(["auth"]);
+  Route.get("chat/:order_id", "Chat/ChatController.fetchMessage").middleware([
+    "auth"
+  ]);
+  Route.put("orders/:order_id", "Order/OrderController.editOrder").middleware([
+    "auth"
+  ]);
+  Route.patch(
+    "orders/:order_id/add-shipping-cost",
+    "Order/OrderController.addShippingCost"
+  ).middleware(["auth", "shopAdmin"]);
   Route.get("products", "Product/ProductController.fetchProduct");
   Route.get("search", "SearchController.index");
-
-}).prefix('api/v1')
-
+  Route.get(
+    "order/delivered/:order_id",
+    "Order/OrderController.delivered"
+  ).middleware(["auth", "shopAdmin"]);
+  Route.get("admin/orders/", "Order/OrderController.allOrders").middleware([
+    "auth",
+    "superAdmin"
+  ]);
+  Route.get(
+    "order/confirmDelivery/:order_id",
+    "Order/OrderController.confirmDelivered"
+  ).middleware(["auth"]);
+  Route.post(
+    "order/extendTime/:order_id",
+    "Order/OrderController.extendTime"
+  ).middleware(["auth"]);
+}).prefix("api/v1");

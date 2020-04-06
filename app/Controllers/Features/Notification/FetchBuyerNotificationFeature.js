@@ -1,30 +1,31 @@
 "use strict";
 const Database = use("Database");
+const OrderProduct = use("App/Models/OrderProduct");
 
-class NotificationFetchSellerOrderNotificationFeature {
+class NotificationFetchBuyerNotificationFeature {
   constructor(request, response, auth) {
     this.request = request;
     this.response = response;
     this.auth = auth;
   }
 
-  async fetchSellerOrderNotifications() {
+  async fetchBuyerOrderNotification() {
     try {
       const userId = this.auth.current.user.id;
-      const orderNotification = await Database.from("order_notifications")
+      let orderNotification = await Database.from("order_notifications")
         .select(
           "orders.id as order_id",
-          "buyer_id",
+          "seller_id",
           "orders.amount",
           "orders.declined_at",
-          "orders.is_paid_at",
           "orders.created_at",
+          "orders.is_paid_at",
           "orders.buyer_accepted_at",
           "orders.shipping_cost",
           "store_products.product_name",
           "order_products.product_id"
         )
-        .where("seller_id", userId)
+        .where("buyer_id", userId)
         .innerJoin("users", "order_notifications.buyer_id", "users.id")
         .innerJoin(
           "order_products",
@@ -39,16 +40,23 @@ class NotificationFetchSellerOrderNotificationFeature {
         )
         .orderBy("orders.created_at", "desc");
 
+      for (var order in orderNotification) {
+        const query = await Database.from("order_products")
+          .where("order_id", orderNotification[order].order_id)
+          .count();
+        orderNotification[order].product_count = query[0]["count(*)"];
+      }
+
       return this.response.status(200).send({
         message: "Successfully returned all order notifications",
         status_code: 200,
         status: "success",
         results: orderNotification
       });
-    } catch (fetchSellerOrderNotificationsError) {
+    } catch (fetchBuyerOrderNotificationError) {
       console.log(
-        "fetchSellerOrderNotificationsError",
-        fetchSellerOrderNotificationsError
+        "fetchBuyerOrderNotification",
+        fetchBuyerOrderNotificationError
       );
       return this.response.status(500).send({
         status: "Fail",
@@ -58,4 +66,4 @@ class NotificationFetchSellerOrderNotificationFeature {
     }
   }
 }
-module.exports = NotificationFetchSellerOrderNotificationFeature;
+module.exports = NotificationFetchBuyerNotificationFeature;

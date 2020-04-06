@@ -18,7 +18,8 @@ class InitializePaymentFeature {
     try {
       const {
         amount,
-        transaction_type_id
+        transaction_type_id,
+        redirect_url
       } = this.request.all()
 
       // const amount = 10
@@ -75,6 +76,10 @@ class InitializePaymentFeature {
                 display_name: "Token",
                 variable_name: "tkn",
                 value: token
+              }, {
+                display_name: "Url",
+                variable_name: "url",
+                value: redirect_url
               }
             ]
           }

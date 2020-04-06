@@ -4,17 +4,17 @@
 const Schema = use('Schema')
 
 class WalletSchema extends Schema {
-  up () {
+  up() {
     this.create('wallets', (table) => {
       table.increments()
       table.integer('user_id')
-      table.integer('balance').defaultTo(0)
+      table.float('balance').defaultTo(0)
       table.timestamp('created_at').defaultTo(this.fn.now())
       table.timestamp('updated_at').defaultTo(this.fn.now())
     })
   }
 
-  down () {
+  down() {
     this.drop('wallets')
   }
 }

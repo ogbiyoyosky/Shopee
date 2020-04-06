@@ -13,12 +13,12 @@ class FetchProductsFeature {
 			const {
 				page,
 				limit,
-				category_id
+				category_id,
+				store_id
 			} = this.request.get();
 
 			let produceInStore
 
-			console.log(category_id)
 
 			if (category_id) {
 				produceInStore = await StoreProduct.query()
@@ -28,7 +28,31 @@ class FetchProductsFeature {
 					.with("category")
 					.with("sub_category")
 					.with("tags")
+					.with("store")
 					.paginate(page, limit);
+			} else if (store_id) {
+				produceInStore = await StoreProduct.query()
+					.whereNull("deleted_at")
+					.andWhere("store_id", store_id)
+					.with("main_product_images")
+					.with("category")
+					.with("sub_category")
+					.with("tags")
+					.with("store")
+					.paginate(page, limit);
+
+			} else if (store_id && category_id) {
+				produceInStore = await StoreProduct.query()
+					.whereNull("deleted_at")
+					.andWhere("store_id", store_id)
+					.andWhere('category_id', category_id)
+					.with("main_product_images")
+					.with("category")
+					.with("sub_category")
+					.with("tags")
+					.with("store")
+					.paginate(page, limit);
+
 			} else {
 				produceInStore = await StoreProduct.query()
 					.whereNull("deleted_at")
@@ -36,8 +60,8 @@ class FetchProductsFeature {
 					.with("category")
 					.with("sub_category")
 					.with("tags")
+					.with("store")
 					.paginate(page, limit);
-
 			}
 
 
