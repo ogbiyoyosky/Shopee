@@ -1,41 +1,40 @@
-'use strict'
+"use strict";
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const Model = use("Model");
 
 class Order extends Model {
+  static get computed() {
+    return ["expiring_time"];
+  }
 
-    static get computed() {
-        return ['expiring_time']
-    }
+  getExpiringTime({ is_paid_at, delivery_time_addon }) {
+    const paidAtToMilisecs = new Date(is_paid_at).getTime();
+    const DAY_IN_MILISECS = 86400000;
+    const getMilisecondsOffset = offset => paidAtToMilisecs + offset;
 
-    getExpiringTime({ is_paid_at, delivery_time_addon }) {
-        if (is_paid_at) {
-            if (delivery_time_addon == "24H") {
-                const paidTime = is_paid_at.getTime()
-                const extendedTime = 24 * 3600000
-                return new Date(extendedTime + paidTime)
+    const increaseByADay = () =>
+      new Date(getMilisecondsOffset(DAY_IN_MILISECS));
 
-            } else if (delivery_time_addon == "24H") {
-                const paidTime = is_paid_at.getTime()
-                const extendedTime = 48 * 3600000
-                return new Date(extendedTime + paidTime)
+    const increaseByTwoDays = () =>
+      new Date(getMilisecondsOffset(DAY_IN_MILISECS * 2));
 
-            } else {
-                const paidTime = is_paid_at.getTime()
-                const extendedTime = 0
-                return new Date(extendedTime + paidTime)
-            }
+    const handleDefault = () => {
+      return increaseByTwoDays();
+    };
 
-        } else {
-            return null
-        }
+    let handlers = {
+      "24H": increaseByADay(),
+      "48H": increaseByTwoDays(),
+      "0H": handleDefault()
+    };
 
-    }
+    return is_paid_at ? handlers[delivery_time_addon] : null;
+  }
 
-    order_notification() {
-        return this.hasOne("App/Models/OrderNotification", 'id', 'order_id')
-    }
+  order_notification() {
+    return this.hasOne("App/Models/OrderNotification", "id", "order_id");
+  }
 }
 
-module.exports = Order
+module.exports = Order;
