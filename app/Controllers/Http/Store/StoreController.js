@@ -52,13 +52,9 @@ class StoreController {
     return new FetchProductCategoryFeature(response).fetchCategory(category_id);
   }
 
-  async listProduct({ request, response, params: { store_id } }) {
-    return new FetchProduceInStoreFeature(request, response).fetchProduct(
-      store_id
-    );
+  async listProduct({ request, response, auth }) {
+    return new FetchProduceInStoreFeature(request, response, auth).fetchProduct();
   }
-
-  
 
   async editProduct({ request, response, auth, params: { product_id } }) {
     return new EditProductFeature(request, response, auth).editProduct(
@@ -72,9 +68,9 @@ class StoreController {
     );
   }
 
- 
 
-  
+
+
 }
 
 module.exports = StoreController;

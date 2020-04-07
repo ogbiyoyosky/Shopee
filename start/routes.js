@@ -126,7 +126,7 @@ Route.group(() => {
     .validator("EditProduct");
 
   Route.get(
-    "Store/:store_id/Product",
+    "Store/Product",
     "Store/StoreController.listProduct"
   ).middleware(["auth", "shopAdmin"]);
 
@@ -169,7 +169,7 @@ Route.group(() => {
   ).middleware(["auth", "shopAdmin"]);
   Route.get("products", "Product/ProductController.fetchProduct");
   Route.get("search", "SearchController.index");
-  Route.get(
+    Route.get(
     "order/delivered/:order_id",
     "Order/OrderController.delivered"
   ).middleware(["auth", "shopAdmin"]);
@@ -186,3 +186,40 @@ Route.group(() => {
     "Order/OrderController.extendTime"
   ).middleware(["auth"]);
 }).prefix("api/v1");
+
+ 
+Route.get("/email", ({ view }) => {
+  return view.render("emails.order_confirmation", {
+    shop: {
+      url: "http://hello.com",
+      shop_name: "New Shop"
+    },
+
+    order_details: {
+      order_items: [
+        {
+          item_name: "Iphone X max",
+          item_image: "https://res.cloudinary.com/dvnhikylo/image/upload/v1586245651/k5lhiqa1ecukaz3tdtwi.jpg",
+          qty: 12,
+          price: 200,
+        },
+        {
+          item_name: "Iphone X max",
+          item_image: "https://res.cloudinary.com/dvnhikylo/image/upload/v1586245651/k5lhiqa1ecukaz3tdtwi.jpg",
+          qty: 12,
+          price: 200,
+          discount: 50
+        }, {
+          item_name: "Iphone X max",
+          item_image: "https://res.cloudinary.com/dvnhikylo/image/upload/v1586245651/k5lhiqa1ecukaz3tdtwi.jpg",
+          qty: 12,
+          price: 200,
+          discount: 50
+        }
+      ]
+    }
+  })
+})
+
+
+
