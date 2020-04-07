@@ -1,5 +1,6 @@
 "use strict";
 const StoreProduct = use("App/Models/StoreProduct");
+const Store = use("App/Models/Store");
 
 class FetchProductInStoreFeature {
 	constructor(request, response) {
@@ -7,12 +8,20 @@ class FetchProductInStoreFeature {
 		this.response = response;
 	}
 
-	async fetchProduct(storeId) {
+	async fetchProduct() {
 		try {
 			const {
 				page,
 				limit
 			} = this.request.get();
+
+			const { id } = await this.auth.current.user
+
+			const store = await Store.query()
+				.where("user_id", id)
+				.first()
+
+			const storeId = store.id
 
 			const produceInStore = await StoreProduct.query()
 				.whereNull("deleted_at")
