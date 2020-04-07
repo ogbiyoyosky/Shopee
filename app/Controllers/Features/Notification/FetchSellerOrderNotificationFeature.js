@@ -17,7 +17,7 @@ class NotificationFetchSellerOrderNotificationFeature {
           "buyer_id",
           "orders.amount",
           "orders.declined_at",
-          "orders.declined_at",
+          "orders.is_paid_at",
           "orders.created_at",
           "orders.buyer_accepted_at",
           "orders.shipping_cost",
