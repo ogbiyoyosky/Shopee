@@ -49,8 +49,11 @@ class AddProductFeature {
 					status_code: 400
 				});
 			}
+			let tags
+			if (tag) {
+				tags = JSON.parse(tag);
+			}
 
-			const tags = JSON.parse(tag);
 			const productImage = this.request.file("product_image", {
 				types: ["image"]
 			});
@@ -100,10 +103,13 @@ class AddProductFeature {
 				}
 			}
 
-			await this.processTags({
-				tags,
-				productId: product.id
-			});
+			if (tags) {
+				await this.processTags({
+					tags,
+					productId: product.id
+				});
+			}
+
 
 
 			await product.main_product_images().attach(imageIds);
