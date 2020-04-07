@@ -51,7 +51,7 @@ class AddProductFeature {
 			}
 			let tags
 			if (tag) {
-				tags = JSON.parse(tag);
+				tags = tag;
 			}
 
 			const productImage = this.request.file("product_image", {
