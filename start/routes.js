@@ -172,7 +172,6 @@ Route.get("/email", ({ view }) => {
           item_image: "https://res.cloudinary.com/dvnhikylo/image/upload/v1586245651/k5lhiqa1ecukaz3tdtwi.jpg",
           qty: 12,
           price: 200,
-          discount: 50
         },
         {
           item_name: "Iphone X max",
