@@ -16,12 +16,38 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
 
-// Route.on('/').render('welcome')
-Route.get("/", ({ view }) => {
+
+
+//Route.on('/').render('welcome')
+
+Route.get("/", () => {
+
   return {
     Shopee: "Welcome to Shopee Api"
   };
 });
+
+Route.group(() => {
+  Route.get('/', ({ subdomains }) => {
+    console.log(subdomains.api)
+
+    return {
+      Shopee: "Welcome to Shopee Api subdomain"
+    };
+  })
+
+}).domain(':api.localhost')
+
+Route.group(() => {
+  Route.get('/', ({ subdomains }) => {
+
+    return {
+      Shopee: "Welcome to Shopee Api"
+    };
+  })
+
+})
+
 
 Route.post("webhook/deploy", "Webhook/WebhookController.deploy");
 
@@ -191,7 +217,6 @@ Route.group(() => {
 Route.get("/email", ({ view }) => {
   return view.render("emails.order_confirmation", {
     shop: {
-      url: "http://hello.com",
       shop_name: "New Shop"
     },
 
@@ -220,3 +245,6 @@ Route.get("/email", ({ view }) => {
     }
   })
 })
+
+
+

@@ -3,9 +3,10 @@ const StoreProduct = use("App/Models/StoreProduct");
 const Store = use("App/Models/Store");
 
 class FetchProductInStoreFeature {
-	constructor(request, response) {
+	constructor(request, response, auth) {
 		this.request = request;
 		this.response = response;
+		this.auth = auth;
 	}
 
 	async fetchProduct() {

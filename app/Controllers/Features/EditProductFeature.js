@@ -6,6 +6,8 @@ const {
 } = use("App/HelperFunctions/UploadImage");
 const Image = use("App/Models/Image");
 const ProductTag = use("App/Models/ProductTag");
+const User = use("App/Models/User")
+const moment = require("moment")
 
 class EditProductFeature {
 	constructor(request, response, auth) {
@@ -32,11 +34,11 @@ class EditProductFeature {
 		}
 	}
 
-  /**
-   *
-   * @param {Integer} product_id - id of the product
-   * @return {Object} -response -ctx
-   */
+	/**
+	 *
+	 * @param {Integer} product_id - id of the product
+	 * @return {Object} -response -ctx
+	 */
 	async editProduct(productId) {
 		try {
 			const user = this.auth.current.user;
@@ -53,6 +55,8 @@ class EditProductFeature {
 				tag,
 				price
 			} = this.request.all();
+
+
 
 			if (user_store.is_activated_at == null) {
 				return this.response.status(400).send({
@@ -107,6 +111,10 @@ class EditProductFeature {
 
 			//add to pivot table
 			await product.main_product_images().sync(imagesIds);
+
+			const userDetail = await User.findBy("id", user_id)
+			userDetail.last_updated_item = moment().format('YYYY-MM-DD HH:mm:ss')
+			await userDetail.save()
 			return this.response.status(200).send({
 				message: "Product successfully updated",
 				status_code: 200,

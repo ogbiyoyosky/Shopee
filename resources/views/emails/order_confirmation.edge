@@ -67,7 +67,7 @@ NOTES:
         .btn {
             text-decoration: none;
             color: #FFF;
-            background-color: #666;
+            background-color: orangered;
             width: 80%;
             padding: 15px 10%;
             font-weight: bold;
@@ -358,17 +358,19 @@ NOTES:
 <body bgcolor="#FFFFFF">
 
     <!-- HEADER -->
-    <table class="head-wrap" bgcolor="#ff4259">
+    <table class="head-wrap" bgcolor="#eee">
         <tr>
             <td></td>
             <td class="header container">
 
                 <div class="content">
-                    <table bgcolor="#ff4259">
+                    <table bgcolor="#eee">
                         <tr>
                             <td>
-                                <a href="shop" title="shop name" alt="" /><img src="{{ 'logo.png' | asset_url }}"
-                                    style="width:70px;height:auto;" /></a>
+                                <a href="shop" title="shop name" alt=""
+                                    style="width:70px; color: #fff; font-size: 25px;height:auto;" />
+                                <a href="timeshoppy.com"><img src="https://timeshoppy.com/assets/images/icon/logo.png"
+                                        alt=""></a></a>
                             </td>
                             <td align="right">
                                 <h6 class="collapse">Order Confirmed</h6>
@@ -394,28 +396,29 @@ NOTES:
                         <tr>
                             <td>
                                 <br />
-                                <h3>Thanks Emmanuel, </h3>
+                                <h3>Thanks {{order_details.order_notification.buyer_details.profile.first_name}}, </h3>
 
                                 <!-- You may like to include a Hero Image -->
-                                <p><img src="http://placekitten.com/g/600/300" alt="" /></p>
+                                <p><img src="https://i.ibb.co/HxNSfn7/7-Best-Practices-for-an-e-Commerce-Thank-You-Pages-Banner-1.jpg"
+                                        alt="" /></p>
                                 <!-- /Hero Image -->
 
                                 <br />
 
-                                <h4>Your Order <small>Date</small></h4>
-                                <p>Thank you for placing your order with shop name. This email is to confirm your
-                                    order has been placed successfully, and will be processed & shipped to you soon.</p>
-
+                                <h4>Your Order <small>placed {{date}}</small></h4>
+                                <p>Thank you for placing your order with timeshoppy. This email is to confirm your
+                                    order has been placed successfully, and will be processed & shipped to you soon by
+                                    the seller.</p>
                                 <br />
 
                                 <!-- Line Items -->
                                 <!--for each -->
-                                @each(item in order_details.order_items)
+                                @each(item in order_details.order_notification.order_items)
                                 <div class="products">
 
-                                    <img src="{{item.item_image}}" />
-                                    <span class="item-title"> {{item.item_name}} </span> <br />
-                                    <span class="item-price"">NGN 200 (1 piece) </span>
+                                    <img src="{{item.main_product_images[0].image_url}}" />
+                                    <span class="item-title"> {{item.product_name}} </span> <br />
+                                    <span class="item-price"">NGN {{item.price * (item.discount / 100)}} ({{item.pivot.qty}} piece) </span>
 
                                 </div>
                                 <hr>
@@ -425,7 +428,7 @@ NOTES:
                                 <br />
 
                                 <!-- Totals -->
-                                <h5><b>Subtotal:</b> {{ shop.shop_name }}</h5>
+                                <h5><b>Subtotal:</b> NGN {{sub_total  }}</h5>
 
                                 <!-- Totals -->
                                 <table class="columns" width="100%">
@@ -435,7 +438,7 @@ NOTES:
                                             <table align="left" class="column">
                                                 <tr>
                                                     <td>
-                                                        <p><b>Shipping:</b> shiping fee
+                                                        <p><b>Shipping:</b> NGN {{shipping_fee}}
                                                         </p>
                                                     </td>
                                                 </tr>
@@ -443,14 +446,7 @@ NOTES:
                                             <!-- /column 1 -->
 
                                             <!--- column 2 -->
-                                            <table align="left" class="column">
-                                                <tr>
-                                                    <td>
-                                                        <p><b>Discounts:</b>
-                                                            1000</p>
-                                                    </td>
-                                                </tr>
-                                            </table>
+
                                             <!-- /column 2 -->
 
                                             <!-- /Discounts -->
@@ -463,13 +459,13 @@ NOTES:
                                 <!-- /Totals -->
                                 <!-- foreach -->
 
-                                <p><b>tax title:</b> Tax price</p>
-
-
-                                <br />
+                                <p><b>VAT </b>NGN {{vat}}</p>
                                 <br />
 
-                                <h4><b>Total:1000</b></h4>
+                                <p><b>Service Charge </b>NGN {{  service_charge}}</p>
+                                <br />
+
+                                <h4><b>Total: NGN {{total}}}</b></h4>
                                 <!-- /Totals -->
 
                                 <br />
@@ -485,40 +481,40 @@ NOTES:
                                                     <td>
                                                         <h5 class="">Shipping address</h5>
                                                         <p class="">
-                                                            10 balogun stree isolo<br />
-                                                            street<br />
-                                                            Isolo<br />
-                                                            province
-                                                            zip<br />
-                                                            country</p>
+                                                            {{order_details.order_notification.order_address[0].address}}<br />
+                                                            {{order_details.order_notification.order_address[0].province.province_label}}<br />
+                                                            {{order_details.order_notification.order_address[0].state.state_label}}<br />
+                                                            {{order_details.order_notification.order_address[0].country_code.name}}
+                                                        </p>
                                                         </p>
                                                     </td>
                                                 </tr>
                                             </table>
+
                                             <!-- /column 1 -->
 
-
-
-                                            <!--- column 2 -->
                                             <table align="left" class="column">
                                                 <tr>
                                                     <td>
-                                                        <h5 class="">Billing address</h5>
+                                                        <h5 class="">Sellers Details</h5>
                                                         <p class="">
-                                                            address name<br />
-                                                            street<br />
-                                                            city<br />
-                                                            privince
-                                                            zip<br />
-                                                            country</p>
+                                                            {{order_details.order_notification.seller_details.profile.first_name}}
+                                                            {{order_details.order_notification.seller_details.profile.last_name}}
+                                                            <br />
+                                                            0{{order_details.order_notification.seller_details.phone_number}}<br />
+                                                            {{shop.shop_name}}<br />
+
                                                         </p>
                                                     </td>
                                                 </tr>
                                             </table>
+
+
+                                            <!--- column 2 -->
+
                                             <!-- /column 2 -->
 
 
-                                            <span class="clear"></span>
 
                                         </td>
                                     </tr>
@@ -528,13 +524,14 @@ NOTES:
                                 <br />
 
                                 <p style="text-align:center;">
-                                    <a class="btn" href="/account">Log in to view your order &raquo;</a>
+                                    <a class="btn" href="http://timeshoppy.com/login">Log in
+                                        to view your
+                                        order &raquo;</a>
                                 </p>
 
                                 <br />
 
-                                <p><small>If you can't get the button to work, paste this link into your browser:
-                                        /account</small></p>
+
 
                             </td>
                         </tr>
@@ -548,7 +545,7 @@ NOTES:
     <!-- /BODY -->
 
     <!-- FOOTER -->
-    <table class="footer-wrap" bgcolor="#ff4259">
+    <table class="footer-wrap" bgcolor="#eee">
         <tr>
             <td></td>
             <td class="container">
@@ -558,13 +555,14 @@ NOTES:
                     <table>
                         <tr>
                             <td align="center">
-                                <p>Thank you for shopping at <a href="" style="color:#111111;">shop
-                                        name</a>!</p>
-                                <a href="" title="shop name"><img src="" style="width:40px;height:auto;"
-                                        alt="name" /></a>
+                                <p>Thank you for shopping at <a href="timeshpoppy.com"
+                                        style="color:#111111;">timeshoppy.com</a></p>
+                                <a href="" title="shop name"><img
+                                        src="https://timeshoppy.com/assets/images/icon/logo.png"
+                                        style="width:40px;height:auto;" alt="name" /></a>
                                 <br /><br />
-                                <p><strong><a href="" style="color:#111111;">email</a></strong></p>
-                                <p><small>© shop name</small></p>
+                                <p><strong><a href="" style="color:#111111;">support@timeshoppy.com</a></strong></p>
+                                <p><small>© Timeshoppy</small></p>
                             </td>
                         </tr>
                     </table>
