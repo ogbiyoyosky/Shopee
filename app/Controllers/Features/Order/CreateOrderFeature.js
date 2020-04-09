@@ -8,6 +8,7 @@ const Wallet = use("App/Models/Wallet");
 const Address = use("App/Models/Address")
 const OrderAddress = use("App/Models/OrderAddress")
 const randomString = require('randomstring')
+const GeneralSetting = use("App/Models/GeneralSetting")
 const moment = require("moment")
 
 
@@ -72,18 +73,27 @@ class OrderCreateOrderFeature {
                 })
             }
 
+            const setting = await GeneralSetting.all()
+            const serializedSettings = setting.toJSON()
+
+
+
             const totalAmount = itemsToBeCalculated.map(item => item.itemPrice * item.selectedQty)
                 .reduce(function (accumulator, item) {
                     return accumulator + item
                 }, 0);
 
+            const vat = totalAmount * (serializedSettings[0].vat / 100)
+            const serviceCharge = totalAmount * (serializedSettings[0].service_charge / 100)
             const token = randomString.generate(15)
+
 
 
             const newOrder = new Order()
             newOrder.user_id = userId
             newOrder.amount = totalAmount
-            newOrder.service_charge = 220
+            newOrder.vat = vat
+            newOrder.service_charge = serviceCharge
             newOrder.placement_code = token
             await newOrder.save()
 

@@ -16,12 +16,38 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
 
-// Route.on('/').render('welcome')
-Route.get("/", ({ view }) => {
+
+
+//Route.on('/').render('welcome')
+
+Route.get("/", () => {
+
   return {
     Shopee: "Welcome to Shopee Api"
   };
 });
+
+Route.group(() => {
+  Route.get('/', ({ subdomains }) => {
+    console.log(subdomains.api)
+
+    return {
+      Shopee: "Welcome to Shopee Api subdomain"
+    };
+  })
+
+}).domain(':api.localhost')
+
+Route.group(() => {
+  Route.get('/', ({ subdomains }) => {
+
+    return {
+      Shopee: "Welcome to Shopee Api"
+    };
+  })
+
+})
+
 
 Route.post("webhook/deploy", "Webhook/WebhookController.deploy");
 
@@ -169,7 +195,7 @@ Route.group(() => {
   ).middleware(["auth", "shopAdmin"]);
   Route.get("products", "Product/ProductController.fetchProduct");
   Route.get("search", "SearchController.index");
-    Route.get(
+  Route.get(
     "order/delivered/:order_id",
     "Order/OrderController.delivered"
   ).middleware(["auth", "shopAdmin"]);
@@ -187,11 +213,10 @@ Route.group(() => {
   ).middleware(["auth"]);
 }).prefix("api/v1");
 
- 
+
 Route.get("/email", ({ view }) => {
   return view.render("emails.order_confirmation", {
     shop: {
-      url: "http://hello.com",
       shop_name: "New Shop"
     },
 

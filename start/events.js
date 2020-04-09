@@ -18,6 +18,19 @@ Event.on('new::customer', async (mailDetails) => {
 
 })
 
+Event.on('new::order', async (mailDetails) => {
+
+  await Mail.send(
+    "emails.order_confirmation", mailDetails, message => {
+      message
+        .to(mailDetails.user.email, mailDetails.user.first_name + " " + mailDetails.user.last_name)
+        .from("support@timeshoppy.com", "Shopee")
+        .subject("Order Confirmation")
+    }
+  )
+
+})
+
 Event.on('new::merchant', async (mailDetails) => {
   await Mail.send(
     "emails.merchant_registration_email", mailDetails, message => {

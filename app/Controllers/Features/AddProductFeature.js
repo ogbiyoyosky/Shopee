@@ -4,6 +4,8 @@ const { uploadImage, uploadBase64 } = use("App/HelperFunctions/UploadImage");
 const Image = use("App/Models/Image");
 const ProductTag = use("App/Models/ProductTag");
 const StoreProduct = use("App/Models/StoreProduct");
+const User = use("App/Models/User")
+const moment = require("moment")
 
 class AddProductFeature {
 	constructor(request, response, auth) {
@@ -113,6 +115,10 @@ class AddProductFeature {
 
 
 			await product.main_product_images().attach(imageIds);
+
+			const userDetail = await User.findBy("id", userId)
+			userDetail.last_updated_item = moment().format('YYYY-MM-DD HH:mm:ss')
+			await userDetail.save()
 
 			return this.response.status(200).send({
 				message: "Product successfully added to store",
