@@ -1,9 +1,7 @@
 "use strict";
 const StoreProduct = use("App/Models/StoreProduct");
 const Store = use("App/Models/Store");
-const {
-	uploadImage
-} = use("App/HelperFunctions/UploadImage");
+const { uploadImage } = use("App/HelperFunctions/UploadImage");
 const Image = use("App/Models/Image");
 const ProductTag = use("App/Models/ProductTag");
 const User = use("App/Models/User")
@@ -16,20 +14,17 @@ class EditProductFeature {
 		this.auth = auth;
 	}
 
-	async processTags({
-		tags,
-		productId
-	}) {
+	async processTags({ tags, productId }) {
 		if (tags) {
 			const existingTags = await ProductTag.findBy("product_id", productId);
 			await existingTags.delete();
 			for (var tag in tags) {
-				const productTag = new ProductTag()
+				const productTag = new ProductTag();
 
-				productTag.product_id = productId
-				productTag.tag = tags[tag]
+				productTag.product_id = productId;
+				productTag.tag = tags[tag];
 
-				await productTag.save()
+				await productTag.save();
 			}
 		}
 	}
@@ -41,6 +36,7 @@ class EditProductFeature {
 	 */
 	async editProduct(productId) {
 		try {
+			let tags;
 			const user = this.auth.current.user;
 			const user_id = user.id;
 			const user_store = await Store.findBy("user_id", user_id);
@@ -56,8 +52,6 @@ class EditProductFeature {
 				price
 			} = this.request.all();
 
-
-
 			if (user_store.is_activated_at == null) {
 				return this.response.status(400).send({
 					status: "Fail",
@@ -65,7 +59,9 @@ class EditProductFeature {
 					status_code: 400
 				});
 			}
-			const tags = JSON.parse(tag);
+			if (tag) {
+				tags = JSON.parse(tag);
+			}
 			const productImage = this.request.file("product_image", {
 				types: ["image"]
 			});
@@ -104,17 +100,15 @@ class EditProductFeature {
 				}
 			}
 
-			await this.processTags({
-				tags,
-				productId
-			})
+			if (tag) {
+				await this.processTags({
+					tags,
+					productId
+				});
+			}
 
 			//add to pivot table
 			await product.main_product_images().sync(imagesIds);
-
-			const userDetail = await User.findBy("id", user_id)
-			userDetail.last_updated_item = moment().format('YYYY-MM-DD HH:mm:ss')
-			await userDetail.save()
 			return this.response.status(200).send({
 				message: "Product successfully updated",
 				status_code: 200,

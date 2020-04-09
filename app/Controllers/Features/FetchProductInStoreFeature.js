@@ -11,18 +11,15 @@ class FetchProductInStoreFeature {
 
 	async fetchProduct() {
 		try {
-			const {
-				page,
-				limit
-			} = this.request.get();
+			const { page, limit } = this.request.get();
 
-			const { id } = await this.auth.current.user
+			const { id } = await this.auth.current.user;
 
 			const store = await Store.query()
 				.where("user_id", id)
-				.first()
+				.first();
 
-			const storeId = store.id
+			const storeId = store.id;
 
 			const produceInStore = await StoreProduct.query()
 				.whereNull("deleted_at")
@@ -34,7 +31,7 @@ class FetchProductInStoreFeature {
 				.with("tags")
 				.paginate(page, limit);
 
-			const serializedProduct = produceInStore.toJSON()
+			const serializedProduct = produceInStore.toJSON();
 
 			this.response.status(200).send({
 				message: "Successfully fetch all products",
