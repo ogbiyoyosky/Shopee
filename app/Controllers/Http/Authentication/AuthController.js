@@ -48,14 +48,25 @@ class AuthController {
         return new GenerateTokenFeature(request, response, auth).generateToken()
     }
 
-    async ban({ response, params: { user_id } }) {
+    async ban({ request, response, params: { user_id } }) {
         try {
+            const { is_ban } = request.all()
+
+            if (is_ban === undefined) {
+                return response.status(400).send({
+                    message: "set is_ban to either 1 or 0",
+                    status_code: 400,
+                    status: "fail"
+                })
+            }
             const user = await User.findBy("id", user_id)
-            user.is_ban = 1
+            user.is_ban = is_ban
             await user.save()
 
+            const message = is_ban ? "Ban" : "Activated"
+
             return response.status(200).send({
-                message: "Successfully ban the user",
+                message: `Successfully ${message} the user`,
                 status: "success",
                 status_code: 200
             })

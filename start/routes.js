@@ -81,9 +81,14 @@ Route.group(() => {
     "Auth/Confirm/:confirmation_token",
     "Authentication/AuthController.confirmAccount"
   );
-  Route.get(
+  Route.post(
     "/users/:user_id/ban",
     "Authentication/AuthController.ban"
+  ).middleware(["auth", "superAdmin"]);
+
+  Route.get(
+    "/users",
+    "UserManagement/UserController.fetchUsers"
   ).middleware(["auth", "superAdmin"]);
 
   Route.post("Auth/Logout", "Authentication/AuthController.logout").middleware(
