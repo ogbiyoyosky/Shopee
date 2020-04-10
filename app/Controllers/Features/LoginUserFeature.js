@@ -21,6 +21,8 @@ class LoginUserFeature {
         .where('email', email)
         .first()
 
+
+
       let token
       if (user.is_activated_at != null) {
 
