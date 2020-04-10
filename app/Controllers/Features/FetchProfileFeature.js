@@ -11,13 +11,14 @@ class FetchProfileFeature {
   async fetchProfile() {
     try {
       const user_id = this.auth.current.user.id;
+      console.log({ user_id });
       const profile = await User.query()
         .select(
           "users.id",
           "email",
           "phone_number",
           "users.is_activated_at",
-          "country_codes.dial_code",
+          // "country_codes.dial_code",
           "users.phone_number ",
           "role_label",
           "first_name",
@@ -39,7 +40,7 @@ class FetchProfileFeature {
         .innerJoin("country_codes", "profiles.country_id", "country_codes.id")
         .innerJoin("states", "profiles.state_id", "states.id")
         .innerJoin("provinces", "profiles.province_id", "provinces.id")
-        .innerJoin("stores", "users.id", "stores.user_id")
+        .leftJoin("stores", "users.id", "stores.user_id")
         .fetch();
 
       const serializedResult = profile.toJSON();
