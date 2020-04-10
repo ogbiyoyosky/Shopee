@@ -61,7 +61,7 @@ class AuthController {
                 })
             }
             const user = await User.findBy("id", user_id)
-            user.is_ban_at = moment().format("YYYY-MM-DD  HH:mm:ss");
+            user.banned_at = moment().format("YYYY-MM-DD  HH:mm:ss");
             await user.save()
 
             const message = is_ban ? "Ban" : "Activated"

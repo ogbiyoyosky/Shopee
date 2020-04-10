@@ -13,7 +13,7 @@ class UserSchema extends Schema {
       table.integer('confirmation_token').nullable()
       table.dateTime('is_activated_at').nullable()
       table.integer("failure_count").defaultTo(0)
-      table.dateTime("is_ban_at")
+      table.dateTime("banned_at")
       table.dateTime("last_updated_item")
       table.dateTime('is_deleted_at').nullable()
       table.integer('role_id')
