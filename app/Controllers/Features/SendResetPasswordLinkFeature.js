@@ -55,7 +55,8 @@ class SendResetPasswordLinkFeature {
           const mailDetails = {
             user,
             profile,
-            token
+            token,
+            frontend_url
           };
 
           Event.fire("new::passwordReset", mailDetails);
