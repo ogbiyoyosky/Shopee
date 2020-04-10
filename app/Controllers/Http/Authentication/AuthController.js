@@ -4,6 +4,7 @@ const ConfirmAccountFeature = use('App/Controllers/Features/ConfirmAccountFeatur
 const LoginUserFeature = use('App/Controllers/Features/LoginUserFeature')
 const LogoutUserFeature = use('App/Controllers/Features/LogoutUserFeature')
 const GenerateTokenFeature = use('App/Controllers/Features/GenerateTokenFeature')
+const moment = require("moment");
 const User = use("App/Models/User")
 
 class AuthController {
@@ -60,7 +61,7 @@ class AuthController {
                 })
             }
             const user = await User.findBy("id", user_id)
-            user.is_ban = is_ban
+            user.is_ban_at = moment().format("YYYY-MM-DD  HH:mm:ss");
             await user.save()
 
             const message = is_ban ? "Ban" : "Activated"

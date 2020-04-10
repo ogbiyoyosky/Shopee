@@ -29,7 +29,7 @@ Route.get("/", () => {
 
 Route.group(() => {
   Route.get('/', ({ subdomains }) => {
-    console.log(subdomains.api)
+
 
     return {
       Shopee: "Welcome to Shopee Api subdomain"
