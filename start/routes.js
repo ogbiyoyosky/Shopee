@@ -27,7 +27,7 @@ Route.get("/", () => {
 Route.group(() => {
   Route.get("/", () => {
     return {
-      Shopee: "Welcome to Shopee Api subdomain",
+      Shopee: "Welcome to Shopee Api subdomains",
     };
   });
 }).domain(":api.localhost");
@@ -40,7 +40,7 @@ Route.group(() => {
   });
 });
 
-Route.post("webhook/deploy", "Webhook/WebhookController.deploy");
+Route.post("/webhook/deploy", "Webhook/WebhookController.deploy");
 
 Route.get("/api/v1", () => {
   return {
@@ -136,7 +136,7 @@ Route.group(() => {
     "auth",
     "superAdmin",
   ]);
-  Route.post("Store/AddProduct/:store_id", "Store/StoreController.addProduct")
+  Route.post("Store/:store_id/AddProduct/", "Store/StoreController.addProduct")
     .middleware(["auth", "shopAdmin"])
     .validator("AddProduct");
 
