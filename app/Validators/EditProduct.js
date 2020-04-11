@@ -1,6 +1,9 @@
 "use strict";
 
 class EditProduct {
+  get validateAll() {
+    return true;
+  }
   get rules() {
     return {
       product_name: "string",
@@ -9,7 +12,7 @@ class EditProduct {
       category_id: "integer",
       subcategory_id: "integer",
       is_published: "integer",
-      price: "number"
+      price: "number",
     };
   }
 
@@ -18,7 +21,7 @@ class EditProduct {
       status: "invalid",
       message: "Invalid data",
       status_code: 400,
-      errorMessages: errorMessages[0].message
+      errorMessages: errorMessages[0].message,
     });
   }
 }
