@@ -14,6 +14,7 @@ class SearchFeature {
     try {
       const query = new Query(this.request, { order: "id", search: q, page });
       const order = query.order();
+      console.log({ q });
 
       const products = await Product.query()
         .where(query.search(["product_name", "description"]))
