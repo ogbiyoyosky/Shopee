@@ -2,12 +2,14 @@
 const StoreProduct = use("App/Models/StoreProduct")
 const Store = use("App/Models/Store")
 const Order = use("App/Models/Order")
+const Profile = use("App/Models/Profile")
 const OrderProduct = use("App/Models/OrderProduct")
 const OrderNotification = use("App/Models/OrderNotification")
 const Wallet = use("App/Models/Wallet");
 const Address = use("App/Models/Address")
 const OrderAddress = use("App/Models/OrderAddress")
 const randomString = require('randomstring')
+const GeneralSetting = use("App/Models/GeneralSetting")
 const moment = require("moment")
 
 
@@ -48,6 +50,8 @@ class OrderCreateOrderFeature {
             const { cart_items, billing_address: { province_id, country_id, state_id, address } } = this.request.all()
             const userId = this.auth.current.user.id
 
+            const userProfile = await userProfile.findBy("user_id", userId)
+
             if (!cart_items) {
                 return this.response.status(400).send({
                     message: "No items in cart",
@@ -55,6 +59,41 @@ class OrderCreateOrderFeature {
                     status: "fail"
                 })
             }
+
+            //validation 
+            // find the store of the first product
+            // check the buyers the state of the buyer matches the state of the seller.
+            //if yes, continue else check if seller sells outside state if yes continue else return response
+            // check the buyers the state of the buyer matches the lga of the seller.
+            //if yes, continue else check if seller sells outside locality if yes continue else return response
+
+
+            const firstItemOnCartId = cart_items[0].product_id
+            const { store_id } = await StoreProduct.findBy("id", firstItemOnCartId)
+            const sellerStore = await Store.findBy("id", store_id)
+            const sellerSellOutsideProvince = sellerStore.sell_outside_province
+            const sellerSellOutsideState = sellerStore.sell_outside_state
+
+            if (userProfile.state_id !== sellerStore.state_id) {
+                if (!sellerSellOutsideState) {
+                    return this.response.status(500).send({
+                        status: "Fail",
+                        message: "The seller does not sell to your region",
+                        status_code: 500
+                    });
+                }
+            }
+
+            if (userProfile.province_id !== sellerStore.province_id) {
+                if (!sellerSellOutsideProvince) {
+                    return this.response.status(500).send({
+                        status: "Fail",
+                        message: "The seller does not sell to your locality",
+                        status_code: 500
+                    });
+                }
+            }
+
 
             const itemsToBeCalculated = []
 
@@ -72,18 +111,31 @@ class OrderCreateOrderFeature {
                 })
             }
 
+            const setting = await GeneralSetting.all()
+            const serializedSettings = setting.toJSON()
+
+
+
             const totalAmount = itemsToBeCalculated.map(item => item.itemPrice * item.selectedQty)
                 .reduce(function (accumulator, item) {
                     return accumulator + item
                 }, 0);
 
+            const vat = totalAmount * (serializedSettings[0].vat / 100)
+            const serviceCharge = totalAmount * (serializedSettings[0].service_charge / 100)
             const token = randomString.generate(15)
+
 
 
             const newOrder = new Order()
             newOrder.user_id = userId
             newOrder.amount = totalAmount
-            newOrder.service_charge = 220
+            newOrder.vat = vat
+
+            if (userProfile.province_id == sellerStore.province_id) {
+                newOrder.shipping_cost = 0
+            }
+            newOrder.service_charge = serviceCharge
             newOrder.placement_code = token
             await newOrder.save()
 

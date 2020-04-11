@@ -20,6 +20,7 @@ class NotificationFetchSellerOrderNotificationFeature {
           "orders.is_paid_at",
           "orders.created_at",
           "orders.buyer_accepted_at",
+          "orders.delivered_at",
           "orders.shipping_cost",
           "store_products.product_name",
           "order_products.product_id"

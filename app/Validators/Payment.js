@@ -1,20 +1,24 @@
-'use strict'
+"use strict";
 
 class Payment {
+  get validateAll() {
+    return true;
+  }
+
   get rules() {
     return {
-      transaction_type_id: 'required|integer',
-      amount: 'required|integer',
-      redirect_url: 'required|string'
-    }
+      transaction_type_id: "required|integer",
+      amount: "required|integer",
+      redirect_url: "required|string",
+    };
   }
 
   get messages() {
     return {
-      'transaction_type_id.required': 'Transactiontype is required',
-      'amount.required': 'Please provide the amount for the transaction',
-      'redirect_url.required': 'Please provide the redirect url',
-    }
+      "transaction_type_id.required": "Transactiontype is required",
+      "amount.required": "Please provide the amount for the transaction",
+      "redirect_url.required": "Please provide the redirect url",
+    };
   }
 
   async fails(errorMessages) {
@@ -22,9 +26,9 @@ class Payment {
       status: "invalid",
       message: "Invalid data",
       status_code: 400,
-      errorMessages: errorMessages[0].message
-    })
+      errorMessages: errorMessages[0].message,
+    });
   }
 }
 
-module.exports = Payment
+module.exports = Payment;

@@ -23,7 +23,7 @@ class OrderViewOrderFeature {
                         builder.with("order_address.country_code")
                         builder.with("order_address.state")
                         builder.with("order_address.province")
-                        builder.with("order_items")
+                        builder.with("order_items.main_product_images")
                     })
                     .fetch()
 

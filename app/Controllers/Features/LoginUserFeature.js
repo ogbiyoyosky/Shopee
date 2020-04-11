@@ -21,10 +21,12 @@ class LoginUserFeature {
         .where('email', email)
         .first()
 
+
+
       let token
       if (user.is_activated_at != null) {
 
-        if (user.is_ban) {
+        if (user.banned_at != null) {
           return this.response.status(400).send({
             message: 'User ban please contact th admin',
             status_code: 400,
