@@ -12,14 +12,10 @@ npm install
 
 echo "running migration"
 
-adonis migration:refresh --force
-
-echo "seeding database"
-
-adonis seed -f
+adonis migration:run --force
 
 echo "Restarting server..."
 
-pm2 start server.js -f
+pm2 restart server.js -f
 
 echo "Server restarted Successfully"
