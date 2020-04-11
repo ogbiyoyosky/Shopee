@@ -15,6 +15,7 @@ class UserSchema extends Schema {
       table.integer("failure_count").defaultTo(0)
       table.dateTime("banned_at")
       table.dateTime("last_updated_item")
+      table.dateTime("last_login_time")
       table.dateTime('is_deleted_at').nullable()
       table.integer('role_id')
       table.timestamps()
