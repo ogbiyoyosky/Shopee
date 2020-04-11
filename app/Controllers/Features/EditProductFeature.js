@@ -70,7 +70,7 @@ class EditProductFeature {
       product.merge({
         product_name,
         description,
-        price: Math.abs(parseInt(price)),
+        price: Math.abs(price),
         stock: Math.abs(parseInt(stock)),
         discount,
         category_id,
