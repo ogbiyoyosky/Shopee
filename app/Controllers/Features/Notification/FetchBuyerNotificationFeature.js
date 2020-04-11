@@ -26,7 +26,7 @@ class NotificationFetchBuyerNotificationFeature {
           "orders.shipping_cost",
           "orders.vat",
           "orders.service_charge",
-          //  "store_products.product_name",
+          "store_products.product_name",
           "order_products.product_id"
         )
         .where("buyer_id", userId)
@@ -37,11 +37,11 @@ class NotificationFetchBuyerNotificationFeature {
           "order_products.id"
         )
         .innerJoin("orders", "order_notifications.order_id", "orders.id")
-        // .innerJoin(
-        //   "store_products",
-        //   "order_products.product_id",
-        //   "store_products.id"
-        // )
+        .innerJoin(
+          "store_products",
+          "order_products.product_id",
+          "store_products.id"
+        )
 
         .orderBy("orders.created_at", "desc");
 
