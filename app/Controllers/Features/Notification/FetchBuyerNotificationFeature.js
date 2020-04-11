@@ -26,7 +26,7 @@ class NotificationFetchBuyerNotificationFeature {
           "orders.shipping_cost",
           "orders.vat",
           "orders.service_charge",
-          "store_products.product_name",
+          //  "store_products.product_name",
           "order_products.product_id"
         )
         .where("buyer_id", userId)
