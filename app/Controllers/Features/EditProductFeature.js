@@ -70,8 +70,8 @@ class EditProductFeature {
       product.merge({
         product_name,
         description,
-        price: Math.abs(price),
-        stock: Math.abs(parseInt(stock)),
+        price,
+        stock,
         discount,
         category_id,
         subcategory_id,
@@ -106,8 +106,6 @@ class EditProductFeature {
           productId,
         });
       }
-
-      console.log("productImage", productImage);
 
       //add to pivot table
       if (productImage) {
