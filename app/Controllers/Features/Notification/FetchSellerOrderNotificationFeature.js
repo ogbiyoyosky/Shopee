@@ -22,6 +22,8 @@ class NotificationFetchSellerOrderNotificationFeature {
           "orders.buyer_accepted_at",
           "orders.delivered_at",
           "orders.shipping_cost",
+          "orders.vat",
+          "orders.service_charge",
           "store_products.product_name",
           "order_products.product_id"
         )
