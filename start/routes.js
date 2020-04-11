@@ -28,7 +28,7 @@ Route.get("/", () => {
 });
 
 Route.group(() => {
-  Route.get('/', ({ subdomains }) => {
+  Route.get('/', () => {
 
 
     return {
@@ -216,13 +216,9 @@ Route.group(() => {
     "order/extendTime/:order_id",
     "Order/OrderController.extendTime"
   ).middleware(["auth"]);
+
+  Route.get("/thirtyDaysBan", "CronJob/CronJobController.thirtyDaysBan")
 }).prefix("api/v1");
 
 
-Route.get("/email", ({ view }) => {
-  return view.render("emails.customer_registration_email", {
 
-  })
-
-
-})

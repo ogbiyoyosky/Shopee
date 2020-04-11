@@ -6,10 +6,11 @@ const Hash = use('Hash')
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model')
 
+
 class User extends Model {
-  static boot () {
+  static boot() {
     super.boot()
-     
+
     /**
      * A hook to hash the user password before saving
      * it to the database.
@@ -19,6 +20,7 @@ class User extends Model {
         userInstance.password = await Hash.make(userInstance.password)
       }
     })
+
   }
 
   static get hidden() {
@@ -30,7 +32,7 @@ class User extends Model {
     ]
   }
 
-  
+
 
   /**
    * A relationship on tokens is required for auth to
@@ -42,22 +44,22 @@ class User extends Model {
    *
    * @return {Object}
    */
-  tokens () {
+  tokens() {
     return this.hasMany('App/Models/Token')
-	}
-
-	user_role() {
-		return this.hasOne("App/Models/Role", "role_id", "id")
   }
 
-  
+  user_role() {
+    return this.hasOne("App/Models/Role", "role_id", "id")
+  }
+
+
 
   wallet_balance() {
-    return this.belongsTo('App/Models/Wallet','id', 'user_id')
+    return this.belongsTo('App/Models/Wallet', 'id', 'user_id')
   }
 
   profile() {
-    return this.belongsTo('App/Models/Profile','id', 'user_id')
+    return this.belongsTo('App/Models/Profile', 'id', 'user_id')
   }
 
 }

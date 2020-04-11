@@ -1,5 +1,6 @@
 "use strict";
 const User = use("App/Models/User");
+const moment = require("moment")
 
 class FetchProfileFeature {
   constructor(request, response, auth) {
@@ -43,6 +44,10 @@ class FetchProfileFeature {
         .fetch();
 
       const serializedResult = profile.toJSON();
+
+      const user = await User.findBy("id", user_id)
+      user.last_login_time = moment().format("YYYY-MM-DD  HH:mm:ss")
+      await user.save()
 
       return this.response.status(200).send({
         message: "Successfully fetched the users profile",
