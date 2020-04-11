@@ -17,7 +17,7 @@ class OrderViewOrderFeature {
         return this.response.status(400).send({
           message: "Order does not exist",
           status_code: 400,
-          status: "fail",
+          status: "success",
         });
       }
       let orderDetails;
