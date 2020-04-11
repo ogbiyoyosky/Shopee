@@ -25,23 +25,23 @@ class NotificationFetchBuyerNotificationFeature {
           "orders.buyer_confirms_delivery_at",
           "orders.shipping_cost",
           "orders.vat",
-          "orders.service_charge",
-          "store_products.product_name",
-          "order_products.product_id"
+          "orders.service_charge"
+          // "store_products.product_name",
+          // "order_products.product_id"
         )
         .where("buyer_id", userId)
         .innerJoin("users", "order_notifications.buyer_id", "users.id")
-        .innerJoin(
-          "order_products",
-          "order_notifications.order_id",
-          "order_products.id"
-        )
+        // .innerJoin(
+        //   "order_products",
+        //   "order_notifications.order_id",
+        //   "order_products.id"
+        // )
         .innerJoin("orders", "order_notifications.order_id", "orders.id")
-        .innerJoin(
-          "store_products",
-          "order_products.product_id",
-          "store_products.id"
-        )
+        // .innerJoin(
+        //   "store_products",
+        //   "order_products.product_id",
+        //   "store_products.id"
+        // )
 
         .orderBy("orders.created_at", "desc");
 
