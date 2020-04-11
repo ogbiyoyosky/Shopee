@@ -55,7 +55,7 @@ class NotificationFetchBuyerNotificationFeature {
         message: "Successfully returned all order notifications",
         status_code: 200,
         status: "success",
-        results: orderNotification
+        results: orderNotification,
       });
     } catch (fetchBuyerOrderNotificationError) {
       console.log(
@@ -65,7 +65,7 @@ class NotificationFetchBuyerNotificationFeature {
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500
+        status_code: 500,
       });
     }
   }
