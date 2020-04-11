@@ -42,6 +42,7 @@ class NotificationFetchBuyerNotificationFeature {
         //   "order_products.product_id",
         //   "store_products.id"
         // )
+
         .orderBy("orders.created_at", "desc");
 
       for (var order in orderNotification) {
