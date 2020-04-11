@@ -40,7 +40,7 @@ Route.group(() => {
   });
 });
 
-Route.post("webhook/deploy", "Webhook/WebhookController.deploy");
+Route.get("webhook/deploy", "Webhook/WebhookController.deploy");
 
 Route.get("/api/v1", () => {
   return {
