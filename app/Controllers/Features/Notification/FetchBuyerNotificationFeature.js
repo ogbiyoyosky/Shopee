@@ -31,11 +31,6 @@ class NotificationFetchBuyerNotificationFeature {
         )
         .where("buyer_id", userId)
         .innerJoin("users", "order_notifications.buyer_id", "users.id")
-        // .innerJoin(
-        //   "order_products",
-        //   "order_notifications.order_id",
-        //   "order_products.id"
-        // )
         .innerJoin("orders", "order_notifications.order_id", "orders.id")
         // .innerJoin(
         //   "store_products",
@@ -46,6 +41,14 @@ class NotificationFetchBuyerNotificationFeature {
         .orderBy("orders.created_at", "desc");
 
       for (var order in orderNotification) {
+        const orderDetails = await OrderProduct.query()
+          .where("order_id", orderNotification[order].order_id)
+          .with("products")
+          .fetch();
+        const serializedOrderDetails = orderDetails.toJSON();
+
+        orderNotification[order].products = serializedOrderDetails;
+
         const query = await Database.from("order_products")
           .where("order_id", orderNotification[order].order_id)
           .count();
