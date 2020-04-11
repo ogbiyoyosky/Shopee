@@ -37,11 +37,11 @@ class NotificationFetchBuyerNotificationFeature {
           "order_products.id"
         )
         .innerJoin("orders", "order_notifications.order_id", "orders.id")
-        .innerJoin(
-          "store_products",
-          "order_products.product_id",
-          "store_products.id"
-        )
+        // .innerJoin(
+        //   "store_products",
+        //   "order_products.product_id",
+        //   "store_products.id"
+        // )
         .orderBy("orders.created_at", "desc");
 
       for (var order in orderNotification) {
