@@ -4,6 +4,7 @@ class Store {
   get validateAll() {
     return true;
   }
+
   get rules() {
     return {
       store_name: "required|unique:stores,store_name",
