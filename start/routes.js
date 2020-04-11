@@ -136,7 +136,7 @@ Route.group(() => {
     "auth",
     "superAdmin",
   ]);
-  Route.post("Store/AddProduct/:store_id", "Store/StoreController.addProduct")
+  Route.post("Store/:store_id/AddProduct/", "Store/StoreController.addProduct")
     .middleware(["auth", "shopAdmin"])
     .validator("AddProduct");
 
