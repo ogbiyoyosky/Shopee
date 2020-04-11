@@ -108,7 +108,9 @@ class EditProductFeature {
       }
 
       //add to pivot table
-      await product.main_product_images().sync(imagesIds);
+      if (productImage) {
+        await product.main_product_images().sync(imagesIds);
+      }
       return this.response.status(200).send({
         message: "Product successfully updated",
         status_code: 200,
