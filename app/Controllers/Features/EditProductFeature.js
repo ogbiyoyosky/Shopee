@@ -107,6 +107,7 @@ class EditProductFeature {
         });
       }
 
+      console.log("productImage", productImage);
       //add to pivot table
       if (productImage) {
         await product.main_product_images().sync(imagesIds);
