@@ -27,7 +27,7 @@ Route.get("/", () => {
 Route.group(() => {
   Route.get("/", () => {
     return {
-      Shopee: "Welcome to Shopee Api subdomain",
+      Shopee: "Welcome to Shopee Api subdomains",
     };
   });
 }).domain(":api.localhost");

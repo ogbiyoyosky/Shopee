@@ -22,6 +22,7 @@ class NotificationFetchBuyerNotificationFeature {
           "orders.is_paid_at",
           "orders.buyer_accepted_at",
           "orders.delivered_at",
+          "orders.buyer_confirms_delivery_at",
           "orders.shipping_cost",
           "orders.vat",
           "orders.service_charge",

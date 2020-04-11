@@ -2,7 +2,7 @@ cd shopee
 
 echo "Pulling from stagging" 
 
-git pull origin stagging
+git pull origin dev
 
 echo "Pulled successfully from stagging"
 
