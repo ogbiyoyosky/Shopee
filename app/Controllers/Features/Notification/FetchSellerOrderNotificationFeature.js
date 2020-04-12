@@ -40,7 +40,7 @@ class NotificationFetchSellerOrderNotificationFeature {
           .fetch();
         const serializedOrderDetails = orderDetails.toJSON();
 
-        orderNotification[order].products = serializedOrderDetails;
+        orderNotification[order].order_products = serializedOrderDetails;
 
         const query = await Database.from("order_products")
           .where("order_id", orderNotification[order].order_id)
