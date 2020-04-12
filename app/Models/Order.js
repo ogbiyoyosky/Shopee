@@ -10,26 +10,13 @@ class Order extends Model {
 
   getExpiringTime({ is_paid_at, delivery_time_addon }) {
     const paidAtToMilisecs = new Date(is_paid_at).getTime();
+    const ONE_HOUR_MILLISECS = 3600000;
     const DAY_IN_MILISECS = 86400000;
-    const getMilisecondsOffset = offset => paidAtToMilisecs + offset;
 
-    const increaseByADay = () =>
-      new Date(getMilisecondsOffset(DAY_IN_MILISECS));
+    const handleDefault = (offset) =>
+      paidAtToMilisecs + offset * ONE_HOUR_MILLISECS;
 
-    const increaseByTwoDays = () =>
-      new Date(getMilisecondsOffset(DAY_IN_MILISECS * 2));
-
-    const handleDefault = () => {
-      return increaseByTwoDays();
-    };
-
-    let handlers = {
-      "24H": increaseByADay(),
-      "48H": increaseByTwoDays(),
-      "0H": handleDefault()
-    };
-
-    return is_paid_at ? handlers[delivery_time_addon] : null;
+    return is_paid_at ? handleDefault(delivery_time_addon) : null;
   }
 
   order_notification() {
