@@ -16,7 +16,7 @@ Event.on("new::customer", async (mailDetails) => {
           mailDetails.user.email,
           mailDetails.profile.first_name + " " + mailDetails.profile.last_name
         )
-        .from("support@timeshoppy.com", "Shopee")
+        .from("support@timeshoppy.com", "Timeshoppy")
         .subject("Shoppy Platform Registration Information");
     }
   );
@@ -29,7 +29,7 @@ Event.on("new::order", async (mailDetails) => {
         mailDetails.user.email,
         mailDetails.user.first_name + " " + mailDetails.user.last_name
       )
-      .from("support@timeshoppy.com", "Shopee")
+      .from("support@timeshoppy.com", "Timeshoppy")
       .subject("Order Confirmation");
   });
 });
@@ -44,7 +44,7 @@ Event.on("new::merchant", async (mailDetails) => {
           mailDetails.user.email,
           mailDetails.profile.first_name + " " + mailDetails.profile.last_name
         )
-        .from("support@timeshoppy.com", "Shopee")
+        .from("support@timeshoppy.com", "Timeshoppy")
         .subject("Shoppy Platform Registration Information");
     }
   );
@@ -57,7 +57,7 @@ Event.on("new::passwordReset", async (mailDetails) => {
         mailDetails.user.email,
         mailDetails.profile.first_name + " " + mailDetails.profile.last_name
       )
-      .from("support@timeshoppy.com", "Shopee")
+      .from("support@timeshoppy.com", "Timeshoppy")
       .subject("Shoppy Password Reset link");
   });
 });

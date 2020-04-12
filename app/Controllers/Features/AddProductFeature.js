@@ -15,7 +15,6 @@ class AddProductFeature {
   }
 
   async processTags({ Submittedtags, productId }) {
-    console.log(Submittedtags);
     if (Submittedtags) {
       for (var tag in Submittedtags) {
         const productTag = new ProductTag();
