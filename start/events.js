@@ -17,7 +17,7 @@ Event.on("new::customer", async (mailDetails) => {
           mailDetails.profile.first_name + " " + mailDetails.profile.last_name
         )
         .from("support@timeshoppy.com", "Timeshoppy")
-        .subject("Shoppy Platform Registration Information");
+        .subject("Timeshoppy Platform Registration Information");
     }
   );
 });
@@ -45,7 +45,7 @@ Event.on("new::merchant", async (mailDetails) => {
           mailDetails.profile.first_name + " " + mailDetails.profile.last_name
         )
         .from("support@timeshoppy.com", "Timeshoppy")
-        .subject("Shoppy Platform Registration Information");
+        .subject("Timeshoppy Platform Registration Information");
     }
   );
 });
@@ -58,7 +58,7 @@ Event.on("new::passwordReset", async (mailDetails) => {
         mailDetails.profile.first_name + " " + mailDetails.profile.last_name
       )
       .from("support@timeshoppy.com", "Timeshoppy")
-      .subject("Shoppy Password Reset link");
+      .subject("Timeshoppy Password Reset link");
   });
 });
 
