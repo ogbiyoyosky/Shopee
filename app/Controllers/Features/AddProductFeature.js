@@ -14,13 +14,14 @@ class AddProductFeature {
     this.auth = auth;
   }
 
-  async processTags({ tags, productId }) {
-    if (tags) {
-      for (var tag in tags) {
+  async processTags({ Submittedtags, productId }) {
+    console.log(Submittedtags);
+    if (Submittedtags) {
+      for (var tag in Submittedtags) {
         const productTag = new ProductTag();
 
         productTag.product_id = productId;
-        productTag.tag = tags[tag];
+        productTag.tag = Submittedtags[tag];
 
         await productTag.save();
       }
@@ -53,7 +54,9 @@ class AddProductFeature {
       }
       let Submittedtags;
       if (tags) {
-        Submittedtags = tags;
+        typeof tags === "string"
+          ? (Submittedtags = [tags])
+          : (Submittedtags = tags);
       }
 
       const productImage = this.request.file("product_image", {
