@@ -14,7 +14,7 @@ class OrderSchema extends Schema {
       table.dateTime("declined_at");
       table.dateTime("delivered_at");
       table.dateTime("buyer_confirms_delivery_at");
-      table.integer("delivery_time_addon").defaultTo(0);
+      table.integer("delivery_time_addon").defaultTo(24);
       table.float("service_charge");
       table.float("vat");
       table.dateTime("buyer_accepted_at");
