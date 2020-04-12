@@ -134,6 +134,7 @@ class OrderCreateOrderFeature {
 
       if (userProfile.province_id == sellerStore.province_id) {
         newOrder.shipping_cost = 0;
+        newOrder.seller_accepted_at = moment().format("YYYY-MM-DD HH:mm:ss");
       }
       newOrder.service_charge = serviceCharge;
       newOrder.placement_code = token;
