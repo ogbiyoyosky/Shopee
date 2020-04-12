@@ -217,4 +217,6 @@ Route.group(() => {
     "/thirtyRemoveProduct",
     "CronJob/CronJobController.removeProductAfterThirtyDays"
   );
+
+  Route.get("/analytics", "Analytic/AnalyticController.fetchAnalytics");
 }).prefix("api/v1");
