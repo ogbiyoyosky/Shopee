@@ -67,7 +67,49 @@ class OrderEditOrderFeature {
           orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
         }
         await orderDetail.save();
-      } else if (role_label === "Customer") {
+      }
+
+      if (role_label === "Super Admin") {
+        if (
+          is_accepted === 0 &&
+          orderDetail.is_paid_at &&
+          orderDetail.delivered_at === null
+        ) {
+          //find the buyer
+          //find the seller
+
+          const totalAmountToRefunded =
+            orderDetail.vat +
+            orderDetail.service_charge +
+            orderDetail.amount +
+            orderDetail.shipping_cost;
+
+          const { buyer_id } = await OrderNotification.findBy(
+            "order_id",
+            orderId
+          );
+
+          const superAdmin = await User.findBy("role_id", superAdminRole.id);
+          const superAdminWallet = await Wallet.findBy(
+            "user_id",
+            superAdmin.id
+          );
+          superAdminWallet.balance -= totalAmountToRefunded;
+          await superAdminWallet.save();
+
+          const buyerWallet = await Wallet.findBy("user_id", buyer_id);
+          buyerWallet.balance += totalAmountToRefunded;
+          await superAdminWallet.save();
+          orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
+        }
+
+        if (is_accepted === 0 && orderDetail.is_paid_at === null) {
+          orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
+        }
+        await orderDetail.save();
+      }
+
+      if (role_label === "Customer") {
         if (is_accepted) {
           orderDetail.buyer_accepted_at = moment().format(
             "YYYY-MM-DD HH:mm:ss"
