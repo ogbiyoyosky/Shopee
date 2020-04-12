@@ -44,7 +44,7 @@ class OrderViewOrderFeature {
         orderDetails = await Order.query()
           .where("id", orderId)
           .with("order_notification", (builder) => {
-            builder.with("order_items");
+            builder.with("order_items.main_product_images");
           })
           .fetch();
 
