@@ -18,7 +18,7 @@ class AddProduct {
       category_id: "required|integer",
       subcategory_id: "required|integer",
       is_published: "required|integer",
-      tag: "required",
+      tags: "required",
       price: "required|number",
     };
   }
@@ -32,7 +32,7 @@ class AddProduct {
       "category_id.required": "Please choose the category of the product ",
       "subcategory_id.required": "Please choose the subcategory of the item",
       "is_published.required": "Set the publishing status",
-      "tag.required": "please add at least one tag on the product",
+      "tags.required": "please add at least one tag on the product",
       "price.required": "please add a price",
     };
   }

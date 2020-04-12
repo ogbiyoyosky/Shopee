@@ -40,7 +40,7 @@ class AddProductFeature {
         category_id,
         subcategory_id,
         is_published,
-        tag,
+        tags,
         price,
       } = this.request.all();
 
@@ -51,9 +51,9 @@ class AddProductFeature {
           status_code: 400,
         });
       }
-      let tags;
-      if (tag) {
-        tags = tag;
+      let Submittedtags;
+      if (tags) {
+        Submittedtags = JSON.parse(tags);
       }
 
       const productImage = this.request.file("product_image", {
@@ -107,7 +107,7 @@ class AddProductFeature {
 
       if (tags) {
         await this.processTags({
-          tags,
+          Submittedtags,
           productId: product.id,
         });
       }
