@@ -14,15 +14,15 @@ class EditProductFeature {
     this.auth = auth;
   }
 
-  async processTags({ tags, productId }) {
-    if (tags) {
+  async processTags({ Submittedtags, productId }) {
+    if (Submittedtags) {
       const existingTags = await ProductTag.findBy("product_id", productId);
       await existingTags.delete();
-      for (var tag in tags) {
+      for (var tag in Submittedtags) {
         const productTag = new ProductTag();
 
         productTag.product_id = productId;
-        productTag.tag = tags[tag];
+        productTag.tag = Submittedtags[tag];
 
         await productTag.save();
       }
@@ -60,7 +60,9 @@ class EditProductFeature {
         });
       }
       if (tags) {
-        Submittedtags = tags;
+        typeof tags === "string"
+          ? (Submittedtags = [tags])
+          : (Submittedtags = tags);
       }
       const productImage = this.request.file("product_image", {
         types: ["image"],
