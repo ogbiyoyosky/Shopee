@@ -161,6 +161,11 @@ Route.group(() => {
 
   Route.get("products", "Product/ProductController.fetchProduct");
 
+  Route.get(
+    "products/:product_id",
+    "Product/ProductController.fetchProductById"
+  );
+
   Route.post("orders", "Order/OrderController.createOrder").middleware([
     "auth",
   ]);
