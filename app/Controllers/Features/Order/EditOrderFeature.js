@@ -21,6 +21,7 @@ class OrderEditOrderFeature {
       const { role_label } = await Role.findBy("id", role_id);
       const superAdminRole = await Role.findBy("role_label", "Super Admin");
       const orderDetail = await Order.findBy("id", orderId);
+
       if (!orderDetail) {
         return this.response.status(400).send({
           message: "Order does not exist",
@@ -99,7 +100,7 @@ class OrderEditOrderFeature {
 
           const buyerWallet = await Wallet.findBy("user_id", buyer_id);
           buyerWallet.balance += totalAmountToRefunded;
-          await superAdminWallet.save();
+          await buyerWallet.save();
           orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
         }
 
@@ -119,12 +120,6 @@ class OrderEditOrderFeature {
         }
 
         await orderDetail.save();
-      } else {
-        return this.response.status(400).send({
-          message: "No permission granted on role",
-          status: "fail",
-          status_code: 400,
-        });
       }
 
       const status = is_accepted ? "Approved" : "Declined";
