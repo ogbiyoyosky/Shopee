@@ -2,7 +2,7 @@
 const Order = use("App/Models/Order");
 const Role = use("App/Models/Role");
 const User = use("App/Models/User");
-const Wallet = use("App/Model/Wallet");
+const Wallet = use("App/Models/Wallet");
 const OrderNotification = use("App/Models/OrderNotification");
 const moment = require("moment");
 
