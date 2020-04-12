@@ -208,7 +208,7 @@ Route.group(() => {
     "order/confirmDelivery/:order_id",
     "Order/OrderController.confirmDelivered"
   ).middleware(["auth"]);
-  Route.post(
+  Route.get(
     "order/extendTime/:order_id",
     "Order/OrderController.extendTime"
   ).middleware(["auth"]);
