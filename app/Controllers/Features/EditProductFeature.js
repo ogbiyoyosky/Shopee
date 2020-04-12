@@ -36,7 +36,7 @@ class EditProductFeature {
    */
   async editProduct(productId) {
     try {
-      let tags;
+      let Submittedtags;
       const user = this.auth.current.user;
       const user_id = user.id;
       const user_store = await Store.findBy("user_id", user_id);
@@ -48,7 +48,7 @@ class EditProductFeature {
         category_id,
         subcategory_id,
         is_published,
-        tag,
+        tags,
         price,
       } = this.request.all();
 
@@ -59,8 +59,8 @@ class EditProductFeature {
           status_code: 400,
         });
       }
-      if (tag) {
-        tags = JSON.parse(tag);
+      if (tags) {
+        Submittedtags = JSON.parse(tags);
       }
       const productImage = this.request.file("product_image", {
         types: ["image"],
@@ -100,9 +100,9 @@ class EditProductFeature {
         }
       }
 
-      if (tag) {
+      if (tags) {
         await this.processTags({
-          tags,
+          Submittedtags,
           productId,
         });
       }
