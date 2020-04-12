@@ -8,6 +8,7 @@ const OrderNotification = use("App/Models/OrderNotification");
 const Wallet = use("App/Models/Wallet");
 const Address = use("App/Models/Address");
 const OrderAddress = use("App/Models/OrderAddress");
+const Role = use("App/Models/Role");
 const randomString = require("randomstring");
 const GeneralSetting = use("App/Models/GeneralSetting");
 const moment = require("moment");
@@ -50,6 +51,21 @@ class OrderCreateOrderFeature {
         billing_address: { province_id, country_id, state_id, address },
       } = this.request.all();
       const userId = this.auth.current.user.id;
+
+      const superAdmin = await Role.findBy("role_label", "Super Admin");
+      const shopAdmin = await Role.findBy("role_label", "Shop Admin");
+
+      if (
+        this.auth.current.user.role_id === superAdmin.id ||
+        this.auth.current.user.role_id === shoprAdmin.id
+      ) {
+        return this.response.status(400).send({
+          message:
+            "You dont have the permition to create an order please create an account as a customer",
+          status_code: 400,
+          status: "fail",
+        });
+      }
 
       const userProfile = await Profile.findBy("user_id", userId);
 
