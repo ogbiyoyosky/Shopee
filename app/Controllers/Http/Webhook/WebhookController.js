@@ -2,19 +2,42 @@
 const DeployToProductionFeature = use(
   "App/Controllers/Features/DeployToProductionFeature"
 );
+const ProcessTransactionFeature = use(
+  "App/Controllers/Features/ProcessTransactionFeature"
+);
 
 class WebhookController {
   async deploy({ request, response }) {
     return new DeployToProductionFeature(request, response).deploy();
   }
 
-  async funding({ request, response }) {
+  async checkout({ request, response }) {
     const { cancelled, resp } = request.all();
+
     if (cancelled) {
-      return response.redirect("http://localhost:3000/funding-success");
+      return response.redirect("http://timeshoppy.com/dashboard");
     }
 
-    if(resp.data.data.status == "success")
+    // return new ProcessTransactionFeature(
+    //   this.request,
+    //   this.response
+    // ).processTransaction(amount, token, user_id, type, memo, redirectURL);
+
+    if (resp.data.data.status == "success") {
+    }
+  }
+
+  async payment({ request }) {
+    console.log("req", request.all());
+    try {
+    } catch (paymentError) {
+      console.log("paymentError", paymentError);
+      return this.response.status(500).send({
+        status: "Fail",
+        message: "Internal server error from payment webhook.",
+        status_code: 500,
+      });
+    }
   }
 }
 

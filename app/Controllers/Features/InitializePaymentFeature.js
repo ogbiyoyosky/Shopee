@@ -19,24 +19,25 @@ class InitializePaymentFeature {
 
   async pay() {
     try {
-      const { amount, transaction_type_id, redirect_url } = this.request.all();
+      // const { amount, transaction_type_id, redirect_url } = this.request.all();
 
-      // const amount = 10;
-      // const transaction_type_id = 1;
-      // const redirect_url = "checkout";
+      const amount = 10;
+      const transaction_type_id = 1;
+      const redirect_url = "funding-success";
 
-      // const uid = 1;
-      // const email = "freemanogbiyoyo@gmail.com";
-      // const customer_firstname = "Emmanuel";
-      // const customer_lastname = "Ogbiyoyo";
+      const uid = 1;
+      const email = "freemanogbiyoyo@gmail.com";
+      const customer_firstname = "Emmanuel";
+      const customer_lastname = "Ogbiyoyo";
+      const phone_number = "08131287472";
 
-      const uid = this.auth.current.user.id;
+      // const uid = this.auth.current.user.id;
 
-      const profile = await Profile.findBy("user_id", uid);
-      const customer_firstname = profile.first_name;
-      const customer_lastname = profile.last_name;
-      const email = this.auth.current.user.email;
-      const phone_number = `0${this.auth.current.user.phone_number}`;
+      // const profile = await Profile.findBy("user_id", uid);
+      // const customer_firstname = profile.first_name;
+      // const customer_lastname = profile.last_name;
+      // const email = this.auth.current.user.email;
+      // const phone_number = `0${this.auth.current.user.phone_number}`;
 
       let memo;
 
@@ -61,7 +62,7 @@ class InitializePaymentFeature {
           txref: token,
           customer_phone: phone_number, //phone_number,
           amount: amount, //amount,
-          redirect_url: `https://76eb11d5.ngrok.io/api/v1/${redirect_url}`,
+          redirect_url: ` https://ce3d9c31.ngrok.io/api/v1/${redirect_url}`,
           customer_email: email, //email,
           currency: "USD",
           country: "NG",
@@ -77,66 +78,66 @@ class InitializePaymentFeature {
                 {
                   display_name: "Amount",
                   variable_name: "amt",
-                  value: amount
+                  value: amount,
                 },
                 {
                   display_name: "User ID",
                   variable_name: "uid",
-                  value: uid
+                  value: uid,
                 },
                 {
                   display_name: "Memo",
                   variable_name: "memo",
-                  value: memo
+                  value: memo,
                 },
                 {
                   display_name: "Type",
                   variable_name: "type",
-                  value: transaction_type.transaction_type_label
+                  value: transaction_type.transaction_type_label,
                 },
                 {
                   display_name: "Token",
                   variable_name: "tkn",
-                  value: token
+                  value: token,
                 },
                 {
                   display_name: "Url",
                   variable_name: "url",
-                  value: redirect_url
-                }
-              ])
-            }
-          ]
+                  value: redirect_url,
+                },
+              ]),
+            },
+          ],
         },
         headers: {
           authorization: `Bearer ${Env.get("PAYSTACK_SECRET")}`,
           "content-type": "application/json",
-          "cache-control": "no-cache"
+          "cache-control": "no-cache",
         },
-        json: true
+        json: true,
       };
 
       return requestPromise(requestConfig)
-        .then(apiResponse => {
+        .then((apiResponse) => {
           if (!apiResponse.status == "sucesss") {
             return this.response.status(400).send({
               status: "Fail",
               message: "Error contacting rave",
-              status_code: 400
+              status_code: 400,
             });
           }
 
           return this.response.status(200).send({
-            authorization_url: apiResponse.data.link
+            authorization_url: apiResponse.data.link,
           });
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
           console.log("initialization Error", e);
           return this.response.status(500).send({
             status: "Fail",
             message: "Internal Server Error",
-            status_code: 500
+            status_code: 500,
           });
         });
     } catch (error) {
@@ -144,7 +145,7 @@ class InitializePaymentFeature {
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500
+        status_code: 500,
       });
     }
   }
