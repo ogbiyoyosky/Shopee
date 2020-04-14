@@ -122,7 +122,7 @@ Route.group(() => {
   Route.post("Paystack/Pay", "Payment/PaymentController.payWithPayStack")
     .middleware(["auth"])
     .validator("Payment");
-  Route.get(
+  Route.post(
     "Paystack/VerifyPayment",
     "Payment/PaymentController.verifyPayment"
   );
