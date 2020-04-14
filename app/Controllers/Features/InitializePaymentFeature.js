@@ -2,11 +2,13 @@
 const Config = use("Config");
 const Env = use("Env");
 const TransactionTypeSetting = use("App/Models/TransactionTypeSetting");
+const Profile = use("App/Models/Profile");
 const requestPromise = require("request-promise");
 const randomString = require("randomstring");
 
 const PUBLICK_KEY = Env.get("FLUTTER_PUBLIC_KEY");
-const FRONTEND_URL = Env.get("FRONTEND_URL");
+const HOST = Env.get("HOST");
+const PORT = Env.get("PORT");
 
 class InitializePaymentFeature {
   constructor(request, response, auth) {
@@ -29,9 +31,10 @@ class InitializePaymentFeature {
       // const customer_lastname = "Ogbiyoyo";
 
       const uid = this.auth.current.user.id;
-      const email = this.auth.current.user.email;
-      const customer_firstname = this.auth.current.user.last_name;
-      const customer_lastname = this.auth.current.user.last_name;
+
+      const profile = await Profile.findBy("user_id", uid);
+      const customer_firstname = profile.first_name;
+      const customer_lastname = profile.last_name;
       const email = this.auth.current.user.email;
       const phone_number = `0${this.auth.current.user.phone_number}`;
 
@@ -58,7 +61,7 @@ class InitializePaymentFeature {
           txref: token,
           customer_phone: phone_number, //phone_number,
           amount: amount, //amount,
-          redirect_url: `${FRONTEND_URL}/${redirect_url}`,
+          redirect_url: `https://76eb11d5.ngrok.io/api/v1/${redirect_url}`,
           customer_email: email, //email,
           currency: "USD",
           country: "NG",
@@ -74,66 +77,66 @@ class InitializePaymentFeature {
                 {
                   display_name: "Amount",
                   variable_name: "amt",
-                  value: amount,
+                  value: amount
                 },
                 {
                   display_name: "User ID",
                   variable_name: "uid",
-                  value: uid,
+                  value: uid
                 },
                 {
                   display_name: "Memo",
                   variable_name: "memo",
-                  value: memo,
+                  value: memo
                 },
                 {
                   display_name: "Type",
                   variable_name: "type",
-                  value: transaction_type.transaction_type_label,
+                  value: transaction_type.transaction_type_label
                 },
                 {
                   display_name: "Token",
                   variable_name: "tkn",
-                  value: token,
+                  value: token
                 },
                 {
                   display_name: "Url",
                   variable_name: "url",
-                  value: redirect_url,
-                },
-              ]),
-            },
-          ],
+                  value: redirect_url
+                }
+              ])
+            }
+          ]
         },
         headers: {
           authorization: `Bearer ${Env.get("PAYSTACK_SECRET")}`,
           "content-type": "application/json",
-          "cache-control": "no-cache",
+          "cache-control": "no-cache"
         },
-        json: true,
+        json: true
       };
 
       return requestPromise(requestConfig)
-        .then((apiResponse) => {
+        .then(apiResponse => {
           if (!apiResponse.status == "sucesss") {
             return this.response.status(400).send({
               status: "Fail",
               message: "Error contacting rave",
-              status_code: 400,
+              status_code: 400
             });
           }
 
           return this.response.status(200).send({
-            authorization_url: apiResponse.data.link,
+            authorization_url: apiResponse.data.link
           });
         })
-        .catch((e) => {
+        .catch(e => {
           console.log(e);
           console.log("initialization Error", e);
           return this.response.status(500).send({
             status: "Fail",
             message: "Internal Server Error",
-            status_code: 500,
+            status_code: 500
           });
         });
     } catch (error) {
@@ -141,7 +144,7 @@ class InitializePaymentFeature {
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
   }

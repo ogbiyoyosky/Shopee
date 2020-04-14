@@ -21,17 +21,17 @@ class VerifyPaymentFeature {
       uri: Config.get("endpoints.rave.verifyTransactionEndpoint"),
       body: {
         SECKEY: "FLWSECK_TEST-172005f0c04f723fa96ab59c15492a1d-X",
-        txref: txRef,
+        txref: txRef
       },
       headers: {
         "content-type": "application/json",
-        "cache-control": "no-cache",
+        "cache-control": "no-cache"
       },
-      json: true,
+      json: true
     };
 
     return requestPromise(requestConfig)
-      .then(async (apiResponse) => {
+      .then(async apiResponse => {
         if (apiResponse.status == "success") {
           // redirect to a success page
           const fields = JSON.parse(apiResponse.data.meta[0].metavalue);
@@ -53,7 +53,7 @@ class VerifyPaymentFeature {
           let memo;
           let redirectURL;
 
-          let mapData = fields.map((item) => {
+          let mapData = fields.map(item => {
             if (item.variable_name == "tkn") {
               token = item.value;
             }
@@ -92,16 +92,16 @@ class VerifyPaymentFeature {
           return this.response.status(400).send({
             status: "Fail",
             message: "Error contacting rave",
-            status_code: 400,
+            status_code: 400
           });
         }
       })
-      .catch((e) => {
+      .catch(e => {
         console.log("Verify Payment Error", e);
         return this.response.status(400).send({
           status: "Fail",
           message: "Unable to process transaction.",
-          status_code: 400,
+          status_code: 400
         });
       });
   }
