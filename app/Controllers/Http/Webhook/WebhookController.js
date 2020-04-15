@@ -26,13 +26,14 @@ class WebhookController {
 
     if (cancelled) {
       transaction = await Transaction.findBy("transaction_reference", txref);
-
-      if (transaction.status != "success") {
-        transaction.status = "fail";
-        await transaction.save();
-        existingToken = await TransactionToken.findBy("token", txref);
-        existingToken.is_revoked = 1;
-        await existingToken.save();
+      if (transaction) {
+        if (transaction.status != "success") {
+          transaction.status = "fail";
+          await transaction.save();
+          existingToken = await TransactionToken.findBy("token", txref);
+          existingToken.is_revoked = 1;
+          await existingToken.save();
+        }
       }
 
       return response.redirect("https://timeshoppy.com/dashboard");
