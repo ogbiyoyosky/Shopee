@@ -111,9 +111,9 @@ Route.group(() => {
     .middleware(["auth"])
     .validator("EditProfile");
   //paystack integration
-  Route.get("Paystack/Pay", "Payment/PaymentController.payWithPayStack");
-  // .middleware(["auth"])
-  // .validator("Payment");
+  Route.post("Paystack/Pay", "Payment/PaymentController.payWithPayStack")
+    .middleware(["auth"])
+    .validator("Payment");
   Route.post(
     "Paystack/VerifyPayment",
     "Payment/PaymentController.verifyPayment"
@@ -126,6 +126,7 @@ Route.group(() => {
     "Payment/PaymentController.processTransaction"
   );
 
+  //store
   Route.get("Store/AllStores", "Store/StoreController.listStores").middleware([
     "auth",
     "superAdmin",
@@ -212,8 +213,7 @@ Route.group(() => {
     "CronJob/CronJobController.removeProductAfterThirtyDays"
   );
 
-  Route.post("/funding-success", "Webhook/WebhookController.funding");
-  Route.post("/checkout", "Webhook/WebhookController.checkout");
+  Route.post("/verifyPayment", "Webhook/WebhookController.funding");
 
   Route.get("/analytics", "Analytic/AnalyticController.fetchAnalytics");
 }).prefix("api/v1");
