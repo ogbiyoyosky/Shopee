@@ -1,11 +1,12 @@
 "use strict";
 const Config = use("Config");
-const Env = use("Env");
+//const Env = use("Env");
 const requestPromise = require("request-promise");
 const TransactionToken = use("App/Models/TransactionToken");
-const ProcessTransactionFeature = use(
-  "App/Controllers/Features/ProcessTransactionFeature"
-);
+const Transaction = use("App/Models/Transaction");
+// const ProcessTransactionFeature = use(
+//   "App/Controllers/Features/ProcessTransactionFeature"
+// );
 
 class VerifyPaymentFeature {
   constructor(request, response) {
@@ -13,25 +14,23 @@ class VerifyPaymentFeature {
     this.response = response;
   }
 
-  async verify() {
-    const { txRef } = this.request.all();
-
+  async verify(txRef) {
     const requestConfig = {
       method: "POST",
       uri: Config.get("endpoints.rave.verifyTransactionEndpoint"),
       body: {
         SECKEY: "FLWSECK_TEST-172005f0c04f723fa96ab59c15492a1d-X",
-        txref: txRef
+        txref: txRef,
       },
       headers: {
         "content-type": "application/json",
-        "cache-control": "no-cache"
+        "cache-control": "no-cache",
       },
-      json: true
+      json: true,
     };
 
     return requestPromise(requestConfig)
-      .then(async apiResponse => {
+      .then(async (apiResponse) => {
         if (apiResponse.status == "success") {
           // redirect to a success page
           const fields = JSON.parse(apiResponse.data.meta[0].metavalue);
@@ -53,7 +52,7 @@ class VerifyPaymentFeature {
           let memo;
           let redirectURL;
 
-          let mapData = fields.map(item => {
+          let mapData = fields.map((item) => {
             if (item.variable_name == "tkn") {
               token = item.value;
             }
@@ -78,30 +77,41 @@ class VerifyPaymentFeature {
             }
           });
 
-          const transaction = new TransactionToken();
-          transaction.token = token;
-          transaction.user_id = user_id;
-          await transaction.save();
-
-          return new ProcessTransactionFeature(
-            this.request,
-            this.response
-          ).processTransaction(amount, token, user_id, type, memo, redirectURL);
+          return {
+            user_id,
+            amount,
+            token,
+            type,
+            memo,
+            redirectURL,
+            status: "success",
+          };
         } else {
-          // redirect to a failure page.
-          return this.response.status(400).send({
-            status: "Fail",
-            message: "Error contacting rave",
-            status_code: 400
-          });
+          const transactionToken = await TransactionToken.findBy(
+            "token",
+            txRef
+          );
+          if (transactionToken) {
+            transactionToken.is_revoked = 1;
+            await transactionToken.save();
+
+            transaction = await Transaction.findBY(
+              "transaction_reference",
+              txRef
+            );
+            transaction.status = "fail";
+            await transaction.save();
+          }
+
+          return false;
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log("Verify Payment Error", e);
         return this.response.status(400).send({
           status: "Fail",
           message: "Unable to process transaction.",
-          status_code: 400
+          status_code: 400,
         });
       });
   }
