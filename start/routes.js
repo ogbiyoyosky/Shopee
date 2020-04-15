@@ -30,14 +30,6 @@ Route.group(() => {
       Shopee: "Welcome to Shopee Api subdomains",
     };
   });
-}).domain(":api.localhost");
-
-Route.group(() => {
-  Route.get("/", ({ subdomains }) => {
-    return {
-      Shopee: "Welcome to Shopee Api",
-    };
-  });
 });
 
 Route.post("/webhook/deploy", "Webhook/WebhookController.deploy");
@@ -119,13 +111,16 @@ Route.group(() => {
     .middleware(["auth"])
     .validator("EditProfile");
   //paystack integration
-  Route.post("Paystack/Pay", "Payment/PaymentController.payWithPayStack")
-    .middleware(["auth"])
-    .validator("Payment");
-  Route.get(
+  Route.get("Paystack/Pay", "Payment/PaymentController.payWithPayStack");
+  // .middleware(["auth"])
+  // .validator("Payment");
+  Route.post(
     "Paystack/VerifyPayment",
     "Payment/PaymentController.verifyPayment"
   );
+
+  Route.post("/payment/webhook", "Webhook/WebhookController.payment");
+
   Route.get(
     "Transaction/ProcessTransaction",
     "Payment/PaymentController.processTransaction"
@@ -217,6 +212,9 @@ Route.group(() => {
     "/thirtyRemoveProduct",
     "CronJob/CronJobController.removeProductAfterThirtyDays"
   );
+
+  Route.post("/funding-success", "Webhook/WebhookController.funding");
+  Route.post("/checkout", "Webhook/WebhookController.checkout");
 
   Route.get("/analytics", "Analytic/AnalyticController.fetchAnalytics");
 }).prefix("api/v1");
