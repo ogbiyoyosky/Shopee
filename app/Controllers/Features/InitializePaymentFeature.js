@@ -5,6 +5,8 @@ const TransactionTypeSetting = use("App/Models/TransactionTypeSetting");
 const Profile = use("App/Models/Profile");
 const requestPromise = require("request-promise");
 const randomString = require("randomstring");
+const TransactionToken = use("App/Models/TransactionToken");
+const Transaction = use("App/Models/Transaction");
 
 const PUBLICK_KEY = Env.get("FLUTTER_PUBLIC_KEY");
 const HOST = Env.get("HOST");
@@ -19,25 +21,25 @@ class InitializePaymentFeature {
 
   async pay() {
     try {
-      // const { amount, transaction_type_id, redirect_url } = this.request.all();
+      const { amount, transaction_type_id, redirect_url } = this.request.all();
 
-      const amount = 10;
-      const transaction_type_id = 1;
-      const redirect_url = "funding-success";
+      // const amount = 10;
+      // const transaction_type_id = 1;
+      // const redirect_url = "funding-success";
 
-      const uid = 1;
-      const email = "freemanogbiyoyo@gmail.com";
-      const customer_firstname = "Emmanuel";
-      const customer_lastname = "Ogbiyoyo";
-      const phone_number = "08131287472";
+      // const uid = 1;
+      // const email = "freemanogbiyoyo@gmail.com";
+      // const customer_firstname = "Emmanuel";
+      // const customer_lastname = "Ogbiyoyo";
+      // const phone_number = "08131287472";
 
-      // const uid = this.auth.current.user.id;
+      const uid = this.auth.current.user.id;
 
-      // const profile = await Profile.findBy("user_id", uid);
-      // const customer_firstname = profile.first_name;
-      // const customer_lastname = profile.last_name;
-      // const email = this.auth.current.user.email;
-      // const phone_number = `0${this.auth.current.user.phone_number}`;
+      const profile = await Profile.findBy("user_id", uid);
+      const customer_firstname = profile.first_name;
+      const customer_lastname = profile.last_name;
+      const email = this.auth.current.user.email;
+      const phone_number = `0${this.auth.current.user.phone_number}`;
 
       let memo;
 
@@ -118,7 +120,7 @@ class InitializePaymentFeature {
       };
 
       return requestPromise(requestConfig)
-        .then((apiResponse) => {
+        .then(async (apiResponse) => {
           if (!apiResponse.status == "sucesss") {
             return this.response.status(400).send({
               status: "Fail",
@@ -126,6 +128,22 @@ class InitializePaymentFeature {
               status_code: 400,
             });
           }
+
+          //save the transaction and token
+
+          const transaction = new TransactionToken();
+          transaction.token = token;
+          transaction.user_id = uid;
+          await transaction.save();
+
+          await Transaction.create({
+            user_id: uid,
+            amount,
+            status: "pending",
+            transaction_reference: token,
+            transaction_description: memo,
+            transaction_type_id: transaction_type_id,
+          });
 
           return this.response.status(200).send({
             authorization_url: apiResponse.data.link,
