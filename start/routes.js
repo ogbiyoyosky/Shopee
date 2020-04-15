@@ -126,7 +126,6 @@ Route.group(() => {
     "Payment/PaymentController.processTransaction"
   );
 
-  //store
   Route.get("Store/AllStores", "Store/StoreController.listStores").middleware([
     "auth",
     "superAdmin",
