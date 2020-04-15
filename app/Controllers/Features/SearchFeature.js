@@ -20,7 +20,9 @@ class SearchFeature {
         .where(query.search(["product_name", "description"]))
         .with("category")
         .with("sub_category")
+        .with("main_product_images")
         .with("tags")
+        .with("store")
         .orderBy(order.column, order.direction)
         .paginate(query.page(), query.limit());
 

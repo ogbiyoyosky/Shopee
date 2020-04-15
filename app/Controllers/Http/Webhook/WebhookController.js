@@ -14,7 +14,8 @@ class WebhookController {
       return response.redirect("http://localhost:3000/funding-success");
     }
 
-    if(resp.data.data.status == "success")
+    if (resp.data.data.status == "success") {
+    }
   }
 }
 
