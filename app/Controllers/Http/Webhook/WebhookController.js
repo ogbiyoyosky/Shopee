@@ -19,7 +19,7 @@ class WebhookController {
   async funding({ request, response }) {
     const { cancelled, resp, txref } = request.all();
     const {
-      tx: { txRef },
+      tx: { txRef }
     } = JSON.parse(resp);
     let existingToken;
     let transaction;
@@ -43,7 +43,7 @@ class WebhookController {
       user_id,
       amount,
       redirectURL,
-      token,
+      token
     } = await new VerifyPaymentFeature(request, response).verify(txRef);
 
     if (token) {
@@ -109,7 +109,7 @@ class WebhookController {
         }
         return response.status(200).send({
           status: "success",
-          status_code: 200,
+          status_code: 200
         });
       }
     } catch (paymentError) {
@@ -117,7 +117,7 @@ class WebhookController {
       return response.status(500).send({
         status: "Fail",
         message: "Internal server error from payment webhook.",
-        status_code: 500,
+        status_code: 500
       });
     }
   }
