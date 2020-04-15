@@ -62,7 +62,7 @@ class InitializePaymentFeature {
           txref: token,
           customer_phone: phone_number, //phone_number,
           amount: amount, //amount,
-          redirect_url: ` https://api.timeshoppy.com/api/v1/${redirect_url}`,
+          redirect_url: ` https://api.timeshoppy.com/api/v1/verifyPayment`,
           customer_email: email, //email,
           currency: "USD",
           country: "NG",
