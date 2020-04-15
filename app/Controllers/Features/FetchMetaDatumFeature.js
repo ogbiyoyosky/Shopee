@@ -29,21 +29,21 @@ class FetchMetaDatumFeature {
       const meta = {
         countries: serialized_country,
         transaction_type: serialized_transaction_type,
-        general_settings: serializedeSettings
+        general_settings: serializedeSettings,
       };
 
       return this.response.status(200).send({
         message: "Successfully fetch all Metadata",
         status_code: 200,
         status: "Success",
-        result: meta
+        result: meta,
       });
     } catch (FetchMetaDatumFeatureError) {
       console.log("FetchMetaDatumFeatureError", FetchMetaDatumFeatureError);
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500
+        status_code: 500,
       });
     }
   }

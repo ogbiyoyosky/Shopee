@@ -14,7 +14,7 @@ module.exports = {
   |
   */
   app: {
-    hostURL: HOST_URL
+    hostURL: HOST_URL,
   },
 
   /*
@@ -26,7 +26,14 @@ module.exports = {
   paystack: {
     transactionInitializeEndpoint:
       "https://api.paystack.co/transaction/initialize",
-    verifyTransactionEndpoint: "https://api.paystack.co/transaction/verify"
+    verifyTransactionEndpoint: "https://api.paystack.co/transaction/verify",
+  },
+
+  rave: {
+    transactionInitializeEndpoint:
+      "https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/hosted/pay",
+    verifyTransactionEndpoint:
+      "https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/verify",
   },
 
   /*
@@ -36,6 +43,6 @@ module.exports = {
   |
   */
   transactions: {
-    processTransactionEndpoint: `${HOST_URL}/api/v1/Transaction/ProcessTransaction`
-  }
+    processTransactionEndpoint: `${HOST_URL}/api/v1/Transaction/ProcessTransaction`,
+  },
 };
