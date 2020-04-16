@@ -41,7 +41,7 @@ class Register {
   async fails(errorMessages) {
     return this.ctx.response.status(400).json({
       status: "invalid",
-      message: "Invalid data",
+      message: errorMessages[0].message,
       status_code: 400,
       errorMessages: errorMessages[0].message,
     });
