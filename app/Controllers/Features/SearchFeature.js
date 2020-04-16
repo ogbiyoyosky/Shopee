@@ -1,6 +1,7 @@
 "use strict";
 const Product = use("App/Models/StoreProduct");
 const Query = use("Query");
+const Store = use("App/Models/Store")
 
 class SearchFeature {
   constructor(request, response) {
@@ -9,22 +10,45 @@ class SearchFeature {
   }
 
   async listSearchResults() {
-    const { q, page = 1 } = this.request.all();
+    const { q, page = 1, province } = this.request.all();
 
     try {
-      const query = new Query(this.request, { order: "id", search: q, page });
+      const query = new Query(this.request, { order: "id", search: q, province, page });
       const order = query.order();
-      console.log({ q });
 
-      const products = await Product.query()
-        .where(query.search(["product_name", "description"]))
-        .with("category")
-        .with("sub_category")
-        .with("main_product_images")
-        .with("tags")
-        .with("store")
+      const searcResult = Product.query()
+
+      if (province) {
+        const storeIds = await Store.query()
+          .where("province_id", province)
+          .pluck("id")
+
+        console.log(storeIds)
+
+        searcResult
+          .whereIn("store_id", storeIds)
+          .andWhere(query.search(["product_name", "description"]))
+          .with("category")
+          .with("sub_category")
+          .with("main_product_images")
+          .with("tags")
+          .with("store")
+      } {
+        searcResult
+          .where(query.search(["product_name", "description"]))
+          .with("category")
+          .with("sub_category")
+          .with("main_product_images")
+          .with("tags")
+          .with("store")
+          .orderBy(order.column, order.direction)
+          .paginate(query.page(), query.limit());
+      }
+
+      const products = await searcResult.where('is_enabled', 1)
         .orderBy(order.column, order.direction)
         .paginate(query.page(), query.limit());
+
 
       return this.response.status(200).send({
         status: "success",
