@@ -57,7 +57,7 @@ class OrderCreateOrderFeature {
 
       if (
         this.auth.current.user.role_id === superAdmin.id ||
-        this.auth.current.user.role_id === shoprAdmin.id
+        this.auth.current.user.role_id === shopAdmin.id
       ) {
         return this.response.status(400).send({
           message:
