@@ -24,6 +24,8 @@ class WebhookController {
     let existingToken;
     let transaction;
 
+    console.log("cancelled", cancelled)
+
     if (cancelled) {
       transaction = await Transaction.findBy("transaction_reference", txref);
       if (transaction) {
