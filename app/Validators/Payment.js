@@ -8,7 +8,7 @@ class Payment {
   get rules() {
     return {
       transaction_type_id: "required|integer",
-      amount: "required|float",
+      amount: "required",
       redirect_url: "required|string",
     };
   }
