@@ -17,14 +17,16 @@ class WebhookController {
   }
 
   async funding({ request, response }) {
-    const { cancelled, resp, txref } = request.all();
+    const { cancelled, resp } = request.all();
+
+    let txRef
+
+    console.log("test", request.all())
     const {
       tx: { txRef }
     } = JSON.parse(resp);
     let existingToken;
     let transaction;
-
-    console.log("cancelled", cancelled)
 
     if (cancelled) {
       transaction = await Transaction.findBy("transaction_reference", txref);
