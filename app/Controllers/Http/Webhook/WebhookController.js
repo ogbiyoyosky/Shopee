@@ -22,52 +22,52 @@ class WebhookController {
     let txRef
 
     console.log("test", request.all())
-    const {
-      tx: { txRef }
-    } = JSON.parse(resp);
-    let existingToken;
-    let transaction;
+    // const {
+    //   tx: { txRef }
+    // } = JSON.parse(resp);
+    // let existingToken;
+    // let transaction;
 
-    if (cancelled) {
-      transaction = await Transaction.findBy("transaction_reference", txref);
-      if (transaction) {
-        if (transaction.status != "success") {
-          transaction.status = "fail";
-          await transaction.save();
-          existingToken = await TransactionToken.findBy("token", txref);
-          existingToken.is_revoked = 1;
-          await existingToken.save();
-        }
-      }
+    // if (cancelled) {
+    //   transaction = await Transaction.findBy("transaction_reference", txref);
+    //   if (transaction) {
+    //     if (transaction.status != "success") {
+    //       transaction.status = "fail";
+    //       await transaction.save();
+    //       existingToken = await TransactionToken.findBy("token", txref);
+    //       existingToken.is_revoked = 1;
+    //       await existingToken.save();
+    //     }
+    //   }
 
-      return response.redirect("https://timeshoppy.com/dashboard");
-    }
+    //   return response.redirect("https://timeshoppy.com/dashboard");
+    // }
 
-    const {
-      user_id,
-      amount,
-      redirectURL,
-      token
-    } = await new VerifyPaymentFeature(request, response).verify(txRef);
+    // const {
+    //   user_id,
+    //   amount,
+    //   redirectURL,
+    //   token
+    // } = await new VerifyPaymentFeature(request, response).verify(txRef);
 
-    if (token) {
-      transaction = await Transaction.findBy("transaction_reference", token);
+    // if (token) {
+    //   transaction = await Transaction.findBy("transaction_reference", token);
 
-      if (transaction != "success") {
-        transaction.status = "success";
-        await transaction.save();
+    //   if (transaction != "success") {
+    //     transaction.status = "success";
+    //     await transaction.save();
 
-        existingToken = await TransactionToken.findBy("token", token);
-        existingToken.is_revoked = 1;
-        await existingToken.save();
+    //     existingToken = await TransactionToken.findBy("token", token);
+    //     existingToken.is_revoked = 1;
+    //     await existingToken.save();
 
-        await new ProcessTransactionFeature(
-          request,
-          response
-        ).processTransaction(amount, user_id);
-      }
-      return response.redirect(`https://timeshoppy.com/${redirectURL}`);
-    }
+    //     await new ProcessTransactionFeature(
+    //       request,
+    //       response
+    //     ).processTransaction(amount, user_id);
+    //   }
+    //   return response.redirect(`https://timeshoppy.com/${redirectURL}`);
+    // }
     return response.redirect(`https://timeshoppy.com/funding-failure`);
   }
 
