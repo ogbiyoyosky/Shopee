@@ -8,7 +8,7 @@ class Payment {
   get rules() {
     return {
       transaction_type_id: "required|integer",
-      amount: "required|integer",
+      amount: "required|float",
       redirect_url: "required|string",
     };
   }
@@ -24,7 +24,7 @@ class Payment {
   async fails(errorMessages) {
     return this.ctx.response.status(400).json({
       status: "invalid",
-      message: "Invalid data",
+      message: errorMessages[0].message,
       status_code: 400,
       errorMessages: errorMessages[0].message,
     });
