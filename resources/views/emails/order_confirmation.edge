@@ -367,7 +367,7 @@ NOTES:
                     <table bgcolor="#eee">
                         <tr>
                             <td>
-                                <a href="shop" title="shop name" alt=""
+                                <a href="shop" title="shop name" alt="logo"
                                     style="width:70px; color: #fff; font-size: 25px;height:auto;" />
                                 <a href="timeshoppy.com"><img src="https://timeshoppy.com/assets/images/icon/logo.png"
                                         alt=""></a></a>
@@ -418,7 +418,7 @@ NOTES:
 
                                     <img src="{{item.main_product_images[0].image_url}}" />
                                     <span class="item-title"> {{item.product_name}} </span> <br />
-                                    <span class="item-price"">NGN {{item.price * (item.discount / 100)}} ({{item.pivot.qty}} piece) </span>
+                                    <span class="item-price"">$ {{item.price * (item.discount / 100)}} ({{item.pivot.qty}} piece) </span>
 
                                 </div>
                                 <hr>
@@ -428,7 +428,7 @@ NOTES:
                                 <br />
 
                                 <!-- Totals -->
-                                <h5><b>Subtotal:</b> NGN {{sub_total  }}</h5>
+                                <h5><b>Subtotal:</b> $ {{sub_total  }}</h5>
 
                                 <!-- Totals -->
                                 <table class="columns" width="100%">
@@ -438,7 +438,7 @@ NOTES:
                                             <table align="left" class="column">
                                                 <tr>
                                                     <td>
-                                                        <p><b>Shipping:</b> NGN {{shipping_fee}}
+                                                        <p><b>Shipping:</b> $ {{shipping_fee}}
                                                         </p>
                                                     </td>
                                                 </tr>
@@ -459,13 +459,13 @@ NOTES:
                                 <!-- /Totals -->
                                 <!-- foreach -->
 
-                                <p><b>VAT </b>NGN {{vat}}</p>
+                                <p><b>VAT </b>$ {{vat}}</p>
                                 <br />
 
-                                <p><b>Service Charge </b>NGN {{  service_charge}}</p>
+                                <p><b>Service Charge </b>$ {{  service_charge}}</p>
                                 <br />
 
-                                <h4><b>Total: NGN {{total}}}</b></h4>
+                                <h4><b>Total: $ {{total}}}</b></h4>
                                 <!-- /Totals -->
 
                                 <br />

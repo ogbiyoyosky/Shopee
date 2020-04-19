@@ -61,7 +61,7 @@ class OrderCreateOrderFeature {
       ) {
         return this.response.status(400).send({
           message:
-            "You dont have the permition to create an order please create an account as a customer",
+            "You dont have the permission to create an order please create an account as a customer",
           status_code: 400,
           status: "fail",
         });
@@ -76,13 +76,6 @@ class OrderCreateOrderFeature {
           status: "fail",
         });
       }
-
-      //validation
-      // find the store of the first product
-      // check the buyers the state of the buyer matches the state of the seller.
-      //if yes, continue else check if seller sells outside state if yes continue else return response
-      // check the buyers the state of the buyer matches the lga of the seller.
-      //if yes, continue else check if seller sells outside locality if yes continue else return response
 
       const firstItemOnCartId = cart_items[0].product_id;
       const { store_id } = await StoreProduct.findBy("id", firstItemOnCartId);
