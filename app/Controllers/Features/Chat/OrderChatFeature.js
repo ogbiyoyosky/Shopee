@@ -1,6 +1,7 @@
 'use strict'
 const Conversation = use("App/Models/Conversation")
 const ConversationMessage = use("App/Models/ConversationMessage")
+const ConversationConverser = use("App/Models/ConversationConverser")
 
 class OrderChatFeature {
     constructor(request, response, auth) {
@@ -15,6 +16,19 @@ class OrderChatFeature {
             const { message, order_id } = this.request.all()
 
             const conversation = await Conversation.findOrCreate({ order_id })
+            const conversationConverser = await ConversationConverser.findBy("user_id", id)
+
+            if (conversationConverser) {
+
+                conversationConverser.unread_messages += 1
+                conversationConverser.save()
+
+            } else {
+                await ConversationConverser.create({
+                    conversation_id: conversation.id,
+                    user_id: id
+                })
+            }
 
             const conversationMessage = new ConversationMessage()
             conversationMessage.conversation_id = conversation.id
