@@ -1,5 +1,6 @@
 "use strict";
 const Conversation = use("App/Models/Conversation");
+const ConversationConverser = use("App/Models/ConversationConverser")
 
 class ChatFetchOrderMessagesFeature {
   constructor(request, response, auth) {
@@ -18,6 +19,15 @@ class ChatFetchOrderMessagesFeature {
           builder.with("user_role");
         })
         .fetch();
+
+      const conversationConverser = await ConversationConverser.findBy("user_id", id)
+
+      if (conversationConverser) {
+
+        conversationConverser.unread_messages = 0
+        conversationConverser.save()
+
+      }
 
       return this.response.status(200).send({
         message: "Successfully fetched messages for this order",

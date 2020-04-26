@@ -1,6 +1,7 @@
 "use strict";
 const User = use("App/Models/User");
 const moment = require("moment");
+const Database = use("Database")
 
 class FetchProfileFeature {
   constructor(request, response, auth) {
@@ -46,11 +47,20 @@ class FetchProfileFeature {
         .leftJoin("stores", "users.id", "stores.user_id")
         .fetch();
 
+      const unreadMessages = await Database.from("conversation_conversers")
+        .select("unread_messages")
+        .where("user_id", user_id)
+        .sum('unread_messages as total_unread_messages')
+
+      serializedResult.message_info = unreadMessages
+
       const serializedResult = profile.toJSON();
 
       const user = await User.findBy("id", user_id);
       user.last_login_time = moment().format("YYYY-MM-DD  HH:mm:ss");
       await user.save();
+
+
 
       return this.response.status(200).send({
         message: "Successfully fetched the users profile",
