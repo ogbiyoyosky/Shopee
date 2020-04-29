@@ -49,14 +49,14 @@ class EditProductFeature {
         subcategory_id,
         is_published,
         tags,
-        price,
+        price
       } = this.request.all();
 
       if (user_store.is_activated_at == null) {
         return this.response.status(400).send({
           status: "Fail",
           message: "Store is inactive please contact the admin",
-          status_code: 400,
+          status_code: 400
         });
       }
       if (tags) {
@@ -65,7 +65,7 @@ class EditProductFeature {
           : (Submittedtags = tags);
       }
       const productImage = this.request.file("product_image", {
-        types: ["image"],
+        types: ["image"]
       });
 
       const product = await StoreProduct.findBy("id", productId);
@@ -77,7 +77,7 @@ class EditProductFeature {
         discount,
         category_id,
         subcategory_id,
-        is_enabled: is_published,
+        is_enabled: is_published
       });
       await product.save();
 
@@ -105,7 +105,7 @@ class EditProductFeature {
       if (tags) {
         await this.processTags({
           Submittedtags,
-          productId,
+          productId
         });
       }
 
@@ -113,18 +113,22 @@ class EditProductFeature {
       if (productImage) {
         await product.main_product_images().sync(imagesIds);
       }
+
+      user.last_updated_item = moment().format("YYYY-MM-DD HH:mm:ss");
+      await user.save();
+
       return this.response.status(200).send({
         message: "Product successfully updated",
         status_code: 200,
         status: "Success",
-        product,
+        product
       });
     } catch (editProductError) {
       console.log("editProductError", editProductError);
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
   }

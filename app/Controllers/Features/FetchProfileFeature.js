@@ -1,7 +1,7 @@
 "use strict";
 const User = use("App/Models/User");
 const moment = require("moment");
-const Database = use("Database")
+const Database = use("Database");
 
 class FetchProfileFeature {
   constructor(request, response, auth) {
@@ -50,30 +50,28 @@ class FetchProfileFeature {
       const unreadMessages = await Database.from("conversation_conversers")
         .select("unread_messages")
         .where("user_id", user_id)
-        .sum('unread_messages as total_unread_messages')
+        .sum("unread_messages as total_unread_messages");
 
-      serializedResult.message_info = unreadMessages
-
-      const serializedResult = profile.toJSON();
+      let serializedResult = profile.toJSON();
+      serializedResult[0].total_unread_messages =
+        unreadMessages[0].total_unread_messages;
 
       const user = await User.findBy("id", user_id);
       user.last_login_time = moment().format("YYYY-MM-DD  HH:mm:ss");
       await user.save();
 
-
-
       return this.response.status(200).send({
         message: "Successfully fetched the users profile",
         status_code: 200,
         status: "success",
-        result: serializedResult,
+        result: serializedResult
       });
     } catch (error) {
       console.log("profile Error -> ", error);
       return this.response.status(500).send({
         status: "fail",
         status_code: 500,
-        message: "Internal Server Error",
+        message: "Internal Server Error"
       });
     }
   }
