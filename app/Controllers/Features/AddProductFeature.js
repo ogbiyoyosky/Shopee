@@ -5,6 +5,8 @@ const Image = use("App/Models/Image");
 const ProductTag = use("App/Models/ProductTag");
 const StoreProduct = use("App/Models/StoreProduct");
 const User = use("App/Models/User");
+const ProductSize = use("App/Models/ProductSize");
+const ProductColor = use("App/Models/ProductColor");
 const moment = require("moment");
 
 class AddProductFeature {
@@ -27,6 +29,32 @@ class AddProductFeature {
     }
   }
 
+  async processSizes({ SubmittedSizes, productId }) {
+    if (SubmittedSizes) {
+      for (var productSize in SubmittedSizes) {
+        const size = new ProductSize();
+
+        productTag.product_id = productId;
+        productTag.size = SubmittedSizes[productSize];
+
+        await size.save();
+      }
+    }
+  }
+
+  async processColors({ SubmittedColors, productId }) {
+    if (SubmittedColors) {
+      for (var productColor in SubmittedColors) {
+        const color = new ProductColor();
+
+        color.product_id = productId;
+        color.size = SubmittedSizes[productColor];
+
+        await color.save();
+      }
+    }
+  }
+
   async addProduct() {
     try {
       const { user } = this.auth.current;
@@ -41,6 +69,8 @@ class AddProductFeature {
         subcategory_id,
         is_published,
         tags,
+        colors,
+        sizes,
         price,
       } = this.request.all();
 
@@ -52,11 +82,28 @@ class AddProductFeature {
         });
       }
       let Submittedtags;
+      let SubmittedColors;
+      let SubmittedSizes;
       if (tags) {
         typeof tags === "string"
           ? (Submittedtags = [tags])
           : (Submittedtags = tags);
       }
+
+      if (colors) {
+        typeof colors === "string"
+          ? (SubmittedColors = [colors])
+          : (SubmittedColors = colors);
+      }
+
+      if (sizes) {
+        typeof sizes === "string"
+          ? (SubmittedSizes = [sizes])
+          : (SubmittedSizes = sizes);
+      }
+
+
+
 
       const productImage = this.request.file("product_image", {
         types: ["image"],
@@ -110,6 +157,20 @@ class AddProductFeature {
       if (tags) {
         await this.processTags({
           Submittedtags,
+          productId: product.id,
+        });
+      }
+
+      if (colors) {
+        await this.processColors({
+          SubmittedColors,
+          productId: product.id,
+        });
+      }
+
+      if (sizes) {
+        await this.processSizes({
+          SubmittedColors,
           productId: product.id,
         });
       }

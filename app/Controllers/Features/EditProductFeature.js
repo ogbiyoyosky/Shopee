@@ -37,6 +37,8 @@ class EditProductFeature {
   async editProduct(productId) {
     try {
       let Submittedtags;
+      let SubmittedColors;
+      let SubmittedSizes;
       const user = this.auth.current.user;
       const user_id = user.id;
       const user_store = await Store.findBy("user_id", user_id);
@@ -49,6 +51,8 @@ class EditProductFeature {
         subcategory_id,
         is_published,
         tags,
+        colors,
+        sizes,
         price
       } = this.request.all();
 
@@ -63,6 +67,18 @@ class EditProductFeature {
         typeof tags === "string"
           ? (Submittedtags = [tags])
           : (Submittedtags = tags);
+      }
+
+      if (colors) {
+        typeof colors === "string"
+          ? (SubmittedColors = [colors])
+          : (SubmittedColors = colors);
+      }
+
+      if (sizes) {
+        typeof sizes === "string"
+          ? (SubmittedSizes = [sizes])
+          : (SubmittedSizes = sizes);
       }
       const productImage = this.request.file("product_image", {
         types: ["image"]
@@ -106,6 +122,20 @@ class EditProductFeature {
         await this.processTags({
           Submittedtags,
           productId
+        });
+      }
+
+      if (colors) {
+        await this.processColors({
+          SubmittedColors,
+          productId: product.id,
+        });
+      }
+
+      if (sizes) {
+        await this.processSizes({
+          SubmittedColors,
+          productId: product.id,
         });
       }
 

@@ -28,6 +28,8 @@ class FetchProductInStoreFeature {
         .with("sub_category")
         .with("store")
         .with("tags")
+        .with("colors")
+        .with("sizes")
         .paginate(page, limit);
 
       const serializedProduct = produceInStore.toJSON();
