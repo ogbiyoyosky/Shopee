@@ -216,4 +216,5 @@ Route.group(() => {
   Route.post("/verifyPayment", "Webhook/WebhookController.funding");
 
   Route.get("/analytics", "Analytic/AnalyticController.fetchAnalytics");
+
 }).prefix("api/v1");

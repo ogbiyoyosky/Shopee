@@ -32,6 +32,8 @@ class SearchFeature {
           .with("sub_category")
           .with("main_product_images")
           .with("tags")
+          .with("colors")
+          .with("sizes")
           .with("store")
       } {
         searcResult
@@ -40,6 +42,8 @@ class SearchFeature {
           .with("sub_category")
           .with("main_product_images")
           .with("tags")
+          .with("colors")
+          .with("sizes")
           .with("store")
           .orderBy(order.column, order.direction)
           .paginate(query.page(), query.limit());

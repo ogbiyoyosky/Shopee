@@ -31,6 +31,14 @@ class StoreProduct extends Model {
 		return this.hasMany("App/Models/ProductTag", "id", "product_id")
 	}
 
+	sizes() {
+		return this.hasMany("App/Models/ProductSize", "id", "product_id")
+	}
+
+	colors() {
+		return this.hasMany("App/Models/ProductColor", "id", "product_id")
+	}
+
 	category() {
 		return this.hasOne("App/Models/Category", "category_id", "id")
 	}

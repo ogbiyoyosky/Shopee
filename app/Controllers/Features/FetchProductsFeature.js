@@ -23,6 +23,8 @@ class FetchProductsFeature {
           .with("category")
           .with("sub_category")
           .with("tags")
+          .with("colors")
+          .with("sizes")
           .with("store")
           .paginate(page, limit);
       } else if (store_id) {
