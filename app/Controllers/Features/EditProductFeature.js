@@ -4,6 +4,8 @@ const Store = use("App/Models/Store");
 const { uploadImage } = use("App/HelperFunctions/UploadImage");
 const Image = use("App/Models/Image");
 const ProductTag = use("App/Models/ProductTag");
+const ProductSize = use("App/Models/ProductSize");
+const ProductColor = use("App/Models/ProductColor");
 const User = use("App/Models/User");
 const moment = require("moment");
 
@@ -14,10 +16,51 @@ class EditProductFeature {
     this.auth = auth;
   }
 
+  async processSizes({ SubmittedSizes, productId }) {
+    if (SubmittedSizes) {
+      const existingSizes = ProductSize.query().where("product_id", productId);
+      if (existingSizes != null) {
+        await existingSizes.delete();
+      }
+
+      for (var productSize in SubmittedSizes) {
+        const size = new ProductSize();
+
+        size.product_id = productId;
+        size.size = SubmittedSizes[productSize];
+
+        await size.save();
+      }
+    }
+  }
+
+  async processColors({ SubmittedColors, productId }) {
+    if (SubmittedColors) {
+      const existingColors = ProductColor.query().where(
+        "product_id",
+        productId
+      );
+      if (existingColors != null) {
+        await existingColors.delete();
+      }
+
+      for (var productColor in SubmittedColors) {
+        const color = new ProductColor();
+
+        color.product_id = productId;
+        color.color = SubmittedColors[productColor];
+
+        await color.save();
+      }
+    }
+  }
+
   async processTags({ Submittedtags, productId }) {
     if (Submittedtags) {
-      const existingTags = await ProductTag.findBy("product_id", productId);
-      await existingTags.delete();
+      const existingTags = ProductTag.query().where("product_id", productId);
+      if (existingTags != null) {
+        await existingTags.delete();
+      }
       for (var tag in Submittedtags) {
         const productTag = new ProductTag();
 
@@ -55,6 +98,8 @@ class EditProductFeature {
         sizes,
         price
       } = this.request.all();
+
+      console.log("sizs", sizes);
 
       if (user_store.is_activated_at == null) {
         return this.response.status(400).send({
@@ -128,14 +173,14 @@ class EditProductFeature {
       if (colors) {
         await this.processColors({
           SubmittedColors,
-          productId: product.id,
+          productId: product.id
         });
       }
 
       if (sizes) {
         await this.processSizes({
-          SubmittedColors,
-          productId: product.id,
+          SubmittedSizes,
+          productId: product.id
         });
       }
 

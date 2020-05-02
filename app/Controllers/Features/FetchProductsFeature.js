@@ -35,6 +35,8 @@ class FetchProductsFeature {
           .with("main_product_images")
           .with("category")
           .with("sub_category")
+          .with("colors")
+          .with("sizes")
           .with("tags")
           .with("store")
           .paginate(page, limit);
@@ -45,6 +47,8 @@ class FetchProductsFeature {
           .andWhere("category_id", category_id)
           .with("main_product_images")
           .with("category")
+          .with("colors")
+          .with("sizes")
           .with("sub_category")
           .with("tags")
           .with("store")
@@ -56,6 +60,8 @@ class FetchProductsFeature {
           .with("main_product_images")
           .with("category")
           .with("sub_category")
+          .with("colors")
+          .with("sizes")
           .with("tags")
           .with("store")
           .paginate(page, limit);
@@ -65,14 +71,14 @@ class FetchProductsFeature {
         message: "Successfully fetch all products",
         status: "success",
         status_code: 200,
-        results: produceInStore,
+        results: produceInStore
       });
     } catch (fetchProductError) {
       console.log("fetchProduct Error -> ", fetchProductError);
       return this.response.status(500).send({
         status: "fail",
         status_code: 500,
-        message: "Internal Server Error",
+        message: "Internal Server Error"
       });
     }
   }
