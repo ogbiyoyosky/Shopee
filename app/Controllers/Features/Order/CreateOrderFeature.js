@@ -156,6 +156,12 @@ class OrderCreateOrderFeature {
         newOrderItem.order_id = newOrder.id;
         newOrderItem.product_id = cart_items[item].product_id;
         newOrderItem.store_id = cart_items[item].store_id;
+        if (color.length > 0) {
+          newOrderItem.color = cart_items[item].color;
+        }
+        if (size.length > 0) {
+          newOrderItem.size = cart_items[item].size;
+        }
         newOrderItem.qty = cart_items[item].qty;
         newOrderItem.store_id = storeId;
         await newOrderItem.save();
