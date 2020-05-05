@@ -48,7 +48,7 @@ class OrderCreateOrderFeature {
     try {
       const {
         cart_items,
-        billing_address: { province_id, country_id, state_id, address },
+        billing_address: { province_id, country_id, state_id, address }
       } = this.request.all();
       const userId = this.auth.current.user.id;
 
@@ -63,7 +63,7 @@ class OrderCreateOrderFeature {
           message:
             "You dont have the permission to create an order please create an account as a customer",
           status_code: 400,
-          status: "fail",
+          status: "fail"
         });
       }
 
@@ -73,7 +73,7 @@ class OrderCreateOrderFeature {
         return this.response.status(400).send({
           message: "No items in cart",
           status_code: 400,
-          status: "fail",
+          status: "fail"
         });
       }
 
@@ -88,7 +88,7 @@ class OrderCreateOrderFeature {
           return this.response.status(500).send({
             status: "Fail",
             message: "The seller does not sell to your region",
-            status_code: 500,
+            status_code: 500
           });
         }
       }
@@ -98,7 +98,7 @@ class OrderCreateOrderFeature {
           return this.response.status(500).send({
             status: "Fail",
             message: "The seller does not sell to your locality",
-            status_code: 500,
+            status_code: 500
           });
         }
       }
@@ -118,7 +118,7 @@ class OrderCreateOrderFeature {
 
         itemsToBeCalculated.push({
           itemPrice,
-          selectedQty,
+          selectedQty
         });
       }
 
@@ -126,8 +126,8 @@ class OrderCreateOrderFeature {
       const serializedSettings = setting.toJSON();
 
       const totalAmount = itemsToBeCalculated
-        .map((item) => item.itemPrice * item.selectedQty)
-        .reduce(function (accumulator, item) {
+        .map(item => item.itemPrice * item.selectedQty)
+        .reduce(function(accumulator, item) {
           return accumulator + item;
         }, 0);
 
@@ -156,10 +156,10 @@ class OrderCreateOrderFeature {
         newOrderItem.order_id = newOrder.id;
         newOrderItem.product_id = cart_items[item].product_id;
         newOrderItem.store_id = cart_items[item].store_id;
-        if (color.length > 0) {
+        if (cart_items[item].color && cart_items[item].color.length > 0) {
           newOrderItem.color = cart_items[item].color;
         }
-        if (size.length > 0) {
+        if (cart_items[item].size && cart_items[item].size.length > 0) {
           newOrderItem.size = cart_items[item].size;
         }
         newOrderItem.qty = cart_items[item].qty;
@@ -180,7 +180,7 @@ class OrderCreateOrderFeature {
         address,
         province_id,
         state_id,
-        country_id,
+        country_id
       });
 
       const orderAddress = new OrderAddress();
@@ -195,15 +195,15 @@ class OrderCreateOrderFeature {
         status_code: 200,
         results: {
           order: newOrder,
-          placement_code: newOrder.placement_code,
-        },
+          placement_code: newOrder.placement_code
+        }
       });
     } catch (createOrderError) {
       console.log("createOrderError", createOrderError);
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
   }
