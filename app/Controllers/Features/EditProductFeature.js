@@ -99,7 +99,7 @@ class EditProductFeature {
         price
       } = this.request.all();
 
-      console.log("sizs", sizes);
+      console.log("color", colors);
 
       if (user_store.is_activated_at == null) {
         return this.response.status(400).send({

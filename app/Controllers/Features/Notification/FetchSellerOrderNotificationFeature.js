@@ -36,6 +36,7 @@ class NotificationFetchSellerOrderNotificationFeature {
       for (var order in orderNotification) {
         const orderDetails = await OrderProduct.query()
           .where("order_id", orderNotification[order].order_id)
+
           .with("products")
           .fetch();
         const serializedOrderDetails = orderDetails.toJSON();
@@ -52,7 +53,7 @@ class NotificationFetchSellerOrderNotificationFeature {
         message: "Successfully returned all order notifications",
         status_code: 200,
         status: "success",
-        results: orderNotification,
+        results: orderNotification
       });
     } catch (fetchSellerOrderNotificationsError) {
       console.log(
@@ -62,7 +63,7 @@ class NotificationFetchSellerOrderNotificationFeature {
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
   }
