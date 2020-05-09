@@ -56,7 +56,7 @@ class FetchProfileFeature {
 
 
       const reducer = (accumulator, currentValue) => accumulator + currentValue;
-      const total = unreadMessages.reduce(reducer, 1)
+      const total = unreadMessages.reduce(reducer, 0)
 
       let serializedResult = profile.toJSON();
       serializedResult[0].total_unread_messages =
