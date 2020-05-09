@@ -30,12 +30,13 @@ class AddProductFeature {
   }
 
   async processSizes({ SubmittedSizes, productId }) {
+    console.log({ SubmittedSizes });
     if (SubmittedSizes) {
       for (var productSize in SubmittedSizes) {
         const size = new ProductSize();
 
-        productTag.product_id = productId;
-        productTag.size = SubmittedSizes[productSize];
+        size.product_id = productId;
+        size.size = SubmittedSizes[productSize];
 
         await size.save();
       }
@@ -43,12 +44,13 @@ class AddProductFeature {
   }
 
   async processColors({ SubmittedColors, productId }) {
+    console.log({ SubmittedColors });
     if (SubmittedColors) {
       for (var productColor in SubmittedColors) {
         const color = new ProductColor();
 
         color.product_id = productId;
-        color.size = SubmittedSizes[productColor];
+        color.color = SubmittedColors[productColor];
 
         await color.save();
       }
@@ -71,14 +73,17 @@ class AddProductFeature {
         tags,
         colors,
         sizes,
-        price,
+        price
       } = this.request.all();
+
+      console.log({ colors });
+      console.log({ sizes });
 
       if (!userStore || !userStore.is_activated_at) {
         return this.response.status(400).send({
           status: "Fail",
           message: "Store is inactive. Please contact the admin",
-          status_code: 400,
+          status_code: 400
         });
       }
       let Submittedtags;
@@ -102,11 +107,8 @@ class AddProductFeature {
           : (SubmittedSizes = sizes);
       }
 
-
-
-
       const productImage = this.request.file("product_image", {
-        types: ["image"],
+        types: ["image"]
       });
       const multipleProductImages = productImage._files;
       const imageIds = [];
@@ -157,21 +159,21 @@ class AddProductFeature {
       if (tags) {
         await this.processTags({
           Submittedtags,
-          productId: product.id,
+          productId: product.id
         });
       }
 
       if (colors) {
         await this.processColors({
           SubmittedColors,
-          productId: product.id,
+          productId: product.id
         });
       }
 
       if (sizes) {
         await this.processSizes({
-          SubmittedColors,
-          productId: product.id,
+          SubmittedSizes,
+          productId: product.id
         });
       }
 
@@ -185,14 +187,14 @@ class AddProductFeature {
         message: "Product successfully added to store",
         status_code: 200,
         status: "Success",
-        product,
+        product
       });
     } catch (addProductError) {
       console.log("addProductError", addProductError);
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
   }

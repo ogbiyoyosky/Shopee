@@ -35,6 +35,7 @@ class FetchProfileFeature {
           "country_codes.name as country",
           "gender",
           "stores.id as store_id",
+          "stores.is_activated_at as store_activated_at",
           "balance as wallet_balance"
         )
         .where("users.id", user_id)
