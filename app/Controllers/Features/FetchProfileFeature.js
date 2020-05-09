@@ -49,9 +49,9 @@ class FetchProfileFeature {
         .fetch();
 
       const unreadMessages = await Database.from("conversation_conversers")
-        .select("unread_messages", "conversation_conversers.user.id")
-        .where("user_id", user_id)
-        .groupBy("conversation_conversers.user.id")
+        .select("unread_messages", "conversation_conversers.user_id")
+        .where("conversation_conversers.user_id", user_id)
+        .groupBy("conversation_conversers.user_id")
         .sum("unread_messages as total_unread_messages");
 
       let serializedResult = profile.toJSON();
