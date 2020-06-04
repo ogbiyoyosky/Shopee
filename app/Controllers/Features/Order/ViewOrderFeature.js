@@ -31,6 +31,9 @@ class OrderViewOrderFeature {
             builder.with("order_address.state");
             builder.with("order_address.province");
             builder.with("order_items.main_product_images");
+            builder.with("order_items.colors");
+            builder.with("order_items.sizes");
+            // builder.with("order_products");
           })
           .fetch();
 
