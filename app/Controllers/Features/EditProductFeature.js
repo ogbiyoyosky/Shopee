@@ -40,15 +40,15 @@ class EditProductFeature {
         "product_id",
         productId
       );
-      if (existingColors != null) {
+      if (existingColors) {
         await existingColors.delete();
       }
 
       for (var productColor in SubmittedColors) {
-        const color = new ProductColor();
-
-        color.product_id = productId;
-        color.color = SubmittedColors[productColor];
+        const color = new ProductColor({
+          product_id: productId,
+          color: SubmittedColors[productColor]
+        });
 
         await color.save();
       }
