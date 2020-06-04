@@ -50,6 +50,8 @@ class OrderCreateOrderFeature {
         cart_items,
         billing_address: { province_id, country_id, state_id, address }
       } = this.request.all();
+
+      console.log(cart_items);
       const userId = this.auth.current.user.id;
 
       const superAdmin = await Role.findBy("role_label", "Super Admin");
