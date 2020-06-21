@@ -25,8 +25,10 @@ class OrderNotification extends Model {
   order_address() {
     return this.belongsToMany(
       "App/Models/Address",
+      "order_id",
       "address_id",
-      "order_id"
+      "id",
+      "id"
     ).pivotTable("order_addresses");
   }
 }
