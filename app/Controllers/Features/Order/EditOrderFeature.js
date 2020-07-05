@@ -113,7 +113,6 @@ class OrderEditOrderFeature {
           orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
         }
         
-
         await orderDetail.save();
       }
 
