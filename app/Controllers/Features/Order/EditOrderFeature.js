@@ -50,17 +50,10 @@ class OrderEditOrderFeature {
             orderId
           );
 
-          const superAdmin = await User.findBy("role_id", superAdminRole.id);
-          const superAdminWallet = await Wallet.findBy(
-            "user_id",
-            superAdmin.id
-          );
-          superAdminWallet.balance -= totalAmountToRefunded;
-          await superAdminWallet.save();
-
+          
           const buyerWallet = await Wallet.findBy("user_id", buyer_id);
           buyerWallet.balance += totalAmountToRefunded;
-          await superAdminWallet.save();
+          await buyerWallet.save();
           orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
         }
 
@@ -107,6 +100,7 @@ class OrderEditOrderFeature {
         if (is_accepted === 0 && orderDetail.is_paid_at === null) {
           orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
         }
+        
         await orderDetail.save();
       }
 
@@ -118,6 +112,7 @@ class OrderEditOrderFeature {
         } else {
           orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
         }
+        
 
         await orderDetail.save();
       }
