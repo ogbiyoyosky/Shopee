@@ -50,22 +50,24 @@ class OrderCreateOrderFeature {
         cart_items,
         billing_address: { province_id, country_id, state_id, address }
       } = this.request.all();
+
+      console.log(cart_items);
       const userId = this.auth.current.user.id;
 
       const superAdmin = await Role.findBy("role_label", "Super Admin");
       const shopAdmin = await Role.findBy("role_label", "Shop Admin");
 
-      if (
-        this.auth.current.user.role_id === superAdmin.id ||
-        this.auth.current.user.role_id === shopAdmin.id
-      ) {
-        return this.response.status(400).send({
-          message:
-            "You dont have the permission to create an order please create an account as a customer",
-          status_code: 400,
-          status: "fail"
-        });
-      }
+      // if (
+      //   this.auth.current.user.role_id === superAdmin.id ||
+      //   this.auth.current.user.role_id === shopAdmin.id
+      // ) {
+      //   return this.response.status(400).send({
+      //     message:
+      //       "You dont have the permission to create an order please create an account as a customer",
+      //     status_code: 400,
+      //     status: "fail"
+      //   });
+      // }
 
       const userProfile = await Profile.findBy("user_id", userId);
 
@@ -132,8 +134,7 @@ class OrderCreateOrderFeature {
         }, 0);
 
       const vat = totalAmount * (serializedSettings[0].vat / 100);
-      const serviceCharge =
-        totalAmount * (serializedSettings[0].service_charge / 100);
+      const serviceCharge = serializedSettings[0].service_charge;
       const token = randomString.generate(15);
 
       const newOrder = new Order();
