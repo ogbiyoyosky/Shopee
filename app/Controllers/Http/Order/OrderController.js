@@ -172,16 +172,17 @@ class OrderController {
   }
 
   async processRefund({ response, params }) {
-    const { id } = params;
+    const { order_id } = params;
 
     const order = await Order.query()
-      .where("id", id)
+      .where("id", order_id)
       .with("order_notification", builder => {
         builder.with("buyer_details.profile");
       })
-      .fetch();
+      .first();
 
-    const { amount, order_notification } = order;
+    const { amount, order_notification } = order.toJSON();
+    console.log(order.toJSON());
     const { email } = order_notification.buyer_details.profile;
 
     Event.fire("new::orderRefund", {
@@ -190,7 +191,8 @@ class OrderController {
     });
 
     return response.status(200).send({
-      message: "Successfully processed refund for order",
+      message:
+        "Successfully placed a request for a refund. Please wait 24h for a response.",
       status_code: 200,
       status: "success",
       results: []
