@@ -26,7 +26,7 @@ class PayForOrderFeature {
         return this.response.status(400).send({
           message: "No shipping fee added for this order.",
           status_code: 400,
-          status: "fail",
+          status: "fail"
         });
       }
 
@@ -35,7 +35,7 @@ class PayForOrderFeature {
           return this.response.status(400).send({
             message: "Order already paid by you.",
             status_code: 400,
-            status: "fail",
+            status: "fail"
           });
         }
         const { shipping_cost, vat, service_charge } = order;
@@ -48,7 +48,7 @@ class PayForOrderFeature {
           return this.response.status(400).send({
             message: "Insufficient balance",
             status_code: 400,
-            status: "fail",
+            status: "fail"
           });
         }
 
@@ -65,7 +65,7 @@ class PayForOrderFeature {
           order_id
         );
 
-         //credit seller
+        //credit seller
         const sellerId = notification.seller_id;
         const user = await User.findBy("id", sellerId);
         const sellerWallet = await Wallet.findBy("user_id", user.id);
@@ -77,7 +77,7 @@ class PayForOrderFeature {
 
         const orderDetails = await Order.query()
           .where("id", order_id)
-          .with("order_notification", (builder) => {
+          .with("order_notification", builder => {
             builder.with("buyer_details.profile");
             builder.with("seller_details.profile");
             builder.with("order_address.country_code");
@@ -93,7 +93,7 @@ class PayForOrderFeature {
 
         const mailDetails = {
           shop: {
-            shop_name: store.store_name,
+            shop_name: store.store_name
           },
 
           user: {
@@ -103,8 +103,7 @@ class PayForOrderFeature {
             last_name:
               serializedOrderDetails.order_notification.buyer_details.profile
                 .last_name,
-            email:
-              serializedOrderDetails.order_notification.buyer_details.email,
+            email: serializedOrderDetails.order_notification.buyer_details.email
           },
 
           date: moment(serializedOrderDetails.is_paid_at).format(
@@ -121,7 +120,7 @@ class PayForOrderFeature {
 
           service_charge: service_charge,
 
-          total: amountToBeBilled,
+          total: amountToBeBilled
         };
 
         Event.fire("new::order", mailDetails);
@@ -129,7 +128,7 @@ class PayForOrderFeature {
         return this.response.status(200).send({
           message: `Successfully paid for order  ${order.placement_code}`,
           status_code: 200,
-          status: "success",
+          status: "success"
         });
       }
 
@@ -138,14 +137,14 @@ class PayForOrderFeature {
       return this.response.status(400).send({
         message: "Order does not exist",
         status_code: 400,
-        status: "fail",
+        status: "fail"
       });
     } catch (payForOrderError) {
       console.log("payForOrderError", payForOrderError);
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
   }
