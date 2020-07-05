@@ -1,4 +1,7 @@
 "use strict";
+
+const Event = use("Event");
+
 const CreateOrderFeature = use(
   "App/Controllers/Features/Order/CreateOrderFeature"
 );
@@ -64,7 +67,7 @@ class OrderController {
         return response.status(400).send({
           message: "please provide the order ID",
           status: "fail",
-          status_code: 400,
+          status_code: 400
         });
       }
 
@@ -77,14 +80,14 @@ class OrderController {
         return response.status(200).send({
           message: "Order marked as delivered",
           status: "success",
-          status_code: 200,
+          status_code: 200
         });
       }
 
       return response.status(400).send({
         message: "Order does not exist",
         status: "fail",
-        status_code: 400,
+        status_code: 400
       });
     } catch (error) {
       console.log(error);
@@ -97,7 +100,7 @@ class OrderController {
         return response.status(400).send({
           message: "please provide the order ID",
           status: "fail",
-          status_code: 400,
+          status_code: 400
         });
       }
 
@@ -112,21 +115,21 @@ class OrderController {
         return response.status(200).send({
           message: "Order confirmed as delivered",
           status: "success",
-          status_code: 200,
+          status_code: 200
         });
       }
 
       return response.status(400).send({
         message: "Order does not exist",
         status: "fail",
-        status_code: 400,
+        status_code: 400
       });
     } catch (error) {
       console.log(error);
       return response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
   }
@@ -137,7 +140,7 @@ class OrderController {
         return response.status(400).send({
           message: "please provide the order ID",
           status: "fail",
-          status_code: 400,
+          status_code: 400
         });
       }
       const order = await Order.findBy("id", order_id);
@@ -149,29 +152,55 @@ class OrderController {
         return response.status(200).send({
           message: "successfully extended the sellers time by 24 hours",
           status: "success",
-          status_code: 200,
+          status_code: 200
         });
       }
 
       return response.status(400).send({
         message: "Order does not exist",
         status: "fail",
-        status_code: 400,
+        status_code: 400
       });
     } catch (error) {
       console.log(error);
       return response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
+  }
+
+  async processRefund({ response, params }) {
+    const { id } = params;
+
+    const order = await Order.query()
+      .where("id", id)
+      .with("order_notification", builder => {
+        builder.with("buyer_details.profile");
+      })
+      .fetch();
+
+    const { amount, order_notification } = order;
+    const { email } = order_notification.buyer_details.profile;
+
+    Event.fire("new::orderRefund", {
+      email,
+      amount
+    });
+
+    return response.status(200).send({
+      message: "Successfully processed refund for order",
+      status_code: 200,
+      status: "success",
+      results: []
+    });
   }
 
   async allOrders({ response }) {
     try {
       const orderDetails = await Order.query()
-        .with("order_notification", (builder) => {
+        .with("order_notification", builder => {
           builder.with("buyer_details.profile");
           builder.with("seller_details.profile");
           builder.with("order_address.country_code");
@@ -185,14 +214,14 @@ class OrderController {
         message: "Successfully returned the order details",
         status_code: 200,
         status: "success",
-        results: orderDetails,
+        results: orderDetails
       });
     } catch (error) {
       console.log("allOrderError", error);
       return response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
   }
