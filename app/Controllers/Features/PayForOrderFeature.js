@@ -20,7 +20,7 @@ class PayForOrderFeature {
       const { order_id } = this.request.all();
       const { id } = this.auth.current.user;
 
-      const order = await Order.findBy("Id", order_id);
+      const order = await Order.findBy("id", order_id);
 
       if (!order.shipping_cost === null) {
         return this.response.status(400).send({
@@ -58,22 +58,20 @@ class PayForOrderFeature {
         order.is_paid_at = moment().format("YYYY-MM-DD HH:mm:ss");
         await order.save();
 
-        const userRole = await Role.findBy("role_label", "Super Admin");
-
-        const user = await User.findBy("role_id", userRole.id);
-
-        const escrowWallet = await Wallet.findBy("user_id", user.id);
-
-        escrowWallet.balance += amountToBeBilled;
-        await escrowWallet.save();
-
         //shop details
 
         const notification = await OrderNotification.findBy(
           "order_id",
           order_id
         );
+
+         //credit seller
         const sellerId = notification.seller_id;
+        const user = await User.findBy("id", sellerId);
+        const sellerWallet = await Wallet.findBy("user_id", user.id);
+
+        sellerWallet.balance += amountToBeBilled;
+        await sellerWallet.save();
 
         const store = await Store.findBy("user_id", sellerId);
 
