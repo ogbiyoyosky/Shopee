@@ -20,14 +20,14 @@ const Route = use("Route");
 
 Route.get("/", () => {
   return {
-    Shopee: "Welcome to Shopee Api",
+    Shopee: "Welcome to Shopee Api"
   };
 });
 
 Route.group(() => {
   Route.get("/", () => {
     return {
-      Shopee: "Welcome to Shopee Api subdomains",
+      Shopee: "Welcome to Shopee Api subdomains"
     };
   });
 });
@@ -36,7 +36,7 @@ Route.post("/webhook/deploy", "Webhook/WebhookController.deploy");
 
 Route.get("/api/v1", () => {
   return {
-    Shopee: "This is the version 1 of shopee api",
+    Shopee: "This is the version 1 of shopee api"
   };
 });
 
@@ -71,7 +71,7 @@ Route.group(() => {
 
   Route.get("/users", "UserManagement/UserController.fetchUsers").middleware([
     "auth",
-    "superAdmin",
+    "superAdmin"
   ]);
 
   Route.post("Auth/Logout", "Authentication/AuthController.logout").middleware(
@@ -129,7 +129,7 @@ Route.group(() => {
   //store
   Route.get("Store/AllStores", "Store/StoreController.listStores").middleware([
     "auth",
-    "superAdmin",
+    "superAdmin"
   ]);
   Route.post("Store/:store_id/AddProduct/", "Store/StoreController.addProduct")
     .middleware(["auth", "shopAdmin"])
@@ -144,7 +144,7 @@ Route.group(() => {
 
   Route.get("Store/Product", "Store/StoreController.listProduct").middleware([
     "auth",
-    "shopAdmin",
+    "shopAdmin"
   ]);
 
   Route.delete(
@@ -162,10 +162,10 @@ Route.group(() => {
   );
 
   Route.post("orders", "Order/OrderController.createOrder").middleware([
-    "auth",
+    "auth"
   ]);
   Route.post("order/pay", "Order/OrderController.payForOrder").middleware([
-    "auth",
+    "auth"
   ]);
   Route.get(
     "seller/orders",
@@ -176,14 +176,18 @@ Route.group(() => {
     "Order/OrderController.fetchBuyerOrderNotification"
   ).middleware(["auth"]);
   Route.get("orders/:order_id", "Order/OrderController.viewOrder").middleware([
-    "auth",
+    "auth"
   ]);
+  Route.post(
+    "orders/:order_id/processRefund",
+    "Order/OrderController.processRefund"
+  ).middleware(["auth"]);
   Route.post("chat", "Chat/ChatController.sendMessage").middleware(["auth"]);
   Route.get("chat/:order_id", "Chat/ChatController.fetchMessage").middleware([
-    "auth",
+    "auth"
   ]);
   Route.put("orders/:order_id", "Order/OrderController.editOrder").middleware([
-    "auth",
+    "auth"
   ]);
   Route.patch(
     "orders/:order_id/add-shipping-cost",
@@ -197,7 +201,7 @@ Route.group(() => {
   ).middleware(["auth", "shopAdmin"]);
   Route.get("admin/orders/", "Order/OrderController.allOrders").middleware([
     "auth",
-    "superAdmin",
+    "superAdmin"
   ]);
   Route.get(
     "order/confirmDelivery/:order_id",
@@ -216,5 +220,4 @@ Route.group(() => {
   Route.post("/verifyPayment", "Webhook/WebhookController.funding");
 
   Route.get("/analytics", "Analytic/AnalyticController.fetchAnalytics");
-
 }).prefix("api/v1");
