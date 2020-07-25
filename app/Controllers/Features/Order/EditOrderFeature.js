@@ -26,7 +26,7 @@ class OrderEditOrderFeature {
         return this.response.status(400).send({
           message: "Order does not exist",
           status: "fail",
-          status_code: 400,
+          status_code: 400
         });
       }
 
@@ -50,7 +50,6 @@ class OrderEditOrderFeature {
             orderId
           );
 
-          
           const buyerWallet = await Wallet.findBy("user_id", buyer_id);
           buyerWallet.balance += totalAmountToRefunded;
           await buyerWallet.save();
@@ -100,7 +99,7 @@ class OrderEditOrderFeature {
         if (is_accepted === 0 && orderDetail.is_paid_at === null) {
           orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
         }
-        
+
         await orderDetail.save();
       }
 
@@ -112,7 +111,7 @@ class OrderEditOrderFeature {
         } else {
           orderDetail.declined_at = moment().format("YYYY-MM-DD HH:mm:ss");
         }
-        
+
         await orderDetail.save();
       }
 
@@ -122,14 +121,14 @@ class OrderEditOrderFeature {
       return this.response.status(200).send({
         message,
         status: "success",
-        status_code: 200,
+        status_code: 200
       });
     } catch (editOrderError) {
       console.log("editOrderError", editOrderError);
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500,
+        status_code: 500
       });
     }
   }
