@@ -48,10 +48,10 @@ class OrderCreateOrderFeature {
     try {
       const {
         cart_items,
-        billing_address: { province_id, country_id, state_id, address }
+        billing_address: { province_id, country_id, state_id, address },
       } = this.request.all();
 
-      console.log(cart_items);
+      // console.log(cart_items);
       const userId = this.auth.current.user.id;
 
       const superAdmin = await Role.findBy("role_label", "Super Admin");
@@ -75,7 +75,7 @@ class OrderCreateOrderFeature {
         return this.response.status(400).send({
           message: "No items in cart",
           status_code: 400,
-          status: "fail"
+          status: "fail",
         });
       }
 
@@ -85,12 +85,14 @@ class OrderCreateOrderFeature {
       const sellerSellOutsideProvince = sellerStore.sell_outside_province;
       const sellerSellOutsideState = sellerStore.sell_outside_state;
 
+      console.log(sellerStore);
+
       if (userProfile.state_id !== sellerStore.state_id) {
         if (!sellerSellOutsideState) {
           return this.response.status(500).send({
             status: "Fail",
             message: "The seller does not sell to your region",
-            status_code: 500
+            status_code: 500,
           });
         }
       }
@@ -100,7 +102,7 @@ class OrderCreateOrderFeature {
           return this.response.status(500).send({
             status: "Fail",
             message: "The seller does not sell to your locality",
-            status_code: 500
+            status_code: 500,
           });
         }
       }
@@ -120,7 +122,7 @@ class OrderCreateOrderFeature {
 
         itemsToBeCalculated.push({
           itemPrice,
-          selectedQty
+          selectedQty,
         });
       }
 
@@ -128,8 +130,8 @@ class OrderCreateOrderFeature {
       const serializedSettings = setting.toJSON();
 
       const totalAmount = itemsToBeCalculated
-        .map(item => item.itemPrice * item.selectedQty)
-        .reduce(function(accumulator, item) {
+        .map((item) => item.itemPrice * item.selectedQty)
+        .reduce(function (accumulator, item) {
           return accumulator + item;
         }, 0);
 
@@ -181,7 +183,7 @@ class OrderCreateOrderFeature {
         address,
         province_id,
         state_id,
-        country_id
+        country_id,
       });
 
       const orderAddress = new OrderAddress();
@@ -196,15 +198,15 @@ class OrderCreateOrderFeature {
         status_code: 200,
         results: {
           order: newOrder,
-          placement_code: newOrder.placement_code
-        }
+          placement_code: newOrder.placement_code,
+        },
       });
     } catch (createOrderError) {
       console.log("createOrderError", createOrderError);
       return this.response.status(500).send({
         status: "Fail",
         message: "Internal Server Error",
-        status_code: 500
+        status_code: 500,
       });
     }
   }
