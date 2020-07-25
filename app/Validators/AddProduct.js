@@ -1,44 +1,50 @@
-'use strict'
+"use strict";
 
 class AddProduct {
-  get rules () {
+  get validateAll() {
+    return true;
+  }
+  get sanitizationRules() {
     return {
-      product_image: 'required',
-      product_name: 'required|string',
-      description: 'required|string',
-      total_stock: "required|integer",
+      tag: "trim|escape|stripTags|stripLinks",
+    };
+  }
+  get rules() {
+    return {
+      product_image: "required",
+      product_name: "required|string",
+      description: "required|string",
+      stock: "required|integer",
       category_id: "required|integer",
-      sub_category_id: "required|integer",
-      short_description: "required|string",
+      subcategory_id: "required|integer",
       is_published: "required|integer",
-      tag: "required",
+      tags: "required",
       price: "required|number",
-    }
+    };
   }
 
-  get messages () {
+  get messages() {
     return {
-			'product_image.required': 'Please upload an image of the product',
-      'product_name.unique': 'Please set the product name',
-      'description.required': 'Please set a description of the product.',
-      'total_stock.required': 'Please set how many in stock.',
-      'category_id.required': 'Please choose the category of the product ',
-      'sub_category_id.required': 'Please choose the subcategory of the item',
-      'short_description.required': 'Please add a short description',
-      'is_published.required': 'Set the publishing status',
-      'tag.required': 'please add at least one tag on the product',
-      'price.required': 'please add a price'
-    }
+      "product_image.required": "Please upload an image of the product",
+      "product_name.unique": "Please set the product name",
+      "description.required": "Please set a description of the product.",
+      "total_stock.required": "Please set how many in stock.",
+      "category_id.required": "Please choose the category of the product ",
+      "subcategory_id.required": "Please choose the subcategory of the item",
+      "is_published.required": "Set the publishing status",
+      "tags.required": "please add at least one tag on the product",
+      "price.required": "please add a price",
+    };
   }
-  
-  async fails (errorMessages) { 
+
+  async fails(errorMessages) {
     return this.ctx.response.status(400).json({
       status: "invalid",
-      message: "Invalid data",
+      message: errorMessages[0].message,
       status_code: 400,
-      errorMessages: errorMessages[0].message
-    })
+      errorMessages: errorMessages[0].message,
+    });
   }
 }
 
-module.exports = AddProduct
+module.exports = AddProduct;

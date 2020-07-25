@@ -1,43 +1,51 @@
 "use strict";
 const StoreProduct = use("App/Models/StoreProduct");
+const Store = use("App/Models/Store");
 
 class FetchProductInStoreFeature {
-  constructor(request, response) {
+  constructor(request, response, auth) {
     this.request = request;
     this.response = response;
+    this.auth = auth;
   }
 
-  async fetchProduct(store_id) {
+  async fetchProduct() {
     try {
       const { page, limit } = this.request.get();
+
+      const { id } = await this.auth.current.user;
+
+      const store = await Store.query().where("user_id", id).first();
+
+      const storeId = store.id;
+
       const produceInStore = await StoreProduct.query()
-        .whereNull("is_deleted_at")
-        .andWhere("store_id", store_id)
+        .whereNull("deleted_at")
+        .andWhere("is_enabled", 1)
+        .andWhere("store_id", storeId)
         .with("main_product_images")
         .with("category")
         .with("sub_category")
+        .with("store")
         .with("tags")
-        .with("variant", builder => {
-          builder.whereNull("is_deleted_at");
-          builder.with("variant_value");
-          builder.with("variant_details", builder => {
-            builder.with("product_variant_images");
-          });
-        })
+        .with("colors")
+        .with("sizes")
         .paginate(page, limit);
+
+      const serializedProduct = produceInStore.toJSON();
 
       this.response.status(200).send({
         message: "Successfully fetch all products",
         status: "success",
         status_code: 200,
-        results: produceInStore
+        results: serializedProduct,
       });
     } catch (fetchProduceError) {
       console.log("fetchProduceError", fetchProduceError);
       return this.response.status(500).send({
         status: "fail",
         status_code: 500,
-        message: "Internal Server Error"
+        message: "Internal Server Error",
       });
     }
   }

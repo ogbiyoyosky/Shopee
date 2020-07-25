@@ -16,14 +16,23 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
 
-// Route.on('/').render('welcome')
-Route.get("/", ({ view }) => {
+//Route.on('/').render('welcome')
+
+Route.get("/", () => {
   return {
     Shopee: "Welcome to Shopee Api"
   };
 });
 
-Route.post("webhook/deploy", "Webhook/WebhookController.deploy");
+Route.group(() => {
+  Route.get("/", () => {
+    return {
+      Shopee: "Welcome to Shopee Api subdomains"
+    };
+  });
+});
+
+Route.post("/webhook/deploy", "Webhook/WebhookController.deploy");
 
 Route.get("/api/v1", () => {
   return {
@@ -55,6 +64,16 @@ Route.group(() => {
     "Auth/Confirm/:confirmation_token",
     "Authentication/AuthController.confirmAccount"
   );
+  Route.post(
+    "/users/:user_id/ban",
+    "Authentication/AuthController.ban"
+  ).middleware(["auth", "superAdmin"]);
+
+  Route.get("/users", "UserManagement/UserController.fetchUsers").middleware([
+    "auth",
+    "superAdmin"
+  ]);
+
   Route.post("Auth/Logout", "Authentication/AuthController.logout").middleware(
     "auth"
   );
@@ -78,7 +97,7 @@ Route.group(() => {
     "Store/ActivateStore/:store_id",
     "Store/StoreController.activateStore"
   )
-    .middleware(["auth", "superAdmin"])
+    .middleware(["auth"])
     .validator("ActivateStore");
   Route.get(
     "Store/FetchStores",
@@ -95,10 +114,13 @@ Route.group(() => {
   Route.post("Paystack/Pay", "Payment/PaymentController.payWithPayStack")
     .middleware(["auth"])
     .validator("Payment");
-  Route.get(
+  Route.post(
     "Paystack/VerifyPayment",
     "Payment/PaymentController.verifyPayment"
   );
+
+  Route.post("/payment/webhook", "Webhook/WebhookController.payment");
+
   Route.get(
     "Transaction/ProcessTransaction",
     "Payment/PaymentController.processTransaction"
@@ -109,7 +131,7 @@ Route.group(() => {
     "auth",
     "superAdmin"
   ]);
-  Route.post("Store/AddProduct/:store_id", "Store/StoreController.addProduct")
+  Route.post("Store/:store_id/AddProduct/", "Store/StoreController.addProduct")
     .middleware(["auth", "shopAdmin"])
     .validator("AddProduct");
 
@@ -120,37 +142,82 @@ Route.group(() => {
     .middleware(["auth", "shopAdmin"])
     .validator("EditProduct");
 
-  Route.get(
-    "Store/:store_id/Product",
-    "Store/StoreController.listProduct"
-  ).middleware(["auth", "shopAdmin"]);
-
-  Route.post(
-    "Product/:product_id/AddVariant",
-    "Store/StoreController.addVariant"
-  )
-    .middleware(["auth", "shopAdmin"])
-    .validator("AddVariant");
+  Route.get("Store/Product", "Store/StoreController.listProduct").middleware([
+    "auth",
+    "shopAdmin"
+  ]);
 
   Route.delete(
     "Product/:product_id/DeleteProduct",
     "Store/StoreController.deleteProduct"
   ).middleware(["auth", "shopAdmin"]);
 
-  Route.put(
-    "Product/:product_id/:variant_id/EditVariant",
-    "Store/StoreController.editVariant"
-  )
-    .middleware(["auth", "shopAdmin"])
-    .validator("EditVariant");
+  Route.get("Product/categories", "Product/ProductController.getCategories");
 
-  Route.get("Product/categories", 'Product/ProductController.getCategories')
+  Route.get("products", "Product/ProductController.fetchProduct");
 
-  Route.delete(
-    "Product/:product_id/:variant_id/DeleteVariant",
-    "Store/StoreController.deleteVariant"
+  Route.get(
+    "products/:product_id",
+    "Product/ProductController.fetchProductById"
+  );
+
+  Route.post("orders", "Order/OrderController.createOrder").middleware([
+    "auth"
+  ]);
+  Route.post("order/pay", "Order/OrderController.payForOrder").middleware([
+    "auth"
+  ]);
+  Route.get(
+    "seller/orders",
+    "Order/OrderController.fetchSellerOrderNotifications"
   ).middleware(["auth", "shopAdmin"]);
+  Route.get(
+    "buyer/orders",
+    "Order/OrderController.fetchBuyerOrderNotification"
+  ).middleware(["auth"]);
+  Route.get("orders/:order_id", "Order/OrderController.viewOrder").middleware([
+    "auth"
+  ]);
+  Route.post(
+    "orders/:order_id/processRefund",
+    "Order/OrderController.processRefund"
+  ).middleware(["auth"]);
+  Route.post("chat", "Chat/ChatController.sendMessage").middleware(["auth"]);
+  Route.get("chat/:order_id", "Chat/ChatController.fetchMessage").middleware([
+    "auth"
+  ]);
+  Route.put("orders/:order_id", "Order/OrderController.editOrder").middleware([
+    "auth"
+  ]);
+  Route.patch(
+    "orders/:order_id/add-shipping-cost",
+    "Order/OrderController.addShippingCost"
+  ).middleware(["auth", "shopAdmin"]);
+  Route.get("products", "Product/ProductController.fetchProduct");
+  Route.get("search", "SearchController.index");
+  Route.get(
+    "order/delivered/:order_id",
+    "Order/OrderController.delivered"
+  ).middleware(["auth", "shopAdmin"]);
+  Route.get("admin/orders/", "Order/OrderController.allOrders").middleware([
+    "auth",
+    "superAdmin"
+  ]);
+  Route.get(
+    "order/confirmDelivery/:order_id",
+    "Order/OrderController.confirmDelivered"
+  ).middleware(["auth"]);
+  Route.get(
+    "order/extendTime/:order_id",
+    "Order/OrderController.extendTime"
+  ).middleware(["auth"]);
 
-  Route.get("Products", 'Product/ProductController.fetchProduct' )
+  Route.get(
+    "/thirtyRemoveProduct",
+    "CronJob/CronJobController.removeProductAfterThirtyDays"
+  );
 
-}).prefix('api/v1')
+  Route.post("/verifyPayment", "Webhook/WebhookController.funding");
+
+  Route.get("/analytics", "Analytic/AnalyticController.fetchAnalytics");
+}).prefix("api/v1");

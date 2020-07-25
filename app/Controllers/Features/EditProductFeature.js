@@ -4,6 +4,10 @@ const Store = use("App/Models/Store");
 const { uploadImage } = use("App/HelperFunctions/UploadImage");
 const Image = use("App/Models/Image");
 const ProductTag = use("App/Models/ProductTag");
+const ProductSize = use("App/Models/ProductSize");
+const ProductColor = use("App/Models/ProductColor");
+const User = use("App/Models/User");
+const moment = require("moment");
 
 class EditProductFeature {
   constructor(request, response, auth) {
@@ -12,27 +16,90 @@ class EditProductFeature {
     this.auth = auth;
   }
 
+  async processSizes({ SubmittedSizes, productId }) {
+    if (SubmittedSizes) {
+      const existingSizes = ProductSize.query().where("product_id", productId);
+      if (existingSizes != null) {
+        await existingSizes.delete();
+      }
+
+      for (var productSize in SubmittedSizes) {
+        const size = new ProductSize();
+
+        size.product_id = productId;
+        size.size = SubmittedSizes[productSize];
+
+        await size.save();
+      }
+    }
+  }
+
+  async processColors({ SubmittedColors, productId }) {
+    if (SubmittedColors) {
+      const existingColors = ProductColor.query().where(
+        "product_id",
+        productId
+      );
+      if (existingColors) {
+        await existingColors.delete();
+      }
+
+      for (var productColor in SubmittedColors) {
+        const color = new ProductColor({
+          product_id: productId,
+          color: SubmittedColors[productColor]
+        });
+
+        await color.save();
+      }
+    }
+  }
+
+  async processTags({ Submittedtags, productId }) {
+    if (Submittedtags) {
+      const existingTags = ProductTag.query().where("product_id", productId);
+      if (existingTags != null) {
+        await existingTags.delete();
+      }
+      for (var tag in Submittedtags) {
+        const productTag = new ProductTag();
+
+        productTag.product_id = productId;
+        productTag.tag = Submittedtags[tag];
+
+        await productTag.save();
+      }
+    }
+  }
+
   /**
    *
    * @param {Integer} product_id - id of the product
    * @return {Object} -response -ctx
    */
-  async editProduct(product_id) {
+  async editProduct(productId) {
     try {
+      let Submittedtags;
+      let SubmittedColors;
+      let SubmittedSizes;
       const user = this.auth.current.user;
       const user_id = user.id;
       const user_store = await Store.findBy("user_id", user_id);
       const {
         product_name,
         description,
-        total_stock,
+        stock,
+        discount,
         category_id,
-        sub_category_id,
-        short_description,
+        subcategory_id,
         is_published,
-        tag,
+        tags,
+        colors,
+        sizes,
         price
       } = this.request.all();
+
+      console.log("color", colors);
 
       if (user_store.is_activated_at == null) {
         return this.response.status(400).send({
@@ -41,37 +108,53 @@ class EditProductFeature {
           status_code: 400
         });
       }
+      if (tags) {
+        typeof tags === "string"
+          ? (Submittedtags = [tags])
+          : (Submittedtags = tags);
+      }
 
-      const product_image = this.request.file("product_image", {
+      if (colors) {
+        typeof colors === "string"
+          ? (SubmittedColors = [colors])
+          : (SubmittedColors = colors);
+      }
+
+      if (sizes) {
+        typeof sizes === "string"
+          ? (SubmittedSizes = [sizes])
+          : (SubmittedSizes = sizes);
+      }
+      const productImage = this.request.file("product_image", {
         types: ["image"]
       });
 
-      const product = await StoreProduct.findBy("id", product_id);
+      const product = await StoreProduct.findBy("id", productId);
       product.merge({
         product_name,
         description,
         price,
-        total_stock,
+        stock,
+        discount,
         category_id,
-        sub_category_id,
-        short_description,
+        subcategory_id,
         is_enabled: is_published
       });
       await product.save();
 
       const imagesIds = [];
 
-      if (product_image) {
-        const mutiple_image = product_image._files;
-        if (mutiple_image == undefined) {
-          const uploaded_image = await uploadImage(product_image);
+      if (productImage) {
+        const mutipleImage = productImage._files;
+        if (!mutipleImage) {
+          const uploadedImage = await uploadImage(productImage);
           const newImage = new Image();
-          newImage.image_url = uploaded_image.url;
+          newImage.image_url = uploadedImage.url;
           await newImage.save();
           imagesIds.push(newImage.id);
         } else {
-          for (var i in mutiple_image) {
-            const uploaded_image = await uploadImage(mutiple_image[i]);
+          for (var image in mutipleImage) {
+            const uploaded_image = await uploadImage(mutiple_image[image]);
             const newImage = new Image();
             newImage.image_url = uploaded_image.url;
             await newImage.save();
@@ -80,21 +163,35 @@ class EditProductFeature {
         }
       }
 
-      if (tag) {
-        const tags = JSON.parse(tag);
-        const existingTags = await ProductTag.findBy("product_id", product_id);
-        await existingTags.delete();
-        //add new entry
-        for (var i in tags) {
-          const new_tag = new ProductTag();
-          new_tag.product_id = product.id;
-          new_tag.tag = tags[i];
-          new_tag.save();
-        }
+      if (tags) {
+        await this.processTags({
+          Submittedtags,
+          productId
+        });
+      }
+
+      if (colors) {
+        await this.processColors({
+          SubmittedColors,
+          productId: product.id
+        });
+      }
+
+      if (sizes) {
+        await this.processSizes({
+          SubmittedSizes,
+          productId: product.id
+        });
       }
 
       //add to pivot table
-      await product.main_product_images().sync(imagesIds);
+      if (productImage) {
+        await product.main_product_images().sync(imagesIds);
+      }
+
+      user.last_updated_item = moment().format("YYYY-MM-DD HH:mm:ss");
+      await user.save();
+
       return this.response.status(200).send({
         message: "Product successfully updated",
         status_code: 200,

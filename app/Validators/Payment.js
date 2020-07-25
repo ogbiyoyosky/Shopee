@@ -1,28 +1,34 @@
-'use strict'
+"use strict";
 
 class Payment {
-  get rules () {
-    return {
-      transaction_type_id: 'required|integer',
-      amount: 'required|integer'
-    }
+  get validateAll() {
+    return true;
   }
 
-  get messages () {
+  get rules() {
     return {
-			'transaction_type_id.required': 'Transactiontype is required',
-			'eamount.required': 'Please provide the amount for the transaction',
-    }
+      transaction_type_id: "required|integer",
+      amount: "required",
+      redirect_url: "required|string",
+    };
   }
-  
-  async fails (errorMessages) { 
+
+  get messages() {
+    return {
+      "transaction_type_id.required": "Transactiontype is required",
+      "amount.required": "Please provide the amount for the transaction",
+      "redirect_url.required": "Please provide the redirect url",
+    };
+  }
+
+  async fails(errorMessages) {
     return this.ctx.response.status(400).json({
       status: "invalid",
-      message: "Invalid data",
+      message: errorMessages[0].message,
       status_code: 400,
-      errorMessages: errorMessages[0].message
-    })
+      errorMessages: errorMessages[0].message,
+    });
   }
 }
 
-module.exports = Payment
+module.exports = Payment;

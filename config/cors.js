@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 module.exports = {
   /*
@@ -16,7 +16,14 @@ module.exports = {
   | Function - Receives the current origin and should return one of the above values.
   |
   */
-  origin: ['https://shopeecommerce.netlify.com', 'http://localhost:3001', 'http://localhost:3000', 'https://timeshoppy.com', 'https://admin.timeshoppy.com'],
+  origin: [
+    "https://shopeecommerce.netlify.com",
+    "http://localhost:3001",
+    "http://localhost:3000",
+    "https://timeshoppy.com",
+    "https://admin.timeshoppy.com",
+    "https://*.paystack.com"
+  ],
 
   /*
   |--------------------------------------------------------------------------
@@ -29,7 +36,7 @@ module.exports = {
   | Array - An array of allowed methods
   |
   */
-  methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  methods: ["GET", "PUT", "PATCH", "POST", "DELETE"],
 
   /*
   |--------------------------------------------------------------------------
@@ -84,4 +91,4 @@ module.exports = {
   |
   */
   maxAge: 90
-}
+};
