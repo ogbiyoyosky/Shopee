@@ -17,7 +17,7 @@ class ShopAdmin {
     const user_id = auth.current.user.id;
     const stores = await Store.findBy('user_id', user_id);
 
-    console.log('Stores Info', stores);
+    console.log('Stores Info ', stores, 'by ', user_id);
 
     if (stores) {
       await next();
