@@ -17,7 +17,7 @@ class OrderEditOrderFeature {
     try {
       const { is_accepted } = this.request.all();
 
-      const { role_id } = this.auth.current.user;
+      const { role_id, id: userId } = this.auth.current.user;
       const { role_label } = await Role.findBy('id', role_id);
       const superAdminRole = await Role.findBy('role_label', 'Super Admin');
       const orderDetail = await Order.findBy('id', orderId);
@@ -30,38 +30,12 @@ class OrderEditOrderFeature {
         });
       }
 
-      if (role_label === 'Shop Admin') {
-        if (
-          is_accepted === 0 &&
-          orderDetail.is_paid_at &&
-          orderDetail.delivered_at === null
-        ) {
-          //find the buyer
-          //find the seller
+      const { buyer_id, seller_id } = await OrderNotification.findBy(
+        'order_id',
+        orderId
+      );
 
-          const totalAmountToRefunded =
-            orderDetail.vat +
-            orderDetail.service_charge +
-            orderDetail.amount +
-            orderDetail.shipping_cost;
-
-          const { buyer_id } = await OrderNotification.findBy(
-            'order_id',
-            orderId
-          );
-
-          const buyerWallet = await Wallet.findBy('user_id', buyer_id);
-          buyerWallet.balance += totalAmountToRefunded;
-          await buyerWallet.save();
-          orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
-        }
-
-        if (is_accepted === 0 && orderDetail.is_paid_at === null) {
-          orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
-        }
-        await orderDetail.save();
-      }
-
+      // super admin operations
       if (role_label === 'Super Admin') {
         if (
           is_accepted === 0 &&
@@ -76,11 +50,6 @@ class OrderEditOrderFeature {
             orderDetail.service_charge +
             orderDetail.amount +
             orderDetail.shipping_cost;
-
-          const { buyer_id } = await OrderNotification.findBy(
-            'order_id',
-            orderId
-          );
 
           const superAdmin = await User.findBy('role_id', superAdminRole.id);
           const superAdminWallet = await Wallet.findBy(
@@ -103,20 +72,57 @@ class OrderEditOrderFeature {
         await orderDetail.save();
       }
 
+      // non-super admin operations
       if (role_label === 'Customer') {
-        if (is_accepted) {
-          orderDetail.buyer_accepted_at = moment().format(
-            'YYYY-MM-DD HH:mm:ss'
-          );
-        } else {
-          orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
+        // seller operation
+        if (userId == seller_id) {
+          if (
+            is_accepted === 0 &&
+            orderDetail.is_paid_at &&
+            orderDetail.delivered_at === null
+          ) {
+            //find the buyer
+            //find the seller
+
+            const totalAmountToRefunded =
+              orderDetail.vat +
+              orderDetail.service_charge +
+              orderDetail.amount +
+              orderDetail.shipping_cost;
+
+            const { buyer_id } = await OrderNotification.findBy(
+              'order_id',
+              orderId
+            );
+
+            const buyerWallet = await Wallet.findBy('user_id', buyer_id);
+            buyerWallet.balance += totalAmountToRefunded;
+            await buyerWallet.save();
+            orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
+          }
+
+          if (is_accepted === 0 && orderDetail.is_paid_at === null) {
+            orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
+          }
+          await orderDetail.save();
         }
 
-        await orderDetail.save();
+        // buyer operations
+        if (userId == buyer_id) {
+          if (is_accepted) {
+            orderDetail.buyer_accepted_at = moment().format(
+              'YYYY-MM-DD HH:mm:ss'
+            );
+          } else {
+            orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
+          }
+
+          await orderDetail.save();
+        }
       }
 
       const status = is_accepted ? 'Approved' : 'Declined';
-      const recipient = role_label === 'Shop Admin' ? 'Buyer' : 'Seller';
+      const recipient = userId == seller_id ? 'Buyer' : 'Seller';
       const message = `successfully ${status} the order a notification has been sent to the ${recipient} `;
       return this.response.status(200).send({
         message,
