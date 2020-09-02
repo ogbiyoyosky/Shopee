@@ -7,6 +7,7 @@ const Wallet = use('App/Models/Wallet');
 const User = use('App/Models/User');
 const Role = use('App/Models/Role');
 const Event = use('Event');
+const ManageWalletCashflow = use('App/HelperFunctions/ManageWalletCashflow');
 
 class PayForOrderFeature {
   constructor(request, response, auth) {
@@ -60,8 +61,11 @@ class PayForOrderFeature {
           });
         }
 
-        userWallet.balance = userWallet.balance - amountToBeBilled;
-        await userWallet.save();
+        await ManageWalletCashflow.debit({
+          wallet_id: userWallet.id,
+          amount: amountToBeBilled,
+          description: `Payment for order ${order.placement_code}`,
+        });
 
         order.is_paid_at = moment().format('YYYY-MM-DD HH:mm:ss');
         await order.save();
@@ -78,8 +82,11 @@ class PayForOrderFeature {
         const user = await User.findBy('id', sellerId);
         const sellerWallet = await Wallet.findBy('user_id', user.id);
 
-        sellerWallet.balance += amountToBeBilled;
-        await sellerWallet.save();
+        await ManageWalletCashflow.credit({
+          wallet_id: sellerWallet.id,
+          amount: amountToBeBilled,
+          description: `Payment for order ${order.placement_code}`,
+        });
 
         const store = await Store.findBy('user_id', sellerId);
 
