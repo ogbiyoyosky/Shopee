@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const getLedgerBalance = ({ balance, cashflows }) => {
   const sumOfUnclearedWalletInflows = cashflows.reduce(
     (accumulator, cashflow) => {
@@ -61,9 +63,16 @@ const wallet = {
   ],
 };
 
-const ledgerBalance = getLedgerBalance(wallet);
-const totalUnclearedInflows = getTotalUnclearedInflows(wallet);
+// const ledgerBalance = getLedgerBalance(wallet);
+// const totalUnclearedInflows = getTotalUnclearedInflows(wallet);
 
-console.log('Ledger balance:', ledgerBalance);
-console.log('Uncleared balance:', totalUnclearedInflows);
-console.log('Available balance:', ledgerBalance - totalUnclearedInflows);
+// console.log('Ledger balance:', ledgerBalance);
+// console.log('Uncleared balance:', totalUnclearedInflows);
+// console.log('Available balance:', ledgerBalance - totalUnclearedInflows);
+
+const yesterday = new Date('2020-09-03');
+
+const momentInstance = moment(yesterday);
+
+console.log(yesterday);
+console.log(momentInstance.add(24, 'hours').isSameOrBefore(moment.now()));

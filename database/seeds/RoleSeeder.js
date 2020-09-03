@@ -1,8 +1,5 @@
 'use strict';
 
-const { Database } = require('sqlite3');
-const DatabaseFactory = require('@adonisjs/lucid/src/Factory/DatabaseFactory');
-
 /*
 |--------------------------------------------------------------------------
 | RoleSeeder
