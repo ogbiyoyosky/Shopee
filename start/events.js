@@ -1,68 +1,68 @@
-const Event = use("Event");
-const Mail = use("Mail");
-const Env = use("Env");
-const twilioAccountSid = Env.get("TWILIOSID");
-const twilioAuthToken = Env.get("TWILIOAUTHTOKEN");
-const SmsClient = require("twilio")(twilioAccountSid, twilioAuthToken);
-const sender = Env.get("SHORT_CODE");
+const Event = use('Event');
+const Mail = use('Mail');
+const Env = use('Env');
+const twilioAccountSid = Env.get('TWILIOSID');
+const twilioAuthToken = Env.get('TWILIOAUTHTOKEN');
+const SmsClient = require('twilio')(twilioAccountSid, twilioAuthToken);
+const sender = Env.get('SHORT_CODE');
 
-Event.on("new::customer", async (mailDetails) => {
+Event.on('new::customer', async (mailDetails) => {
   await Mail.send(
-    "emails.customer_registration_email",
+    'emails.customer_registration_email',
     mailDetails,
     (message) => {
       message
         .to(
           mailDetails.user.email,
-          mailDetails.profile.first_name + " " + mailDetails.profile.last_name
+          mailDetails.profile.first_name + ' ' + mailDetails.profile.last_name
         )
-        .from("support@timeshoppy.com", "Timeshoppy")
-        .subject("Timeshoppy Platform Registration Information");
+        .from('support@timeshoppy.com', 'Timeshoppy')
+        .subject('Timeshoppy Platform Registration Information');
     }
   );
 });
 
-Event.on("new::order", async (mailDetails) => {
-  await Mail.send("emails.order_confirmation", mailDetails, (message) => {
+Event.on('new::order', async (mailDetails) => {
+  await Mail.send('emails.order_confirmation', mailDetails, (message) => {
     message
       .to(
         mailDetails.user.email,
-        mailDetails.user.first_name + " " + mailDetails.user.last_name
+        mailDetails.user.first_name + ' ' + mailDetails.user.last_name
       )
-      .from("support@timeshoppy.com", "Timeshoppy")
-      .subject("Order Confirmation");
+      .from('support@timeshoppy.com', 'Timeshoppy')
+      .subject('Order Confirmation');
   });
 });
 
-Event.on("new::merchant", async (mailDetails) => {
+Event.on('new::merchant', async (mailDetails) => {
   await Mail.send(
-    "emails.merchant_registration_email",
+    'emails.merchant_registration_email',
     mailDetails,
     (message) => {
       message
         .to(
           mailDetails.user.email,
-          mailDetails.profile.first_name + " " + mailDetails.profile.last_name
+          mailDetails.profile.first_name + ' ' + mailDetails.profile.last_name
         )
-        .from("support@timeshoppy.com", "Timeshoppy")
-        .subject("Timeshoppy Platform Registration Information");
+        .from('support@timeshoppy.com', 'Timeshoppy')
+        .subject('Timeshoppy Platform Registration Information');
     }
   );
 });
 
-Event.on("new::passwordReset", async (mailDetails) => {
-  await Mail.send("emails.reset_password", mailDetails, (message) => {
+Event.on('new::passwordReset', async (mailDetails) => {
+  await Mail.send('emails.reset_password', mailDetails, (message) => {
     message
       .to(
         mailDetails.user.email,
-        mailDetails.profile.first_name + " " + mailDetails.profile.last_name
+        mailDetails.profile.first_name + ' ' + mailDetails.profile.last_name
       )
-      .from("support@timeshoppy.com", "Timeshoppy")
-      .subject("Timeshoppy Password Reset link");
+      .from('support@timeshoppy.com', 'Timeshoppy')
+      .subject('Timeshoppy Password Reset link');
   });
 });
 
-Event.on("new::regtext", async (textDetails) => {
+Event.on('new::regtext', async (textDetails) => {
   try {
     await SmsClient.messages.create({
       body: `Hi there!, your verification code is ${textDetails.user.confirmation_token} `,
@@ -74,7 +74,7 @@ Event.on("new::regtext", async (textDetails) => {
   }
 });
 
-Event.on("new::orderText", async (textDetails) => {
+Event.on('new::orderText', async (textDetails) => {
   try {
     await SmsClient.messages.create({
       body: `A new order of NGN ${textDetails.amount} has been placed on your dashboard `,
@@ -86,7 +86,7 @@ Event.on("new::orderText", async (textDetails) => {
   }
 });
 
-Event.on("new::orderPay", async (textDetails) => {
+Event.on('new::orderPay', async (textDetails) => {
   try {
     await SmsClient.messages.create({
       body: `The order ${textDetails.placement_code} of NGN ${textDetails.amount} has been paid for by the buyer you have 48 hours to make delivery.`,
@@ -98,7 +98,7 @@ Event.on("new::orderPay", async (textDetails) => {
   }
 });
 
-Event.on("new::orderDecline", async (textDetails) => {
+Event.on('new::orderDecline', async (textDetails) => {
   try {
     await SmsClient.messages.create({
       body: `The order ${textDetails.placement_code} has been declined.`,
@@ -110,31 +110,82 @@ Event.on("new::orderDecline", async (textDetails) => {
   }
 });
 
-Event.on("new::orderRefund", async ({ email, amount }) => {
+Event.on('new::orderRefund', async ({ email, amount }) => {
   try {
-    await Mail.send("emails.order_refund", { email, amount }, (message) => {
+    await Mail.send('emails.order_refund', { email, amount }, (message) => {
       message
-        .to("admin@timeshoppy.com")
-        .from("support@timeshoppy.com", "Timeshoppy Support")
-        .subject("Order Refund Requested");
+        .to('admin@timeshoppy.com')
+        .from('support@timeshoppy.com', 'Timeshoppy Support')
+        .subject('Order Refund Requested');
     });
   } catch (error) {
     console.log(error);
   }
 });
 
+Event.on('new::orderDelivered', async ({ email, placement_code }) => {
+  try {
+    await Mail.send(
+      'emails.order_delivered',
+      { email, placement_code },
+      (message) => {
+        message
+          .to(email)
+          .from('support@timeshoppy.com', 'Timeshoppy')
+          .subject('Order Delivered');
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+Event.on('new::deliveryConfirmed', async ({ email, placement_code }) => {
+  try {
+    await Mail.send(
+      'emails.delivery_confirmed',
+      { email, placement_code },
+      (message) => {
+        message
+          .to(email)
+          .from('support@timeshoppy.com', 'Timeshoppy')
+          .subject('Delivery Confirmed');
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+Event.on('new::orderComplete', async ({ email, placement_code }) => {
+  try {
+    await Mail.send(
+      'emails.order_complete',
+      { email, placement_code },
+      (message) => {
+        message
+          .to(email)
+          .from('support@timeshoppy.com', 'Timeshoppy')
+          .subject('Your Order Is Complete');
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 Event.on(
-  "new:total_invoice",
+  'new:total_invoice',
   async ({ email, last_name, first_name, shipping, vat, total, amount }) => {
     try {
       await Mail.send(
-        "emails.total_order_cost",
+        'emails.total_order_cost',
         { email, last_name, first_name, shipping, vat, total, amount },
         (message) => {
           message
-            .to("admin@timeshoppy.com")
-            .from("support@timeshoppy.com", "Timeshoppy Support")
-            .subject("Total Order Cost");
+            .to('admin@timeshoppy.com')
+            .from('support@timeshoppy.com', 'Timeshoppy Support')
+            .subject('Total Order Cost');
         }
       );
     } catch (error) {

@@ -61,7 +61,7 @@ class User extends Model {
     return this.hasOne('App/Models/Role', 'role_id', 'id');
   }
 
-  stores() {
+  store() {
     return this.hasOne('App/Models/Store', 'id', 'user_id');
   }
 
