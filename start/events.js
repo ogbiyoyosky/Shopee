@@ -157,18 +157,14 @@ Event.on('new::deliveryConfirmed', async ({ email, placement_code }) => {
   }
 });
 
-Event.on('new::orderComplete', async ({ email, placement_code }) => {
+Event.on('new::orderComplete', async (mailDetails) => {
   try {
-    await Mail.send(
-      'emails.order_complete',
-      { email, placement_code },
-      (message) => {
-        message
-          .to(email)
-          .from('support@timeshoppy.com', 'Timeshoppy')
-          .subject('Your Order Is Complete');
-      }
-    );
+    await Mail.send('emails.order_complete', mailDetails, (message) => {
+      message
+        .to(mailDetails.user.email)
+        .from('support@timeshoppy.com', 'Timeshoppy')
+        .subject('Your Order Is Complete');
+    });
   } catch (error) {
     console.log(error);
   }
