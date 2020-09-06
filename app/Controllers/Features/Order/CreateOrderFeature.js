@@ -66,7 +66,7 @@ class OrderCreateOrderFeature {
       .orWhere('placement_code', 'Z' + newPlacementCode)
       .fetch();
 
-    if (duplicate) {
+    if (duplicate.rows.length) {
       return await this.generatePlacementCode({ userId, totalAmount });
     }
 
