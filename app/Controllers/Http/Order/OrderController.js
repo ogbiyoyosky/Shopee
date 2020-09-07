@@ -118,29 +118,60 @@ class OrderController {
       const order = await Order.query()
         .where('id', order_id)
         .with('order_notification', (builder) => {
-          builder.with('seller_details.profile');
           builder.with('buyer_details.profile');
+          builder.with('seller_details.profile');
+          builder.with('order_items.main_product_images');
         })
         .first();
 
       if (order) {
-        const { placement_code, order_notification } = order.toJSON();
+        const serializedOrder = order.toJSON();
+        const { placement_code } = serializedOrder;
         console.log(order.toJSON());
-        const { seller_details, buyer_details } = order_notification;
 
         order.buyer_confirms_delivery_at = moment().format(
           'YYYY-MM-DD HH:mm:ss'
         );
         await order.save();
 
+        const { amount, shipping_cost, vat, service_charge } = serializedOrder;
+        const totalCost = amount + shipping_cost + vat + service_charge;
+
+        // Prepare reciept for thank you mail
+        const mailDetails = {
+          user: {
+            first_name:
+              serializedOrder.order_notification.buyer_details.profile
+                .first_name,
+            last_name:
+              serializedOrder.order_notification.buyer_details.profile
+                .last_name,
+            email: serializedOrder.order_notification.buyer_details.email,
+          },
+
+          placement_code,
+
+          date: moment(serializedOrder.is_paid_at).format('MMMM Do YYYY'),
+
+          order_details: serializedOrder,
+
+          sub_total: amount,
+
+          shipping_fee: shipping_cost,
+
+          vat: vat,
+
+          service_charge: service_charge,
+
+          total: totalCost,
+        };
+
         Event.fire('new::deliveryConfirmed', {
-          email: seller_details.profile.email,
+          email: serializedOrder.order_notification.seller_details.email,
           placement_code,
         });
 
-        Event.fire('new:orderComplete', {
-          email: buyer_details.profile.email,
-        });
+        Event.fire('new::orderComplete', mailDetails);
 
         return response.status(200).send({
           message: 'Order confirmed as delivered',
