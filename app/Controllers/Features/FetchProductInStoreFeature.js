@@ -30,10 +30,13 @@ class FetchProductInStoreFeature {
         .with('tags')
         .with('colors')
         .with('sizes')
-        .paginate(page, limit)
-        .fetch();
+        .paginate(page, limit);
+      // .fetch();
+
+      console.log(produceInStore);
 
       const serializedProduct = produceInStore.toJSON();
+      console.log(serializedProduct);
 
       this.response.status(200).send({
         message: 'Successfully fetch all products',
