@@ -217,6 +217,11 @@ Route.group(() => {
     'CronJob/CronJobController.removeProductAfterThirtyDays'
   );
 
+  Route.get(
+    '/clearInflowsForWithdrawal',
+    'CronJob/CronJobController.clearInflowsForWithdrawalAfterTwentyFourHours'
+  );
+
   Route.post('/verifyPayment', 'Webhook/WebhookController.funding');
 
   Route.get('/analytics', 'Analytic/AnalyticController.fetchAnalytics');
