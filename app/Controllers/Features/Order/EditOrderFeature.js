@@ -4,6 +4,7 @@ const Role = use('App/Models/Role');
 const User = use('App/Models/User');
 const Wallet = use('App/Models/Wallet');
 const OrderNotification = use('App/Models/OrderNotification');
+const ManageWalletCashflow = use('App/HelperFunctions/ManageWalletCashflow');
 const moment = require('moment');
 
 class OrderEditOrderFeature {
@@ -56,12 +57,20 @@ class OrderEditOrderFeature {
             'user_id',
             superAdmin.id
           );
-          superAdminWallet.balance -= totalAmountToRefunded;
-          await superAdminWallet.save();
+
+          // Debit super admin
+          ManageWalletCashflow.debit({
+            wallet_id: superAdminWallet.id,
+            amount: totalAmountToRefunded,
+          });
 
           const buyerWallet = await Wallet.findBy('user_id', buyer_id);
-          buyerWallet.balance += totalAmountToRefunded;
-          await buyerWallet.save();
+          // Credit the buyer
+          ManageWalletCashflow.credit({
+            wallet_id: buyerWallet.id,
+            amount: totalAmountToRefunded,
+          });
+
           orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
         }
 
@@ -96,8 +105,11 @@ class OrderEditOrderFeature {
             );
 
             const buyerWallet = await Wallet.findBy('user_id', buyer_id);
-            buyerWallet.balance += totalAmountToRefunded;
-            await buyerWallet.save();
+            // Credit the buyer
+            ManageWalletCashflow.credit({
+              wallet_id: buyerWallet.id,
+              amount: totalAmountToRefunded,
+            });
             orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
           }
 
