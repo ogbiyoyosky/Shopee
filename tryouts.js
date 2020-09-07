@@ -76,3 +76,18 @@ const momentInstance = moment(yesterday);
 
 console.log(yesterday);
 console.log(momentInstance.add(24, 'hours').isSameOrBefore(moment.now()));
+
+const baseCode = String(0000000000);
+const placementCode = String(baseCode);
+const completedOrderCode = 'F' + placementCode;
+const returnedOrderCode = 'Z' + completedOrderCode.slice(1);
+
+console.log(baseCode, placementCode, completedOrderCode, returnedOrderCode);
+
+console.log(`${Date.now()}`);
+
+const currentTimestamp = Date.now();
+let orderBasedData = 99999999999 + 5000000 + currentTimestamp;
+
+const randomFactor = Math.floor(Math.random() * 1000000);
+console.log(randomFactor + orderBasedData);

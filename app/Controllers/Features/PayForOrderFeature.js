@@ -67,6 +67,7 @@ class PayForOrderFeature {
           description: `Payment for order ${order.placement_code}`,
         });
 
+        order.placement_code = 'F' + order.placement_code; //Marked as complete
         order.is_paid_at = moment().format('YYYY-MM-DD HH:mm:ss');
         await order.save();
 

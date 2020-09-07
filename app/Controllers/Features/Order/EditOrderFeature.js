@@ -72,10 +72,13 @@ class OrderEditOrderFeature {
           });
 
           orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
+          orderDetail.placement_code =
+            'Z' + orderDetail.placement_code.slice(1);
         }
 
         if (is_accepted === 0 && orderDetail.is_paid_at === null) {
           orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
+          orderDetail.placement_code = 'Z' + orderDetail.placement_code;
         }
 
         await orderDetail.save();
@@ -110,11 +113,15 @@ class OrderEditOrderFeature {
               wallet_id: buyerWallet.id,
               amount: totalAmountToRefunded,
             });
+
             orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
+            orderDetail.placement_code =
+              'Z' + orderDetail.placement_code.slice(1);
           }
 
           if (is_accepted === 0 && orderDetail.is_paid_at === null) {
             orderDetail.declined_at = moment().format('YYYY-MM-DD HH:mm:ss');
+            orderDetail.placement_code = 'Z' + orderDetail.placement_code;
           }
           await orderDetail.save();
         }
