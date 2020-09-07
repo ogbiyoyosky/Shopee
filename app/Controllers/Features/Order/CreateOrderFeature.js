@@ -1,4 +1,6 @@
 'use strict';
+
+const Event = use('Event');
 const StoreProduct = use('App/Models/StoreProduct');
 const Store = use('App/Models/Store');
 const Order = use('App/Models/Order');
