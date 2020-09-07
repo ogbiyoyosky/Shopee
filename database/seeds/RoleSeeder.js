@@ -1,4 +1,7 @@
-'use strict'
+'use strict';
+
+const { Database } = require('sqlite3');
+const DatabaseFactory = require('@adonisjs/lucid/src/Factory/DatabaseFactory');
 
 /*
 |--------------------------------------------------------------------------
@@ -11,31 +14,26 @@
 */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
-const Factory = use('Factory')
-const Database = use('Database')
+const Factory = use('Factory');
+const Database = use('Database');
 
 const roles = [
   {
-   role_label: 'Super Admin'
+    role_label: 'Super Admin',
   },
   {
-    role_label: 'Shop Admin'
+    role_label: 'Customer',
   },
-  {
-    role_label: 'Customer'
-  },
-]
+];
 class RoleSeeder {
-  async run () {
-    await Database.raw('SET FOREIGN_KEY_CHECKS = 0;')
-    await Database.truncate('roles')
+  async run() {
+    await Database.raw('SET FOREIGN_KEY_CHECKS = 0;');
+    await Database.truncate('roles');
 
-    await Database
-      .from('roles')
-      .insert(roles)
-    
-    await Database.raw('SET FOREIGN_KEY_CHECKS = 1;')
+    await Database.from('roles').insert(roles);
+
+    await Database.raw('SET FOREIGN_KEY_CHECKS = 1;');
   }
 }
 
-module.exports = RoleSeeder
+module.exports = RoleSeeder;

@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 /** @type {import('@adonisjs/framework/src/Hash')} */
-const Hash = use("Hash");
+const Hash = use('Hash');
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use("Model");
+const Model = use('Model');
 const THIRTY_DAY_IN_MILISECONDS = 86400000 * 30;
 
 class User extends Model {
@@ -15,7 +15,7 @@ class User extends Model {
      * A hook to hash the user password before saving
      * it to the database.
      */
-    this.addHook("beforeSave", async (userInstance) => {
+    this.addHook('beforeSave', async (userInstance) => {
       if (userInstance.dirty.password) {
         userInstance.password = await Hash.make(userInstance.password);
       }
@@ -23,11 +23,11 @@ class User extends Model {
   }
 
   static get computed() {
-    return ["is_errant_seller"];
+    return ['is_errant_seller', 'is_shop_admin'];
   }
 
-  getIsErrantSeller({ last_login_time, role_id }) {
-    if (role_id !== 2 || !last_login_time) return false;
+  getIsErrantSeller({ last_login_time, store }) {
+    if (!store || !last_login_time) return false;
 
     const cutOffThresholdInMilisecs =
       new Date(last_login_time).getTime() + THIRTY_DAY_IN_MILISECONDS;
@@ -35,8 +35,12 @@ class User extends Model {
     return Date.now() > new Date(cutOffThresholdInMilisecs);
   }
 
+  getIsShopAdmin({ store }) {
+    return Boolean(store);
+  }
+
   static get hidden() {
-    return ["password", "created_at", "updated_at", "confirmation_token"];
+    return ['password', 'created_at', 'updated_at', 'confirmation_token'];
   }
 
   /**
@@ -50,19 +54,23 @@ class User extends Model {
    * @return {Object}
    */
   tokens() {
-    return this.hasMany("App/Models/Token");
+    return this.hasMany('App/Models/Token');
   }
 
   user_role() {
-    return this.hasOne("App/Models/Role", "role_id", "id");
+    return this.hasOne('App/Models/Role', 'role_id', 'id');
+  }
+
+  stores() {
+    return this.hasOne('App/Models/Store', 'id', 'user_id');
   }
 
   wallet_balance() {
-    return this.belongsTo("App/Models/Wallet", "id", "user_id");
+    return this.belongsTo('App/Models/Wallet', 'id', 'user_id');
   }
 
   profile() {
-    return this.belongsTo("App/Models/Profile", "id", "user_id");
+    return this.belongsTo('App/Models/Profile', 'id', 'user_id');
   }
 }
 
