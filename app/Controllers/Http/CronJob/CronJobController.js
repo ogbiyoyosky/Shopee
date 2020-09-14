@@ -52,30 +52,31 @@ class CronJobController {
         .andWhere('is_cleared', false)
         .fetch();
 
-      const serializedUnclearedInflows = unclearedInflows.toJSON();
+      await Promise.all(
+        unclearedInflows.rows.map(async (inflow) => {
+          const dateRecorded = moment(inflow.created_at);
 
-      for (var inflow in serializedUnclearedInflows) {
-        const dateOfRecord = serializedUnclearedInflows[inflow].created_at;
-        const momentInstance = moment(dateOfRecord);
+          if (dateRecorded.add(24, 'hours').isSameOrBefore(moment.now())) {
+            const wallet = await Wallet.findBy('id', inflow.wallet_id);
 
-        if (momentInstance.add(24, 'hours').isSameOrBefore(moment.now())) {
-          const wallet = await Wallet.findBy('id', inflow.wallet_id);
+            await WalletCashflow.query()
+              .where('id', inflow.id)
+              .update({ is_cleared: true });
 
-          serializedUnclearedInflows[inflow].is_cleared = true;
-          await serializedUnclearedInflows[inflow].save();
-
-          wallet.balance += serializedUnclearedInflows[inflow].amount;
-          await wallet.save();
-        }
-      }
+            await Wallet.query()
+              .where('id', inflow.wallet_id)
+              .update({ balance: wallet.balance + inflow.amount });
+          }
+        })
+      );
 
       return response.status(200).send({
         status: 'succes',
-        message: 'Succeffully removed all in active products',
+        message: 'Succeffully cleared inflows for withdrawal',
         status_code: 200,
       });
-    } catch (thirtyDaysBanError) {
-      console.log('thirtyDaysBanError', thirtyDaysBanError);
+    } catch (clearInflowsError) {
+      console.log('clearInflowsError', clearInflowsError);
       return response.status(500).send({
         status: 'Fail',
         message: 'Internal Server Error',
