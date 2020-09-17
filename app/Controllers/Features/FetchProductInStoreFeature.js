@@ -1,6 +1,6 @@
-"use strict";
-const StoreProduct = use("App/Models/StoreProduct");
-const Store = use("App/Models/Store");
+'use strict';
+const StoreProduct = use('App/Models/StoreProduct');
+const Store = use('App/Models/Store');
 
 class FetchProductInStoreFeature {
   constructor(request, response, auth) {
@@ -15,37 +15,41 @@ class FetchProductInStoreFeature {
 
       const { id } = await this.auth.current.user;
 
-      const store = await Store.query().where("user_id", id).first();
+      const store = await Store.query().where('user_id', id).first();
 
       const storeId = store.id;
 
       const produceInStore = await StoreProduct.query()
-        .whereNull("deleted_at")
-        .andWhere("is_enabled", 1)
-        .andWhere("store_id", storeId)
-        .with("main_product_images")
-        .with("category")
-        .with("sub_category")
-        .with("store")
-        .with("tags")
-        .with("colors")
-        .with("sizes")
+        .whereNull('deleted_at')
+        .andWhere('is_enabled', 1)
+        .andWhere('store_id', storeId)
+        .with('main_product_images')
+        .with('category')
+        .with('sub_category')
+        .with('store')
+        .with('tags')
+        .with('colors')
+        .with('sizes')
         .paginate(page, limit);
+      // .fetch();
+
+      console.log(produceInStore);
 
       const serializedProduct = produceInStore.toJSON();
+      console.log(serializedProduct);
 
       this.response.status(200).send({
-        message: "Successfully fetch all products",
-        status: "success",
+        message: 'Successfully fetch all products',
+        status: 'success',
         status_code: 200,
         results: serializedProduct,
       });
     } catch (fetchProduceError) {
-      console.log("fetchProduceError", fetchProduceError);
+      console.log('fetchProduceError', fetchProduceError);
       return this.response.status(500).send({
-        status: "fail",
+        status: 'fail',
         status_code: 500,
-        message: "Internal Server Error",
+        message: 'Internal Server Error',
       });
     }
   }
