@@ -4,7 +4,7 @@
 const Model = use('Model');
 
 class Wallet extends Model {
-  get computed() {
+  static get computed() {
     return ['cashflows', 'total_uncleared_inflows', 'ledger_balance'];
   }
 

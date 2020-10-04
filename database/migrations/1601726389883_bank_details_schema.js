@@ -7,10 +7,10 @@ class BankDetailSchema extends Schema {
   up () {
     this.create('bank_details', (table) => {
       table.increments()
-      table.integer('bank_id').notNullable(),
-      table.integer('account_type_id').notNullable(),
-      table.string('account_name', 254).notNullable(),
-      table.integer('account_number', 15).notNullable(),
+      table.integer('bank_id').nullable(),
+      table.string('account_name', 254).nullable(),
+      table.integer('account_number', 15).nullable(),
+      table.integer('user_id').nullable(),
       table.timestamps()
     })
   }

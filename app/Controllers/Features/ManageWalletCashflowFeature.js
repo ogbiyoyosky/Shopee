@@ -10,7 +10,8 @@ class ManageWalletCashflowFeature {
 
   async credit(data) {
     try {
-      await ManageWalletCashflow.credit(data);
+      const cashflow = await ManageWalletCashflow.credit(data);
+      return cashflow;
     } catch (manageWalletCashflowFeatureError) {
       console.log(
         'manageWalletCashflowFeatureError',
@@ -26,7 +27,8 @@ class ManageWalletCashflowFeature {
 
   async debit(data) {
     try {
-      await ManageWalletCashflow.debit(data);
+      const cashflow = await ManageWalletCashflow.debit(data);
+      return cashflow;
     } catch (manageWalletCashflowFeatureError) {
       console.log(
         'manageWalletCashflowFeatureError',
