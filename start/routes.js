@@ -161,6 +161,10 @@ Route.group(() => {
     'Product/ProductController.fetchProductById'
   );
 
+
+  // Wallet and Wallet Cashflows
+  Route.get('wallets/transactions', 'Wallet/WalletController.fetchCashflows').middleware([ 'auth' ]);
+
   Route.post('orders', 'Order/OrderController.createOrder').middleware([
     'auth',
   ]);
