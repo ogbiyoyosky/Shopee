@@ -34,21 +34,22 @@ class ProcessWithdrawal {
                 });
             }
 
-            const bankDetail = await Wallet.findBy('user_id', this.auth.current.user.id);
+            const bankDetail = await BankDetail.findBy('user_id', this.auth.current.user.id);
 
-            if (!bankDetail || !bankDetail.account_number || bankDetail.bank_id) {
+            console.log(bankDetail);
+
+            if (!bankDetail || !bankDetail.account_number || !bankDetail.bank_id) {
                 return this.response.status(404).send({
                     status: 'Fail',
                     status_code: 404,
-                    message: 'Please update your bank details'
+                    message: 'Please update your bank detail'
                 });
             }
 
-            const cashflow = await ManageWalletCashflow.credit({
+            const cashflow = await ManageWalletCashflow.debit({
                 amount: amountToWithdraw,
                 description: 'Withdrawal',
                 wallet_id: wallet.id,
-                is_cleared: false
             });
 
             const withdrawal = new Withdrawal();
