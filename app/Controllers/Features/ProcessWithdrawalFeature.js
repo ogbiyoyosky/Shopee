@@ -1,4 +1,5 @@
 'use strict'
+const User = use('App/Models/User');
 const Wallet = use('App/Models/Wallet');
 const BankDetail = use('App/Models/BankDetail');
 const Withdrawal = use('App/Models/Withdrawal');
@@ -13,8 +14,36 @@ class ProcessWithdrawal {
 
     async processWithdrawal() {
         try {
-            const body = this.request.all();
-            const amountToWithdraw = Number(body.amount);
+            const { amount, password } = this.request.all();
+            const amountToWithdraw = Number(amount);
+
+            if (!password) {
+                return this.response.status(400).send({
+                    message: "Incorrect password",
+                    status: 'fail',
+                    status_code: 403,
+                }); 
+            }
+
+            const passwordVerified = await User.comparePassword(this.auth.current.user.id, password);
+
+            if (!passwordVerified) {
+                return this.response.status(400).send({
+                    message: "Incorrect password",
+                    status: 'fail',
+                    status_code: 403,
+                });  
+            }
+            
+            const bankDetail = await BankDetail.findBy('user_id', this.auth.current.user.id);
+
+            if (!bankDetail || !bankDetail.account_name || !bankDetail.account_number || !bankDetail.bank_id) {
+                return this.response.status(404).send({
+                    status: 'Fail',
+                    status_code: 404,
+                    message: 'Please update your bank detail'
+                });
+            }
 
             const wallet = await Wallet.findBy('user_id', this.auth.current.user.id);
 
@@ -31,18 +60,6 @@ class ProcessWithdrawal {
                     status: 'Fail',
                     status_code: 400,
                     message: 'Insufficient balance'
-                });
-            }
-
-            const bankDetail = await BankDetail.findBy('user_id', this.auth.current.user.id);
-
-            console.log(bankDetail);
-
-            if (!bankDetail || !bankDetail.account_number || !bankDetail.bank_id) {
-                return this.response.status(404).send({
-                    status: 'Fail',
-                    status_code: 404,
-                    message: 'Please update your bank detail'
                 });
             }
 

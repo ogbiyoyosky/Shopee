@@ -84,7 +84,7 @@ class EditBankDetailFeature {
 
             return this.response.status(200).send({
                 message: "Successfully updated your bank detail.",
-                status: 'Success',
+                status: 'success',
                 status_code: 200,
                 result: bankDetail
             });        
