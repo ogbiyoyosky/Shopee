@@ -161,6 +161,20 @@ Route.group(() => {
     'Product/ProductController.fetchProductById'
   );
 
+  
+  // Banks
+  Route.get('banks', 'Meta/MetaDatumController.fetchBanks').middleware([ 'auth' ]);
+  
+  // Bank Details
+  Route.get('bank-details', 'BankDetail/BankDetailController.fetchDetail').middleware([ 'auth' ]);
+  Route.patch('bank-details', 'BankDetail/BankDetailController.editDetail').middleware([ 'auth' ]);
+
+
+  // Wallet and Wallet Cashflows
+  Route.get('wallets/transactions', 'Wallet/WalletController.fetchCashflows').middleware([ 'auth' ]);
+  Route.post('wallets/withdraw', 'Wallet/WalletController.withdraw').middleware([ 'auth' ]);
+
+  // Orders
   Route.post('orders', 'Order/OrderController.createOrder').middleware([
     'auth',
   ]);

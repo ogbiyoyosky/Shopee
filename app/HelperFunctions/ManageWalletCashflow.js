@@ -13,7 +13,7 @@ class ManageWalletCashflow {
    * @param { string } [data.description] - A description of the new cashflow
    * @param { boolean } [data.is_cleared] - If true, the cashflow will be cleared instantly.
    * Defaults to true
-   * @returns { Promise<void> } a Promise that resolves to nothing.
+   * @returns { Promise<object> } a Promise that resolves to the new cashflow.
    */
   static async credit(data) {
     const wallet = await ManageWalletCashflow.getWallet(data.wallet_id);
@@ -22,6 +22,7 @@ class ManageWalletCashflow {
       type: 'credit',
     });
     await this.updateWalletBalance(wallet, cashflow);
+    return wallet;
   }
 
   /**
@@ -32,13 +33,14 @@ class ManageWalletCashflow {
    * @param { number } data.amount - An amount to debit
    * @param { string } [data.description] - A description of the new cashflow
    * @param { boolean } [data.is_cleared] - If true, the cashflow will be cleared instantly. Defaults to true
-   * @returns { Promise<void> } a Promise that resolves to nothing.
+   * @returns { Promise<object> } a Promise that resolves to the new cashflow.
    */
   static async debit(data) {
     const wallet = await this.getWallet(data.wallet_id);
     data = { is_cleared: true, ...data, type: 'debit' };
     const cashflow = await ManageWalletCashflow.createCashflow(data);
     await ManageWalletCashflow.updateWalletBalance(wallet, cashflow);
+    return cashflow
   }
 
   /**
@@ -64,7 +66,7 @@ class ManageWalletCashflow {
    * @param { boolean } [data.is_cleared] - If true, the cashflow will be cleared instantly.
    * Defaults to false
    * @param { string } [data.description] - A description of the new cashflow. Defaults to null
-   * @returns { Promise<void> } a Promise that resolves to nothing.
+   * @returns { Promise<object> } a Promise that resolves to the new cashflow.
    */
   static async createCashflow({
     type,

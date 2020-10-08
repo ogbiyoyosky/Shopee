@@ -2,6 +2,7 @@
 const FetchMetaDatumFeature = use('App/Controllers/Features/FetchMetaDatumFeature')
 const FetchStateByCountryIdFeature = use('App/Controllers/Features/FetchStateByCountryIdFeature')
 const FetchProvinceByStateIdFeature = use('App/Controllers/Features/FetchProvinceByStateIdFeature')
+const FetchBanksFeature = use('App/Controllers/Features/FetchBanksFeature')
 
 class MetaDatumController {
     async showMetadata({
@@ -27,6 +28,9 @@ class MetaDatumController {
         }
     }) {
         return new FetchProvinceByStateIdFeature(request,response).fetchProvince(state_id)
+    }
+    async fetchBanks({ response }) {
+        return new FetchBanksFeature(response).fetchBanks()
     }
 }
 

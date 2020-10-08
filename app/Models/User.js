@@ -39,6 +39,19 @@ class User extends Model {
     return Boolean(store);
   }
 
+  static async comparePassword(userId, password) {
+    const user = await User.findBy('id', userId);
+    if (!user) {
+      return false;
+    }
+    const verified = await Hash.verify(password, user.password);
+    return verified;
+  }
+
+  getPassword({ password }) {
+    return password;
+  }
+
   static get hidden() {
     return ['password', 'created_at', 'updated_at', 'confirmation_token'];
   }

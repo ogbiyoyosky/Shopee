@@ -5,6 +5,7 @@ const Wallet = use('App/Models/Wallet');
 const Profile = use('App/Models/Profile');
 const Env = use('Env');
 const CountryCode = use('App/Models/CountryCode');
+const BankDetail = use('App/Models/BankDetail');
 const Event = use('Event');
 const randomString = require('randomstring');
 
@@ -50,6 +51,11 @@ class RegisterUserFeature {
       const wallet = new Wallet();
       wallet.user_id = user.id;
       await wallet.save();
+
+      // bank detail
+      const bankDetail = new BankDetail();
+      bankDetail.user_id = user.id;
+      await bankDetail.save();
 
       //profile
       const profile = new Profile();
