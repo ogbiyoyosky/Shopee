@@ -1,4 +1,4 @@
-const ProcessWithdrawal = require("../../Features/ProcessWithdrawalFeature");
+const ProcessWithdrawal = use("App/Controllers/Features/ProcessWithdrawalFeature");
 
 const FetchWalletCashflowsFeature = use(
     "App/Controllers/Features/FetchWalletCashflowsFeature"

@@ -1,11 +1,20 @@
 'use strict'
+const requestPromise = require("request-promise");
+const randomString = require("randomstring");
+const Config = use("Config");
+const Env = use("Env");
 const User = use('App/Models/User');
 const Wallet = use('App/Models/Wallet');
 const BankDetail = use('App/Models/BankDetail');
 const Withdrawal = use('App/Models/Withdrawal');
 const ManageWalletCashflow = use('App/HelperFunctions/ManageWalletCashflow');
 
-class ProcessWithdrawal {
+
+const HOST = Env.get("HOST");
+const PORT = Env.get("PORT");
+Config.get("endpoints.rave.payoutEndpoint"),
+
+module.exports = class ProcessWithdrawal {
     constructor (request, response, auth ) {
         this.request = request;
         this.response = response;
@@ -63,6 +72,25 @@ class ProcessWithdrawal {
                 });
             }
 
+            const token = randomString.generate(13);
+            const transactionId = this.generateTransactionID(token);
+
+            const response = await this.makeBankTransfer({
+                amount,
+                account_number: bankDetail.account_number,
+                bank: bankDetail.bank_id,
+                reference: transactionId
+            });
+
+            if (response.status !== "success") {
+                return this.response.status(400).send({
+                    status: "Fail",
+                    message: "Error contacting rave",
+                    status_code: 400,
+                    flv_response: response
+                });
+            }
+
             const cashflow = await ManageWalletCashflow.debit({
                 amount: amountToWithdraw,
                 description: 'Withdrawal',
@@ -71,20 +99,23 @@ class ProcessWithdrawal {
 
             const withdrawal = new Withdrawal();
             withdrawal.wallet_cashflow_id = cashflow.id;
-            withdrawal.transaction_id = this.generateTransactionID(cashflow.id);
+            withdrawal.transaction_id = transactionId;
             await withdrawal.save();
 
             return this.response.status(200).send({
                 status: 'success',
                 status_code: 200,
                 message: 'Withdrawal successful',
-                result: cashflow
+                result: cashflow,
+                flw_response: response
             })
         } catch(processWithdrawalError) {
             console.log('processWithdrawalError -> ', processWithdrawalError);
+            let errMsg = processWithdrawalError.error;
+            errMsg = errMsg.data ? errMsg.data.complete_message : "Internal Server Error";
             return this.response.status(500).send({
                 status: "Fail",
-                message: "Internal Server Error",
+                message: errMsg,
                 status_code: 500
             })
         }
@@ -92,12 +123,38 @@ class ProcessWithdrawal {
 
     /**
      * Generates a transaction ID based on the current timestamp and the associated cashflow ID
-     * @param { number } cashflowId - The associated wallet cashflow ID
+     * @param { number } token - A random token
      * @returns { string } a unique transaction ID for the withdrawal
      */
-    generateTransactionID(cashflowId) {
-        return `WTH-${Date.now() + cashflowId + 737}`;
+    generateTransactionID(token) {
+        return `WTH-${Date.now() - 737}-${token}`.toUpperCase();
     }
 
+    /**
+     * Attempts to make a bank transfer
+     */
+    async makeBankTransfer ({ amount, reference, bank, account_number }) {
+        const requestConfig = {
+            method: "POST",
+            uri: Config.get("endpoints.rave.payoutEndpoint"),
+            body: {
+                account_bank: `${bank}`,
+                account_number: `${account_number}`,
+                reference,
+                amount,
+                narration: `Withdrawal - ${reference} Trnsfr`,
+                callback_url: `https://api.timeshoppy.com/api/v1/withdrawals/verifications`,
+                currency: "NGN",
+                debit_currency: "USD",
+            },
+            headers: {
+                authorization: `Bearer ${Env.get("FLUTTER_SECRET_KEY")}`,
+                "Content-Type": "application/json",
+                "cache-control": "no-cache",
+            },
+            json: true,
+        };
+
+        return requestPromise(requestConfig)
+    }
 }
-module.exports = ProcessWithdrawal;

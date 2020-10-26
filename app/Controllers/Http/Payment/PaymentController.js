@@ -3,7 +3,6 @@ const InitializePaymentFeature = use('App/Controllers/Features/InitializePayment
 const VerifyPaymentFeature = use('App/Controllers/Features/VerifyPaymentFeature')
 const ProcessTransactionFeature = use('App/Controllers/Features/ProcessTransactionFeature')
 
-
 class PaymentController {
     async payWithPayStack ({
         request,
@@ -18,7 +17,6 @@ class PaymentController {
         response
        
     }) {
-    
         return new VerifyPaymentFeature(request, response).verify()
     }
 

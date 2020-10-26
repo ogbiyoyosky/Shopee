@@ -1,5 +1,7 @@
 'use strict'
 
+const requestPromise = require("request-promise");
+const Env = use('Env');
 const User = use('App/Models/User');
 const Bank = use('App/Models/Bank');
 const BankDetail = use("App/Models/BankDetail");
@@ -49,9 +51,22 @@ class EditBankDetailFeature {
             }
 
             if (bank_id) {
-                const bank = await Bank.findBy('id', bank_id);
+                const requestConfig = {
+                    method: "POST",
+                    uri: 'https://live.moneywaveapi.co/banks',
+                    headers: {
+                        authorization: `Bearer ${Env.get("FLUTTER_SECRET_KEY")}`,
+                        "Content-Type": "application/json",
+                        "cache-control": "no-cache",
+                    },
+                    json: true,
+                };
+        
+                const banksResesponse = await requestPromise(requestConfig);
 
-                if (!bank) {
+                // const bank = await Bank.findBy('id', bank_id);
+
+                if (!banksResesponse.data[bank_id]) {
                     return this.response.status(400).send({
                         message: "The selected bank does not exist. Please check again or contact support.",
                         status: 'fail',

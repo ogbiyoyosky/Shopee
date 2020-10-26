@@ -177,6 +177,7 @@ Route.group(() => {
   // Wallet and Wallet Cashflows
   Route.get('wallets/transactions', 'Wallet/WalletController.fetchCashflows').middleware([ 'auth' ]);
   Route.post('wallets/withdraw', 'Wallet/WalletController.withdraw').middleware([ 'auth' ]);
+  Route.post('/withdrawals/verifications', 'Withdrawal/WithdrawalController.verify');
 
   // Orders
   Route.post('orders', 'Order/OrderController.createOrder').middleware([
