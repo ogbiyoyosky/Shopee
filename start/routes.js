@@ -44,6 +44,10 @@ Route.group(() => {
   //meta
   Route.get('/MetaData', 'Meta/MetaDatumController.showMetadata');
   Route.get(
+    'MetaData/Countries/',
+    'Meta/MetaDatumController.fetchCountries'
+  );
+  Route.get(
     'MetaData/States/:country_id',
     'Meta/MetaDatumController.fetchState'
   );
@@ -173,6 +177,7 @@ Route.group(() => {
   // Wallet and Wallet Cashflows
   Route.get('wallets/transactions', 'Wallet/WalletController.fetchCashflows').middleware([ 'auth' ]);
   Route.post('wallets/withdraw', 'Wallet/WalletController.withdraw').middleware([ 'auth' ]);
+  Route.post('/withdrawals/verifications', 'Withdrawal/WithdrawalController.verify');
 
   // Orders
   Route.post('orders', 'Order/OrderController.createOrder').middleware([

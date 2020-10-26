@@ -34,6 +34,7 @@ module.exports = {
       "https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/hosted/pay",
     verifyTransactionEndpoint:
       "https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/verify",
+    payoutEndpoint: "https://api.flutterwave.com/v3/transfers",
   },
 
   /*
