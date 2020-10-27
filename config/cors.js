@@ -22,7 +22,8 @@ module.exports = {
     "http://localhost:3000",
     "https://timeshoppy.com",
     "https://admin.timeshoppy.com",
-    "https://*.paystack.com"
+    "https://*.paystack.com",
+    "https://timeshoppy-admin.vercel.app"
   ],
 
   /*
