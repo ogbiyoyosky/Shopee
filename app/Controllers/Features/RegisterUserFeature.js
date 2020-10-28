@@ -53,9 +53,9 @@ class RegisterUserFeature {
       await wallet.save();
 
       // bank detail
-      const bankDetail = new BankDetail();
-      bankDetail.user_id = user.id;
-      await bankDetail.save();
+      // const bankDetail = new BankDetail();
+      // bankDetail.user_id = user.id;
+      // await bankDetail.save();
 
       //profile
       const profile = new Profile();

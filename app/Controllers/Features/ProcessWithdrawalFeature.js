@@ -37,7 +37,7 @@ module.exports = class ProcessWithdrawal {
             const passwordVerified = await User.comparePassword(this.auth.current.user.id, password);
 
             if (!passwordVerified) {
-                return this.response.status(400).send({
+                return this.response.status(403).send({
                     message: "Incorrect password",
                     status: 'fail',
                     status_code: 403,
@@ -47,9 +47,9 @@ module.exports = class ProcessWithdrawal {
             const bankDetail = await BankDetail.findBy('user_id', this.auth.current.user.id);
 
             if (!bankDetail || !bankDetail.account_name || !bankDetail.account_number || !bankDetail.bank_id) {
-                return this.response.status(404).send({
+                return this.response.status(400).send({
                     status: 'Fail',
-                    status_code: 404,
+                    status_code: 400,
                     message: 'Please update your bank detail'
                 });
             }
