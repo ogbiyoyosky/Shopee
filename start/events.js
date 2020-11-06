@@ -7,7 +7,7 @@ const SmsClient = require('twilio')(twilioAccountSid, twilioAuthToken);
 const sender = Env.get('SHORT_CODE');
 
 Event.on('new::customer', async (mailDetails) => {
-  await Mail.connection('mailgun').send(
+  await Mail.send(
     'emails.customer_registration_email',
     mailDetails,
     (message) => {
@@ -16,26 +16,26 @@ Event.on('new::customer', async (mailDetails) => {
           mailDetails.user.email,
           mailDetails.profile.first_name + ' ' + mailDetails.profile.last_name
         )
-        .from('support@timeshoppy.com', 'Timeshoppy')
+        .from('nwakasistephen@gmail.com', 'Timeshoppy')
         .subject('Timeshoppy Platform Registration Information');
     }
   );
 });
 
 Event.on('new::order', async (mailDetails) => {
-  await Mail.connection('mailgun').send('emails.order_confirmation', mailDetails, (message) => {
+  await Mail.send('emails.order_confirmation', mailDetails, (message) => {
     message
       .to(
         mailDetails.user.email,
         mailDetails.user.first_name + ' ' + mailDetails.user.last_name
       )
-      .from('support@timeshoppy.com', 'Timeshoppy')
+      .from('nwakasistephen@gmail.com', 'Timeshoppy')
       .subject('Order Confirmation');
   });
 });
 
 Event.on('new::merchant', async (mailDetails) => {
-  await Mail.connection('mailgun').send(
+  await Mail.send(
     'emails.merchant_registration_email',
     mailDetails,
     (message) => {
@@ -44,20 +44,20 @@ Event.on('new::merchant', async (mailDetails) => {
           mailDetails.user.email,
           mailDetails.profile.first_name + ' ' + mailDetails.profile.last_name
         )
-        .from('support@timeshoppy.com', 'Timeshoppy')
+        .from('nwakasistephen@gmail.com', 'Timeshoppy')
         .subject('Timeshoppy Platform Registration Information');
     }
   );
 });
 
 Event.on('new::passwordReset', async (mailDetails) => {
-  await Mail.connection('mailgun').send('emails.reset_password', mailDetails, (message) => {
+  await Mail.send('emails.reset_password', mailDetails, (message) => {
     message
       .to(
         mailDetails.user.email,
         mailDetails.profile.first_name + ' ' + mailDetails.profile.last_name
       )
-      .from('support@timeshoppy.com', 'Timeshoppy')
+      .from('nwakasistephen@gmail.com', 'Timeshoppy')
       .subject('Timeshoppy Password Reset link');
   });
 });
@@ -112,10 +112,10 @@ Event.on('new::orderDecline', async (textDetails) => {
 
 Event.on('new::orderRefund', async ({ email, amount }) => {
   try {
-    await Mail.connection('mailgun').send('emails.order_refund', { email, amount }, (message) => {
+    await Mail.send('emails.order_refund', { email, amount }, (message) => {
       message
         .to('admin@timeshoppy.com')
-        .from('support@timeshoppy.com', 'Timeshoppy Support')
+        .from('nwakasistephen@gmail.com', 'Timeshoppy Support')
         .subject('Order Refund Requested');
     });
   } catch (error) {
@@ -125,13 +125,13 @@ Event.on('new::orderRefund', async ({ email, amount }) => {
 
 Event.on('new::orderDelivered', async ({ email, placement_code }) => {
   try {
-    await Mail.connection('mailgun').send(
+    await Mail.send(
       'emails.order_delivered',
       { email, placement_code },
       (message) => {
         message
           .to(email)
-          .from('support@timeshoppy.com', 'Timeshoppy')
+          .from('nwakasistephen@gmail.com', 'Timeshoppy')
           .subject('Order Delivered');
       }
     );
@@ -142,13 +142,13 @@ Event.on('new::orderDelivered', async ({ email, placement_code }) => {
 
 Event.on('new::deliveryConfirmed', async ({ email, placement_code }) => {
   try {
-    await Mail.connection('mailgun').send(
+    await Mail.send(
       'emails.delivery_confirmed',
       { email, placement_code },
       (message) => {
         message
           .to(email)
-          .from('support@timeshoppy.com', 'Timeshoppy')
+          .from('nwakasistephen@gmail.com', 'Timeshoppy')
           .subject('Delivery Confirmed');
       }
     );
@@ -159,10 +159,10 @@ Event.on('new::deliveryConfirmed', async ({ email, placement_code }) => {
 
 Event.on('new::orderComplete', async (mailDetails) => {
   try {
-    await Mail.connection('mailgun').send('emails.order_complete', mailDetails, (message) => {
+    await Mail.send('emails.order_complete', mailDetails, (message) => {
       message
         .to(mailDetails.user.email)
-        .from('support@timeshoppy.com', 'Timeshoppy')
+        .from('nwakasistephen@gmail.com', 'Timeshoppy')
         .subject('Your Order Is Complete');
     });
   } catch (error) {
@@ -174,13 +174,13 @@ Event.on(
   'new:total_invoice',
   async ({ email, last_name, first_name, shipping, vat, total, amount }) => {
     try {
-      await Mail.connection('mailgun').send(
+      await Mail.send(
         'emails.total_order_cost',
         { email, last_name, first_name, shipping, vat, total, amount },
         (message) => {
           message
             .to('admin@timeshoppy.com')
-            .from('support@timeshoppy.com', 'Timeshoppy Support')
+            .from('nwakasistephen@gmail.com', 'Timeshoppy Support')
             .subject('Total Order Cost');
         }
       );
