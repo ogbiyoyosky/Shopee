@@ -63,10 +63,11 @@ class WebhookController {
         existingToken.is_revoked = 1;
         await existingToken.save();
 
+        const transactionType = 'FUNDING';
         await new ProcessTransactionFeature(
           request,
           response
-        ).processTransaction(amount, user_id);
+        ).processTransaction(amount, user_id, transactionType);
       }
       return response.redirect(`https://timeshoppy.com/${redirectURL}`);
     }
@@ -106,10 +107,11 @@ class WebhookController {
               existingToken.is_revoked = 1;
               await existingToken.save();
 
+              const transactionType = 'PRODUCT_PAYMENT';
               await new ProcessTransactionFeature(
                 request,
                 response
-              ).processTransaction(amount, user_id);
+              ).processTransaction(amount, user_id, transactionType);
             }
           }
         }
