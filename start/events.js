@@ -16,7 +16,7 @@ Event.on('new::customer', async (mailDetails) => {
           mailDetails.user.email,
           mailDetails.profile.first_name + ' ' + mailDetails.profile.last_name
         )
-        .from('nwakasistephen@gmail.com', 'Timeshoppy')
+        .from('support@timeshoppy.com', 'Timeshoppy')
         .subject('Timeshoppy Platform Registration Information');
     }
   );
@@ -29,7 +29,7 @@ Event.on('new::order', async (mailDetails) => {
         mailDetails.user.email,
         mailDetails.user.first_name + ' ' + mailDetails.user.last_name
       )
-      .from('nwakasistephen@gmail.com', 'Timeshoppy')
+      .from('support@timeshoppy.com', 'Timeshoppy')
       .subject('Order Confirmation');
   });
 });
@@ -44,7 +44,7 @@ Event.on('new::merchant', async (mailDetails) => {
           mailDetails.user.email,
           mailDetails.profile.first_name + ' ' + mailDetails.profile.last_name
         )
-        .from('nwakasistephen@gmail.com', 'Timeshoppy')
+        .from('support@timeshoppy.com', 'Timeshoppy')
         .subject('Timeshoppy Platform Registration Information');
     }
   );
@@ -57,7 +57,7 @@ Event.on('new::passwordReset', async (mailDetails) => {
         mailDetails.user.email,
         mailDetails.profile.first_name + ' ' + mailDetails.profile.last_name
       )
-      .from('nwakasistephen@gmail.com', 'Timeshoppy')
+      .from('support@timeshoppy.com', 'Timeshoppy')
       .subject('Timeshoppy Password Reset link');
   });
 });
@@ -115,7 +115,7 @@ Event.on('new::orderRefund', async ({ email, amount }) => {
     await Mail.send('emails.order_refund', { email, amount }, (message) => {
       message
         .to('admin@timeshoppy.com')
-        .from('nwakasistephen@gmail.com', 'Timeshoppy Support')
+        .from('support@timeshoppy.com', 'Timeshoppy Support')
         .subject('Order Refund Requested');
     });
   } catch (error) {
@@ -131,7 +131,7 @@ Event.on('new::orderDelivered', async ({ email, placement_code }) => {
       (message) => {
         message
           .to(email)
-          .from('nwakasistephen@gmail.com', 'Timeshoppy')
+          .from('support@timeshoppy.com', 'Timeshoppy')
           .subject('Order Delivered');
       }
     );
@@ -148,7 +148,7 @@ Event.on('new::deliveryConfirmed', async ({ email, placement_code }) => {
       (message) => {
         message
           .to(email)
-          .from('nwakasistephen@gmail.com', 'Timeshoppy')
+          .from('support@timeshoppy.com', 'Timeshoppy')
           .subject('Delivery Confirmed');
       }
     );
@@ -162,7 +162,7 @@ Event.on('new::orderComplete', async (mailDetails) => {
     await Mail.send('emails.order_complete', mailDetails, (message) => {
       message
         .to(mailDetails.user.email)
-        .from('nwakasistephen@gmail.com', 'Timeshoppy')
+        .from('support@timeshoppy.com', 'Timeshoppy')
         .subject('Your Order Is Complete');
     });
   } catch (error) {
@@ -180,7 +180,7 @@ Event.on(
         (message) => {
           message
             .to('admin@timeshoppy.com')
-            .from('nwakasistephen@gmail.com', 'Timeshoppy Support')
+            .from('support@timeshoppy.com', 'Timeshoppy Support')
             .subject('Total Order Cost');
         }
       );
