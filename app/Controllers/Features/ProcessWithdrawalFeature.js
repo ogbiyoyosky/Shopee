@@ -27,7 +27,7 @@ module.exports = class ProcessWithdrawal {
             const amountToWithdraw = Number(amount);
 
             if (!password) {
-                return this.response.status(400).send({
+                return this.response.status(403).send({
                     message: "Incorrect password",
                     status: 'fail',
                     status_code: 403,

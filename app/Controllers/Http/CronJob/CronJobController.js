@@ -9,6 +9,8 @@ const Wallet = use('App/Models/Wallet');
 const WalletCashflow = use('App/Models/WalletCashflow');
 const ManageWalletCashflow = use('App/HelperFunctions/ManageWalletCashflow');
 const moment = require('moment');
+const cron = require('node-cron');
+
 
 class CronJobController {
   async removeProductAfterThirtyDays({ response }) {
@@ -85,5 +87,38 @@ class CronJobController {
     }
   }
 }
+
+// to run every 3 minutes, schedule - '00 */3 * * * *'
+// Schedule cron job every day at 12am
+cron.schedule('00 */1 * * * *', async () => {
+  // eslint-disable-next-line no-console
+  console.log('Firing reminders');
+  try {
+    const unclearedInflows = await WalletCashflow.query()
+      .where('type', 'credit')
+      .andWhere('is_cleared', false)
+      .fetch();
+
+    await Promise.all(
+      unclearedInflows.rows.map(async (inflow) => {
+        const dateRecorded = moment(inflow.created_at);
+
+        if (dateRecorded.add(24, 'hours').isSameOrBefore(moment.now())) {
+          const wallet = await Wallet.findBy('id', inflow.wallet_id);
+
+          await WalletCashflow.query()
+            .where('id', inflow.id)
+            .update({ is_cleared: true });
+
+          await Wallet.query()
+            .where('id', inflow.wallet_id)
+            .update({ balance: wallet.balance + inflow.amount });
+        }
+      })
+    );
+  } catch (clearInflowsError) {
+    console.log('clearInflowsError', clearInflowsError);
+  }
+});
 
 module.exports = CronJobController;
