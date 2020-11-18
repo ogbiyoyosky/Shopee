@@ -32,6 +32,7 @@ module.exports = {
       user: Env.get('MAIL_USERNAME'),
       pass: Env.get('MAIL_PASSWORD')
     },
+    requireTLS: false,
     maxConnections: 5,
     maxMessages: 100,
     rateLimit: 10
