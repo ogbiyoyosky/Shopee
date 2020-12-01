@@ -16,13 +16,19 @@ const Database = use('Database')
 
 const banks = [
   {
-   name: 'GTBank'
+   name: 'GTBank',
+   created_at: new Date(),
+   updated_at: new Date(),
   },
   {
-    name: 'WEMA Bank'
+    name: 'WEMA Bank',
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
-    name: 'Fidelity Bank'
+    name: 'Fidelity Bank',
+    created_at: new Date(),
+    updated_at: new Date(),
   }]
 
 class BankSeeder {

@@ -50,6 +50,14 @@ class UserSeeder {
         role_id: 3,
         is_activated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
       },
+      {
+        password,
+        phone_number: 8051078832,
+        email: "admin@timeshoppy.com",
+        is_activated_at: 1,
+        role_id: 1,
+        is_activated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+      },
     ]);
 
     await Database.table("profiles").insert([
@@ -80,6 +88,15 @@ class UserSeeder {
         state_id: 1,
         gender: "Male",
       },
+      {
+        user_id: 4,
+        first_name: "Super",
+        last_name: "Admin",
+        country_id: 1,
+        province_id: 1,
+        state_id: 1,
+        gender: "Male",
+      },
     ]);
 
     await Database.table("wallets").insert([
@@ -93,6 +110,10 @@ class UserSeeder {
       },
       {
         user_id: 3,
+        balance: 0,
+      },
+      {
+        user_id: 4,
         balance: 0,
       },
     ]);

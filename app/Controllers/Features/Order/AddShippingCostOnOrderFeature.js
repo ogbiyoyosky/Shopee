@@ -29,6 +29,7 @@ class OrderAddShippingCostOnOrderFeature {
         email: user.email,
         shipping: shipping_cost,
         vat: orderDetail.vat,
+        placement_code: orderDetail.placement_code,
         amount: orderDetail.amount,
         total: shipping_cost + orderDetail.vat + orderDetail.amount,
       };

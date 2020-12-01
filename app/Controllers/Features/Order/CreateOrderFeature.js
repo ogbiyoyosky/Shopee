@@ -164,7 +164,8 @@ class OrderCreateOrderFeature {
           return accumulator + item;
         }, 0);
 
-      const vat = totalAmount * (serializedSettings[0].vat / 100);
+      // const vat = totalAmount * (serializedSettings[0].vat / 100); // VAT as initially calculated
+      const vat = 0; // Defaults to zero and shall only be included implicitly in the shipping cost
       const serviceCharge = serializedSettings[0].service_charge;
       const token = await this.generatePlacementCode({
         userId,

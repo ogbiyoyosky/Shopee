@@ -120,6 +120,9 @@ class OrderController {
         .with('order_notification', (builder) => {
           builder.with('buyer_details.profile');
           builder.with('seller_details.profile');
+          builder.with('order_address.country_code');
+          builder.with('order_address.state');
+          builder.with('order_address.province');
           builder.with('order_items.main_product_images');
         })
         .first();
@@ -242,13 +245,14 @@ class OrderController {
       })
       .first();
 
-    const { amount, order_notification } = order.toJSON();
+    const { amount, placement_code, order_notification } = order.toJSON();
     console.log(order.toJSON());
     const { email } = order_notification.buyer_details.profile;
 
     Event.fire('new::orderRefund', {
       email,
       amount,
+      placement_code
     });
 
     return response.status(200).send({

@@ -110,9 +110,9 @@ Event.on('new::orderDecline', async (textDetails) => {
   }
 });
 
-Event.on('new::orderRefund', async ({ email, amount }) => {
+Event.on('new::orderRefund', async ({ email, amount, placement_code }) => {
   try {
-    await Mail.send('emails.order_refund', { email, amount }, (message) => {
+    await Mail.send('emails.order_refund', { email, amount, placement_code }, (message) => {
       message
         .to('admin@timeshoppy.com')
         .from('support@timeshoppy.com', 'Timeshoppy Support')
@@ -172,14 +172,14 @@ Event.on('new::orderComplete', async (mailDetails) => {
 
 Event.on(
   'new:total_invoice',
-  async ({ email, last_name, first_name, shipping, vat, total, amount }) => {
+  async ({ email, last_name, first_name, placement_code, shipping, vat, total, amount }) => {
     try {
       await Mail.send(
         'emails.total_order_cost',
-        { email, last_name, first_name, shipping, vat, total, amount },
+        { email, last_name, first_name, placement_code, shipping, vat, total, amount },
         (message) => {
           message
-            .to('admin@timeshoppy.com')
+            .to(email)
             .from('support@timeshoppy.com', 'Timeshoppy Support')
             .subject('Total Order Cost');
         }

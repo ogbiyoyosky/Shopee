@@ -463,10 +463,10 @@ NOTES:
                                 <!-- /Totals -->
                                 <!-- foreach -->
 
-                                <p><b>VAT </b>$ {{vat}}</p>
+                                {{--  <p><b>VAT: </b>$ {{vat}}</p>  --}}
                                 <br />
 
-                                <p><b>Service Charge </b>$ {{  service_charge}}</p>
+                                <p><b>Service Charge: </b>$ {{  service_charge}}</p>
                                 <br />
 
                                 <h4><b>Total: $ {{total}}}</b></h4>
@@ -496,6 +496,21 @@ NOTES:
                                             </table>
 
                                             <!-- /column 1 -->
+                                            <table align="left" class="column">
+                                                <tr>
+                                                    <td>
+                                                        <h5 class="">Sellers Details</h5>
+                                                        <p class="">
+                                                            {{order_details.order_notification.seller_details.profile.first_name}}
+                                                            {{order_details.order_notification.seller_details.profile.last_name}}
+                                                            <br />
+                                                            0{{order_details.order_notification.seller_details.phone_number}}<br />
+                                                            {{shop.shop_name}}<br />
+
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
 
 
                                             <!--- column 2 -->

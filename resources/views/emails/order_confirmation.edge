@@ -405,7 +405,7 @@ NOTES:
 
                                 <br />
 
-                                <h4>Your Order <small>placed {{date}}</small></h4>
+                                <h4>Your Order {{ placement_code }} <small>placed {{date}}</small></h4>
                                 <p>Thank you for placing your order with timeshoppy. This email is to confirm your
                                     order has been placed successfully, and will be processed & shipped to you soon by
                                     the seller.</p>
@@ -459,7 +459,7 @@ NOTES:
                                 <!-- /Totals -->
                                 <!-- foreach -->
 
-                                <p><b>VAT </b>$ {{vat}}</p>
+                                {{--  <p><b>VAT </b>$ {{vat}}</p>  --}}
                                 <br />
 
                                 <p><b>Service Charge </b>$ {{  service_charge}}</p>
