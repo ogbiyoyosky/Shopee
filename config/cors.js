@@ -23,7 +23,9 @@ module.exports = {
     "https://timeshoppy.com",
     "https://admin.timeshoppy.com",
     "https://*.paystack.com",
-    "https://timeshoppy-admin.vercel.app"
+    "https://*.flutterwave.com",
+    "https://timeshoppy-admin.vercel.app",
+    "https://timeshoppy-main.vercel.app"
   ],
 
   /*
