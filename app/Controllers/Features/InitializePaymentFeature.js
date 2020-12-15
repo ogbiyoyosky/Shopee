@@ -72,7 +72,7 @@ class InitializePaymentFeature {
           customer_lastname: customer_lastname,
           custom_title: "Timeshoppy.com",
           custom_description: "Escrow Ecommerce",
-          custom_logo: "https://timeshoppy.com/assets/images/icon/logo.png",
+          custom_logo: "https://timeshoppy.com/assets/images/icon/logo.jpeg",
           meta: [
             {
               metaname: "custom_fields",

@@ -4,6 +4,7 @@ const Store = use('App/Models/Store');
 const OrderNotification = use('App/Models/OrderNotification');
 const moment = require('moment');
 const Wallet = use('App/Models/Wallet');
+const StoreProduct = use('App/Models/StoreProduct');
 const User = use('App/Models/User');
 const Role = use('App/Models/Role');
 const Event = use('Event');
@@ -99,13 +100,21 @@ class PayForOrderFeature {
             builder.with('order_address.country_code');
             builder.with('order_address.state');
             builder.with('order_address.province');
+            builder.with('order_items');
             builder.with('order_items.main_product_images');
           })
           .first();
 
         const serializedOrderDetails = orderDetails.toJSON();
 
-        //order_details
+        console.log(serializedOrderDetails);
+
+        // update the stock of each item in the order
+        await Promise.all(serializedOrderDetails.order_notification.order_items.map(async item => {
+          const product = await StoreProduct.findBy('id', item.product_id);
+          product.stock = product.stock - item.qty;
+          await product.save();
+        }));
 
         const mailDetails = {
           shop: {

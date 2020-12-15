@@ -58,7 +58,11 @@ module.exports = {
       port: Env.get('DB_PORT', ''),
       user: Env.get('DB_USER', 'root'),
       password: Env.get('DB_PASSWORD', ''),
-      database: Env.get('DB_DATABASE', 'adonis')
+      database: Env.get('DB_DATABASE', 'adonis'),
+      pool: {
+        min: 0,
+        max: 50
+      }
     }
     // connection: {
     //   host: 'us-cdbr-iron-east-05.cleardb.net',
