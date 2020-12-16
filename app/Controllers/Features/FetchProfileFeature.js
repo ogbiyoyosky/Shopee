@@ -16,6 +16,7 @@ class FetchProfileFeature {
           "users.id",
           "email",
           "phone_number",
+          "last_updated_item",
           "profiles.country_id",
           "profiles.state_id",
           "profiles.province_id",
