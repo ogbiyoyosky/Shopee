@@ -422,7 +422,7 @@ NOTES:
 
                                     <img src="{{item.main_product_images[0].image_url}}" />
                                     <span class="item-title"> {{item.product_name}} </span> <br />
-                                    <span class="item-price"">$ {{item.price * (item.discount / 100)}} ({{item.pivot.qty}} piece) </span>
+                                    <span class="item-price">$ {{item.price - (item.price * (item.discount / 100))}} ({{item.pivot.qty}} piece) </span>
 
                                 </div>
                                 <hr>
@@ -463,7 +463,6 @@ NOTES:
                                 <!-- /Totals -->
                                 <!-- foreach -->
 
-                                {{--  <p><b>VAT: </b>$ {{vat}}</p>  --}}
                                 <br />
 
                                 <p><b>Service Charge: </b>$ {{  service_charge}}</p>
