@@ -19,6 +19,7 @@ class FetchProductsFeature {
           .whereNull("deleted_at")
           .andWhere("is_enabled", 1)
           .andWhere("category_id", category_id)
+          .andWhere("stock", ">", 0)
           .with("main_product_images")
           .with("category")
           .with("sub_category")
@@ -32,6 +33,7 @@ class FetchProductsFeature {
           .whereNull("deleted_at")
           .andWhere("is_enabled", 1)
           .andWhere("store_id", store_id)
+          .andWhere("stock", ">", 0)
           .with("main_product_images")
           .with("category")
           .with("sub_category")
@@ -45,6 +47,7 @@ class FetchProductsFeature {
           .whereNull("deleted_at")
           .andWhere("store_id", store_id)
           .andWhere("category_id", category_id)
+          .andWhere("stock", ">", 0)
           .with("main_product_images")
           .with("category")
           .with("colors")
@@ -54,9 +57,12 @@ class FetchProductsFeature {
           .with("store")
           .paginate(page, limit);
       } else {
+        console.log('Fetching Normal Stuff');
+
         produceInStore = await StoreProduct.query()
           .whereNull("deleted_at")
           .andWhere("is_enabled", 1)
+          .andWhere("stock", ">", 0)
           .with("main_product_images")
           .with("category")
           .with("sub_category")
@@ -67,11 +73,20 @@ class FetchProductsFeature {
           .paginate(page, limit);
       }
 
+      const serializedProducts = produceInStore.toJSON();
+      
+      const products = serializedProducts.data.filter(product => {
+        return product.store.is_activated_at && product.store.is_deactivated_at === null;
+      });
+
       this.response.status(200).send({
         message: "Successfully fetch all products",
         status: "success",
         status_code: 200,
-        results: produceInStore
+        results: {
+          ...serializedProducts,
+          data: products
+        },
       });
     } catch (fetchProductError) {
       console.log("fetchProduct Error -> ", fetchProductError);
