@@ -76,8 +76,9 @@ module.exports = class ProcessWithdrawal {
             const transactionId = this.generateTransactionID(token);
 
             const response = await this.makeBankTransfer({
-                amount,
+                amount: amountToWithdraw,
                 account_number: bankDetail.account_number,
+                beneficiary_name: bankDetail.account_name,
                 bank: bankDetail.bank_id,
                 reference: transactionId
             });
@@ -133,19 +134,20 @@ module.exports = class ProcessWithdrawal {
     /**
      * Attempts to make a bank transfer
      */
-    async makeBankTransfer ({ amount, reference, bank, account_number }) {
+    async makeBankTransfer ({ amount, reference, bank, beneficiary_name, account_number }) {
         const requestConfig = {
             method: "POST",
             uri: Config.get("endpoints.rave.payoutEndpoint"),
             body: {
                 account_bank: `${bank}`,
-                account_number: `${account_number}`,
+                beneficiary_name,
+                account_number,
                 reference,
                 amount,
                 narration: `Withdrawal - ${reference} Trnsfr`,
                 callback_url: `https://api.timeshoppy.com/api/v1/withdrawals/verifications`,
                 currency: "NGN",
-                debit_currency: "USD",
+                debit_currency: "NGN",
             },
             headers: {
                 authorization: `Bearer ${Env.get("FLUTTER_SECRET_KEY")}`,

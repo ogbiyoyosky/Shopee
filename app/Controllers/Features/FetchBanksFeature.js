@@ -25,6 +25,8 @@ class FetchBanksFeature {
     
             const res = await requestPromise(requestConfig);
 
+            
+
             const banks = Object.entries(res.data).map(entry => ({ id: entry[0], name: entry[1] }));
 
             // const serializedBanks = banks.toJSON();
