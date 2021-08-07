@@ -59,6 +59,7 @@ module.exports = {
       user: Env.get('DB_USER', 'root'),
       password: Env.get('DB_PASSWORD', ''),
       database: Env.get('DB_DATABASE', 'adonis'),
+      charset: 'utf8mb4',
       pool: {
         min: 0,
         max: 50

@@ -1,0 +1,65 @@
+version: "3.3"
+
+services:
+  docker-adonis-api:
+    image: docker-adonis-api
+    container_name: docker-adonis-api
+    restart: unless-stopped
+
+    # We specify the image for this service and where we can build that image from
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # We can use these volumes to specify where we want our files to be accessible at.
+    # It's best to house all node modules on a separate volume
+    # volumes:
+      # - "./:/usr/src/services/api"
+      # - "./node_modules"
+    ports:
+      - "3333:3333"
+
+    depends_on:
+      - adonis-mysql
+
+    # For Windows, we need to enable Chokidar polling so our file changes reflect in real-time.
+    environment:
+      - CHOKIDAR_USEPOLLING=1
+
+  adonis-mysql:
+    # We'll use the MySQL 5.7 image as our base image. Less likely to spring unexpected surprises.
+    image: mysql:5.7
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-fk", "tcp://localhost:3306"]
+      interval: 300s
+      timeout: 400s
+      retries: 10
+    ports:
+      - 3306:3306
+    expose:
+      - "3306"
+    # It is best to bind sockets on Windows.
+    command: --innodb_use_native_aio=0 --socket=/tmp/mysql.sock --bind_address=0.0.0.0
+
+    # We'd like to be able to access our data files on our local filesystem
+    # volumes:
+    #   - ./db:/var/lib/mysql
+
+    # It is recommended to not do this in production as it is wildly insecure
+    environment:
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'adonis'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      MYSQL_DATABASE: 'shopee'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+  
+    

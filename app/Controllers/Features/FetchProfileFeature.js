@@ -40,7 +40,7 @@ class FetchProfileFeature {
         .innerJoin("profiles", "users.id", "profiles.user_id")
         .innerJoin("country_codes", "profiles.country_id", "country_codes.id")
         .innerJoin("states", "profiles.state_id", "states.id")
-        .innerJoin("provinces", "profiles.province_id", "provinces.id")
+        .leftJoin("provinces", "profiles.province_id", "provinces.id")
         .leftJoin("stores", "users.id", "stores.user_id")
         .fetch();
 

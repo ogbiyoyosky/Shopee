@@ -15,10 +15,10 @@ const Factory = use('Factory')
 const Database = use('Database')
 
 
-const CountryCityState = require('country-state-city').default;
+const City = require('country-state-city').City;
 
 const getCitiesOfState = (state) => {
-  return CountryCityState.getCitiesOfState(state.tracking_id).map(city => ({
+  return City.getCitiesOfState(state.countryIsoCode, state.isoCode).map(city => ({
     province_label: city.name,
     state_id: state.id
   }));
@@ -28,17 +28,16 @@ class ProvinceSeeder {
   async run() {
     await Database.raw('SET FOREIGN_KEY_CHECKS = 0;');
     await Database.truncate('provinces');
-    const result = await Database.raw('SELECT id, tracking_id FROM states');
+    const result = await Database.raw('SELECT id, isoCode, countryIsoCode FROM states');
     const states = result[0];
+    console.log({ states, result })
 
-    await Promise.all(
-      states.map(async (state) => {
-        const citiesOfState = getCitiesOfState(state);
-        console.log(citiesOfState);
-        
-        await Database.table('provinces').insert(citiesOfState);
-      })
-    );
+    for (let i = 0; i < states.length; i++) {
+      const citiesOfState = getCitiesOfState(states[i]);
+      console.log(citiesOfState);
+      
+      await Database.table('provinces').insert(citiesOfState);
+    }
 
     await Database.raw('SET FOREIGN_KEY_CHECKS = 1;');
   }
