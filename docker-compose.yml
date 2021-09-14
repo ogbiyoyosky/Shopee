@@ -1,0 +1,22 @@
+version: '3.1'
+services: 
+  mysql:
+    image: mysql/mysql-server:8.0.22
+    ports: 
+      - "3306:3306"
+    volumes: 
+      - /data:/var/lib/mysql
+  server:
+    restart: "no"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports: 
+      - "3333:3333"
+    env_file:
+      - env-docker-compose
+    depends_on: 
+      - mysql
+    volumes: 
+      - /user/app/node_modules
+      - .:/user/app

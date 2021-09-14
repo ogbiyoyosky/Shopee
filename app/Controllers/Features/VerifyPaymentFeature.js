@@ -1,12 +1,12 @@
 "use strict";
 const Config = use("Config");
-//const Env = use("Env");
+const Env = use("Env");
 const requestPromise = require("request-promise");
 const TransactionToken = use("App/Models/TransactionToken");
 const Transaction = use("App/Models/Transaction");
-// const ProcessTransactionFeature = use(
-//   "App/Controllers/Features/ProcessTransactionFeature"
-// );
+const ProcessTransactionFeature = use(
+  "App/Controllers/Features/ProcessTransactionFeature"
+);
 
 class VerifyPaymentFeature {
   constructor(request, response) {
@@ -14,103 +14,91 @@ class VerifyPaymentFeature {
     this.response = response;
   }
 
-  async verify(txRef) {
-    const requestConfig = {
-      method: "POST",
-      uri: Config.get("endpoints.rave.verifyTransactionEndpoint"),
-      body: {
-        SECKEY: "FLWSECK_TEST-172005f0c04f723fa96ab59c15492a1d-X",
-        txref: txRef,
-      },
-      headers: {
-        "content-type": "application/json",
-        "cache-control": "no-cache",
-      },
-      json: true,
-    };
+  async verify() {
+    const txRef = this.request.params.reference;
+    const transaction = await Transaction.findBy("transaction_reference", txRef);
 
-    return requestPromise(requestConfig)
-      .then(async (apiResponse) => {
-        if (apiResponse.status == "success") {
-          // redirect to a success page
-          const fields = JSON.parse(apiResponse.data.meta[0].metavalue);
+    if (!transaction) {
+      return this.response.status(404).send({
+        status: "Fail",
+        message: "Transaction not found",
+        status_code: 404,
+      });
+    }
 
-          let redirectQueryString = [];
+    if (transaction.status !== 'pending') {
+      return this.response.status(200).send({
+        status: 'success',
+        message: 'Query successful',
+        status_code: 200,
+        result: transaction,
+      });
+    }
 
-          fields.forEach((field, i) => {
-            redirectQueryString.push(
-              `${field["variable_name"]}=${field["value"]}`
-            );
-          });
+    return requestPromise({
+        method: "GET",
+        uri: `${Config.get("endpoints.paystack.verifyTransactionEndpoint")}/${txRef}`,
+        headers: {
+          "authorization": `Bearer ${Env.get("PAYSTACK_SECRET")}`,
+          "content-type": "application/json",
+          "cache-control": "no-cache",
+        },
+        json: true,
+      })
+      .then(async (apiResponse) => { 
+        let status = transaction.status;
 
-          redirectQueryString = encodeURI(redirectQueryString.join("&"));
-
-          let amount;
-          let user_id;
-          let token;
-          let type;
-          let memo;
-          let redirectURL;
-
-          let mapData = fields.map((item) => {
-            if (item.variable_name == "tkn") {
-              token = item.value;
-            }
-            if (item.variable_name == "uid") {
-              user_id = item.value;
-            }
-
-            if (item.variable_name == "amt") {
-              amount = item.value;
-            }
-
-            if (item.variable_name == "type") {
-              type = item.value;
-            }
-
-            if (item.variable_name == "url") {
-              redirectURL = item.value;
-            }
-
-            if (item.variable_name == "memo") {
-              memo = item.value;
-            }
-          });
-
-          return {
-            user_id,
-            amount,
-            token,
-            type,
-            memo,
-            redirectURL,
-            status: "success",
-          };
-        } else {
-          const transactionToken = await TransactionToken.findBy(
-            "token",
-            txRef
-          );
-          if (transactionToken) {
-            transactionToken.is_revoked = 1;
-            await transactionToken.save();
-
-            transaction = await Transaction.findBY(
-              "transaction_reference",
-              txRef
-            );
-            transaction.status = "fail";
-            await transaction.save();
+        console.log(apiResponse);
+        
+        if (apiResponse.data.status == "success") {
+          status = 'success'
+          
+          if ((apiResponse.data.amount / 100) < transaction.amount) {
+            status = 'fail';
           }
-
-          return false;
+        } else if (apiResponse.data.status == 'failed') {
+          status = 'fail'
         }
+
+        if (status === 'pending') {
+          return this.response.status(200).send({
+            status: 'success',
+            message: 'Query successful',
+            status_code: 200,
+            result: transaction,
+          });
+        }
+
+        const transactionToken = await TransactionToken.findBy("token",txRef);
+
+        if ('success') {
+          const transactionType = 'FUNDING';
+          await new ProcessTransactionFeature(
+            this.request,
+            this.response
+          ).processTransaction(transaction.amount, transaction.user_id, transactionType);
+        }
+        
+        if (transactionToken && !transactionToken.is_revoked) {
+          transactionToken.is_revoked = 1;
+          await transactionToken.save();
+        }
+        
+        transaction.status = status;
+        await transaction.save();
+
+        return this.response.status(200).send({
+          status: 'success',
+          message: 'Query successful',
+          status_code: 200,
+          result: transaction,
+        });
       })
       .catch((e) => {
         console.log("Verify Payment Error", e);
         return this.response.status(400).send({
           status: "Fail",
-          message: "Unable to process transaction.",
+          message: "Unable to verify transaction.",
           status_code: 400,
         });
       });

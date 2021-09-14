@@ -36,10 +36,10 @@
     "cloudinary": "^1.18.1",
     "country-state-city": "^1.0.5",
     "mysql": "^2.17.1",
+    "mysql2": "^2.3.0",
     "node-cron": "^2.0.3",
     "randomstring": "^1.1.5",
     "request-promise": "^4.2.5",
-    "sqlite3": "^4.0.9",
     "twilio": "^3.39.1",
     "url-parse": "^1.4.7"
   },

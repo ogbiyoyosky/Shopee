@@ -9,7 +9,7 @@ class BankDetailSchema extends Schema {
       table.increments()
       table.string('bank_id').notNullable(),
       table.string('account_name', 254).nullable(),
-      table.integer('account_number', 15).nullable(),
+      table.string('account_number', 25).nullable(),
       table.integer('user_id').nullable(),
       table.timestamps()
     })
