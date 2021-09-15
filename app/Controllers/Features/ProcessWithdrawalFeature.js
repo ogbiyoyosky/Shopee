@@ -78,7 +78,7 @@ module.exports = class ProcessWithdrawal {
             const response = await this.makeBankTransfer({
                 amount: amountToWithdraw,
                 account_number: bankDetail.account_number,
-                beneficiary_name: bankDetail.account_name,
+                full_name: bankDetail.account_name,
                 bank: bankDetail.bank_id,
                 reference: transactionId
             });
@@ -134,13 +134,13 @@ module.exports = class ProcessWithdrawal {
     /**
      * Attempts to make a bank transfer
      */
-    async makeBankTransfer ({ amount, reference, bank, beneficiary_name, account_number }) {
+    async makeBankTransfer ({ amount, reference, bank, full_name, account_number }) {
         const requestConfig = {
             method: "POST",
             uri: Config.get("endpoints.rave.payoutEndpoint"),
             body: {
                 account_bank: `${bank}`,
-                beneficiary_name,
+                // full_name,
                 account_number,
                 reference,
                 amount,

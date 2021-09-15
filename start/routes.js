@@ -114,21 +114,13 @@ Route.group(() => {
   Route.put('EditProfile/Info', 'Profile/ProfileController.editProfile')
     .middleware(['auth'])
     .validator('EditProfile');
-  //paystack integration
-  Route.post('Paystack/Pay', 'Payment/PaymentController.payWithPayStack')
+
+  // Payments
+  Route.post('Paystack/Pay', 'Payment/PaymentController.initializePayment')
     .middleware(['auth'])
     .validator('Payment');
-  Route.post(
-    'Paystack/VerifyPayment',
-    'Payment/PaymentController.verifyPayment'
-  );
-
-  Route.post('/payment/webhook', 'Webhook/WebhookController.payment');
-
-  Route.get(
-    'Transaction/ProcessTransaction',
-    'Payment/PaymentController.processTransaction'
-  );
+  Route.get('payments/verify/:reference', 'Payment/PaymentController.verifyPayment');
+  Route.post('/payments/webhook', 'Webhook/WebhookController.payment');
 
   //store
   Route.get('Store/AllStores', 'Store/StoreController.listStores').middleware([
@@ -240,8 +232,6 @@ Route.group(() => {
     '/clearInflowsForWithdrawal',
     'CronJob/CronJobController.clearInflowsForWithdrawalAfterTwentyFourHours'
   );
-
-  Route.post('/verifyPayment', 'Webhook/WebhookController.funding');
 
   Route.get('/analytics', 'Analytic/AnalyticController.fetchAnalytics');
 }).prefix('api/v1');

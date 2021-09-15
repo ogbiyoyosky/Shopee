@@ -37,6 +37,14 @@ module.exports = {
     payoutEndpoint: "https://api.flutterwave.com/v3/transfers",
   },
 
+  /**
+   |--------------------------------------------------------------------------
+   | Payment Callback URL
+   |--------------------------------------------------------------------------
+   |
+   */
+  paymentCallbackBaseURL: `${HOST_URL}/api/v1/payments/verify`,
+
   /*
   |--------------------------------------------------------------------------
   | Transaction endpoints.

@@ -8,7 +8,9 @@ const randomString = require("randomstring");
 const TransactionToken = use("App/Models/TransactionToken");
 const Transaction = use("App/Models/Transaction");
 
-const PAYMENT_GATEWAY_KEY = Env.get("PAYSTACK_SECRET");
+const PUBLICK_KEY = Env.get("FLUTTER_PUBLIC_KEY");
+const HOST = Env.get("HOST");
+const PORT = Env.get("PORT");
 
 class InitializePaymentFeature {
   constructor(request, response, auth) {
@@ -34,7 +36,10 @@ class InitializePaymentFeature {
       const uid = this.auth.current.user.id;
 
       const profile = await Profile.findBy("user_id", uid);
+      const customer_firstname = profile.first_name;
+      const customer_lastname = profile.last_name;
       const email = this.auth.current.user.email;
+      const phone_number = `0${this.auth.current.user.phone_number}`;
 
       let memo;
 
@@ -53,48 +58,61 @@ class InitializePaymentFeature {
 
       const requestConfig = {
         method: "POST",
-        uri: Config.get("endpoints.paystack.transactionInitializeEndpoint"),
+        uri: Config.get("endpoints.rave.transactionInitializeEndpoint"),
         body: {
-          reference: token,
-          amount: Number(amount) * 100, //amount,
-          callback_url: `${process.env.FRONTEND_URL}/payment-verification/${token}`,
-          email, //email,
-          currency: "NGN",
-          metadata: JSON.stringify([
+          PBFPubKey: PUBLICK_KEY,
+          txref: token,
+          customer_phone: phone_number, //phone_number,
+          amount: amount, //amount,
+          redirect_url: ` https://api.timeshoppy.com/api/v1/verifyPayment`,
+          customer_email: email, //email,
+          currency: "USD",
+          country: "NG",
+          customer_firstname: customer_firstname,
+          customer_lastname: customer_lastname,
+          custom_title: "Timeshoppy.com",
+          custom_description: "Escrow Ecommerce",
+          custom_logo: "https://timeshoppy.com/assets/images/icon/logo.jpeg",
+          meta: [
             {
-              display_name: "Amount",
-              variable_name: "amt",
-              value: amount,
+              metaname: "custom_fields",
+              metavalue: JSON.stringify([
+                {
+                  display_name: "Amount",
+                  variable_name: "amt",
+                  value: amount,
+                },
+                {
+                  display_name: "User ID",
+                  variable_name: "uid",
+                  value: uid,
+                },
+                {
+                  display_name: "Memo",
+                  variable_name: "memo",
+                  value: memo,
+                },
+                {
+                  display_name: "Type",
+                  variable_name: "type",
+                  value: transaction_type.transaction_type_label,
+                },
+                {
+                  display_name: "Token",
+                  variable_name: "tkn",
+                  value: token,
+                },
+                {
+                  display_name: "Url",
+                  variable_name: "url",
+                  value: redirect_url,
+                },
+              ]),
             },
-            {
-              display_name: "User ID",
-              variable_name: "uid",
-              value: uid,
-            },
-            {
-              display_name: "Memo",
-              variable_name: "memo",
-              value: memo,
-            },
-            {
-              display_name: "Type",
-              variable_name: "type",
-              value: transaction_type.transaction_type_label,
-            },
-            {
-              display_name: "Token",
-              variable_name: "tkn",
-              value: token,
-            },
-            {
-              display_name: "Url",
-              variable_name: "url",
-              value: redirect_url,
-            },
-          ]),
+          ],
         },
         headers: {
-          authorization: `Bearer ${PAYMENT_GATEWAY_KEY}`,
+          authorization: `Bearer ${Env.get("PAYSTACK_SECRET")}`,
           "content-type": "application/json",
           "cache-control": "no-cache",
         },
@@ -112,10 +130,11 @@ class InitializePaymentFeature {
           }
 
           //save the transaction and token
-          const transactionToken = new TransactionToken();
-          transactionToken.token = token;
-          transactionToken.user_id = uid;
-          await transactionToken.save();
+
+          const transaction = new TransactionToken();
+          transaction.token = token;
+          transaction.user_id = uid;
+          await transaction.save();
 
           await Transaction.create({
             user_id: uid,
@@ -127,10 +146,11 @@ class InitializePaymentFeature {
           });
 
           return this.response.status(200).send({
-            authorization_url: apiResponse.data.authorization_url,
+            authorization_url: apiResponse.data.link,
           });
         })
         .catch((e) => {
+          console.log(e);
           console.log("initialization Error", e);
           return this.response.status(500).send({
             status: "Fail",
