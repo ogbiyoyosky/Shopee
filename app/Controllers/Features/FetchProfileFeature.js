@@ -11,9 +11,6 @@ class FetchProfileFeature {
   async fetchProfile() {
     try {
       const user_id = this.auth.current.user.id;
-
-      console.log(user_id, this.auth.current.user.email, typeof this.auth.current.user.id);
-
       const profile = await User.query()
         .select(
           "users.id",
@@ -30,7 +27,7 @@ class FetchProfileFeature {
           "first_name",
           "last_name",
           "states.state_label",
-          // "provinces.province_label",
+          "provinces.province_label",
           "country_codes.name as country",
           "stores.id as store_id",
           "stores.is_activated_at as store_activated_at",
@@ -43,13 +40,11 @@ class FetchProfileFeature {
         .innerJoin("profiles", "users.id", "profiles.user_id")
         .innerJoin("country_codes", "profiles.country_id", "country_codes.id")
         .innerJoin("states", "profiles.state_id", "states.id")
-        // .innerJoin("provinces", "profiles.province_id", "provinces.id")
+        .leftJoin("provinces", "profiles.province_id", "provinces.id")
         .leftJoin("stores", "users.id", "stores.user_id")
         .fetch();
 
       const serializedResult = profile.toJSON();
-      console.log(profile);
-      console.log(serializedResult);
 
       return this.response.status(200).send({
         message: "Successfully fetched the users profile",
