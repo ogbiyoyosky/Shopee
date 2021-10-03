@@ -8,6 +8,7 @@ const Wallet = use('App/Models/Wallet');
 const BankDetail = use('App/Models/BankDetail');
 const Withdrawal = use('App/Models/Withdrawal');
 const ManageWalletCashflow = use('App/HelperFunctions/ManageWalletCashflow');
+const Paystack = use('App/HelperFunctions/Paystack');
 
 
 const HOST = Env.get("HOST");
@@ -72,23 +73,24 @@ module.exports = class ProcessWithdrawal {
                 });
             }
 
-            const token = randomString.generate(13);
-            const transactionId = this.generateTransactionID(token);
+            const token = randomString.generate({
+                length: 32,
+                capitalization: 'lowercase',
+            });
 
             const response = await this.makeBankTransfer({
                 amount: amountToWithdraw,
-                account_number: bankDetail.account_number,
+                recipient_id: bankDetail.recipient_id,
                 full_name: bankDetail.account_name,
-                bank: bankDetail.bank_id,
-                reference: transactionId
+                reference: token,
             });
 
-            if (response.status !== "success") {
+            if (response.data.status == "failure") {
                 return this.response.status(400).send({
                     status: "Fail",
                     message: "Error contacting rave",
                     status_code: 400,
-                    flv_response: response
+                    flv_response: response.data,
                 });
             }
 
@@ -100,7 +102,7 @@ module.exports = class ProcessWithdrawal {
 
             const withdrawal = new Withdrawal();
             withdrawal.wallet_cashflow_id = cashflow.id;
-            withdrawal.transaction_id = transactionId;
+            withdrawal.transaction_id = token;
             await withdrawal.save();
 
             return this.response.status(200).send({
@@ -108,12 +110,12 @@ module.exports = class ProcessWithdrawal {
                 status_code: 200,
                 message: 'Withdrawal successful',
                 result: cashflow,
-                flw_response: response
+                flw_response: response.data,
             })
         } catch(processWithdrawalError) {
-            console.log('processWithdrawalError -> ', processWithdrawalError);
-            let errMsg = processWithdrawalError.error;
-            errMsg = errMsg.data ? errMsg.data.complete_message : "Internal Server Error";
+            // console.log('processWithdrawalError -> ', processWithdrawalError);
+            let errMsg = processWithdrawalError;
+            errMsg = errMsg.data ? errMsg.data.message : "Internal Server Error";
             return this.response.status(500).send({
                 status: "Fail",
                 message: errMsg,
@@ -128,35 +130,18 @@ module.exports = class ProcessWithdrawal {
      * @returns { string } a unique transaction ID for the withdrawal
      */
     generateTransactionID(token) {
-        return `WTH-${Date.now() - 737}-${token}`.toUpperCase();
+        return `${token}`;
     }
 
     /**
      * Attempts to make a bank transfer
      */
-    async makeBankTransfer ({ amount, reference, bank, full_name, account_number }) {
-        const requestConfig = {
-            method: "POST",
-            uri: Config.get("endpoints.rave.payoutEndpoint"),
-            body: {
-                account_bank: `${bank}`,
-                // full_name,
-                account_number,
-                reference,
-                amount,
-                narration: `Withdrawal - ${reference} Trnsfr`,
-                callback_url: `https://api.timeshoppy.com/api/v1/withdrawals/verifications`,
-                currency: "NGN",
-                debit_currency: "NGN",
-            },
-            headers: {
-                authorization: `Bearer ${Env.get("FLUTTER_SECRET_KEY")}`,
-                "Content-Type": "application/json",
-                "cache-control": "no-cache",
-            },
-            json: true,
-        };
-
-        return requestPromise(requestConfig)
+    async makeBankTransfer ({ amount, reference, recipient_id, full_name }) {
+        return Paystack.initiateTransfer({
+            amount,
+            reference,
+            recipient: recipient_id,
+            reason: `Transfer to ${full_name}`
+        })
     }
 }

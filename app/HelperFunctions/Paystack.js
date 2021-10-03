@@ -1,24 +1,4 @@
-import { InternalServerErrorException } from '@nestjs/common';
-import axios, { AxiosError, AxiosResponse } from 'axios';
-
-// interface TransferRecipientPayload {
-//   name : string;
-//   account_number: string;
-//   bank_code: string;
-//   currency: string;
-// }
-
-// interface TransferPayload {
-//     amount: number;
-//     recipient: string;
-//     reason: string;
-// }
-
-// interface BankQueryFilter {
-//     country?: string;
-//     use_cursor?: boolean;
-//     perPage?: number;
-// }
+const axios = use('axios');
 
 class PaystackClient {
   baseURL = 'https://api.paystack.co';
@@ -36,14 +16,13 @@ class PaystackClient {
     const fallbackMessage = 'Unable to complete request at this time. Please contact support';
 
     if (error.response) {
-
-      console.log(`PAYSTACK ERROR OBJECT: `, error.response);
-      console.log(`PAYSTACK ERROR: `, error.response.data);
+      console.log(error.response);
+      throw new Error(error.response.data.message);
     } else {
       console.log(error);
     }
 
-    throw new InternalServerErrorException(fallbackMessage);
+    throw new Error(fallbackMessage);
   }
 
   composeEndpoint(path) {
@@ -90,7 +69,7 @@ class PaystackClient {
     }
   }
 
-  async createRecipientClient(payload) {
+  async createRecipient(payload) {
     try {
       const endpoint = this.composeEndpoint(`/transferrecipient`);
       const response = await axios.post(endpoint, { type: 'nuban', ...payload }, {
@@ -124,4 +103,4 @@ class PaystackClient {
   }
 }
 
-export default new PaystackClient();
+module.exports = new PaystackClient();
