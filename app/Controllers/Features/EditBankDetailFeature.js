@@ -3,16 +3,17 @@
 const requestPromise = require("request-promise");
 const Env = use('Env');
 const User = use('App/Models/User');
-const Bank = use('App/Models/Bank');
 const BankDetail = use("App/Models/BankDetail");
 const Hash = use('Hash');
+const Paystack = use('App/HelperFunctions/Paystack');
+
 
 class EditBankDetailFeature {
     constructor (  request, response, auth ) {
         this.request = request
         this.response = response
         this.auth = auth
-    }
+    }  
 
     async editDetail(){
         try {
@@ -64,8 +65,6 @@ class EditBankDetailFeature {
         
                 const banksResesponse = await requestPromise(requestConfig);
 
-                // const bank = await Bank.findBy('id', bank_id);
-
                 if (!banksResesponse.data[bank_id]) {
                     return this.response.status(400).send({
                         message: "The selected bank does not exist. Please check again or contact support.",
@@ -84,15 +83,40 @@ class EditBankDetailFeature {
             };
 
             let bankDetail = await BankDetail.findBy('user_id', user.id);
+            let transferRecipient;
 
             if(bankDetail) {
-                bankDetail.merge(data);
+                if (bankDetail.account_number != account_number || bankDetail.bank_id != bank_id) {
+                    transferRecipient = await Paystack.createRecipient({
+                        "type": "nuban",
+                        "name": account_name,
+                        "account_number": account_number,
+                        "bank_code": bank_id,
+                        "currency": "NGN"
+                    });
+
+                    console.log({transferRecipient});
+
+                    bankDetail.merge({
+                        ...data,
+                        recipient_id: transferRecipient.data.recipient_code,
+                    });
+                }
             } else {
+                transferRecipient = await Paystack.createRecipient({
+                    "type": "nuban",
+                    "name": account_name,
+                    "account_number": account_number,
+                    "bank_code": bank_id,
+                    "currency": "NGN"
+                });
+
                 bankDetail = new BankDetail();
                 bankDetail.account_name = account_name;
                 bankDetail.account_number = account_number;
                 bankDetail.bank_id = bank_id;
                 bankDetail.user_id = user.id;
+                bankDetail.recipient_id = transferRecipient.data.recipient_code;
             }
 
             await bankDetail.save();
