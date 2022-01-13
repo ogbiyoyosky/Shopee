@@ -66,7 +66,7 @@ class InitializePaymentFeature {
           amount: amount, //amount,
           redirect_url: ` https://api.timeshoppy.com/api/v1/verifyPayment`,
           customer_email: email, //email,
-          currency: "USD",
+          currency: "NGN",
           country: "NG",
           customer_firstname: customer_firstname,
           customer_lastname: customer_lastname,
