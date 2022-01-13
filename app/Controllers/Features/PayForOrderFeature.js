@@ -1,4 +1,5 @@
 'use strict';
+const Database = use('Database');
 const Order = use('App/Models/Order');
 const Store = use('App/Models/Store');
 const OrderNotification = use('App/Models/OrderNotification');
@@ -18,6 +19,8 @@ class PayForOrderFeature {
   }
 
   async payForOrder() {
+    const trx = await Database.beginTransaction();
+
     try {
       const { order_id } = this.request.all();
       const { id } = this.auth.current.user;
@@ -66,7 +69,7 @@ class PayForOrderFeature {
           wallet_id: userWallet.id,
           amount: amountToBeBilled,
           description: `Payment for order ${order.placement_code}`,
-        });
+        }, { transaction: trx });
 
         order.placement_code = 'F' + order.placement_code; //Marked as paid
         order.is_paid_at = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -86,9 +89,9 @@ class PayForOrderFeature {
 
         await ManageWalletCashflow.credit({
           wallet_id: sellerWallet.id,
-          amount: amountToBeBilled,
+          amount: order.amount + shipping_cost,
           description: `Payment for order ${order.placement_code}`,
-        });
+        }, { transaction: trx });
 
         const store = await Store.findBy('user_id', sellerId);
 
@@ -113,6 +116,7 @@ class PayForOrderFeature {
         await Promise.all(serializedOrderDetails.order_notification.order_items.map(async item => {
           const product = await StoreProduct.findBy('id', item.product_id);
           product.stock = product.stock - item.qty;
+          product.useTransaction(trx);
           await product.save();
         }));
 
@@ -151,6 +155,8 @@ class PayForOrderFeature {
 
         Event.fire('new::order', mailDetails);
 
+        trx.commit();
+
         return this.response.status(200).send({
           message: `Successfully paid for order  ${order.placement_code}`,
           status_code: 200,
@@ -161,6 +167,7 @@ class PayForOrderFeature {
       //send email
     } catch (payForOrderError) {
       console.log('payForOrderError', payForOrderError);
+      trx.rollback();
       return this.response.status(500).send({
         status: 'Fail',
         message: 'Internal Server Error',

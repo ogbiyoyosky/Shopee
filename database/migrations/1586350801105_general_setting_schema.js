@@ -7,8 +7,8 @@ class GeneralSettingSchema extends Schema {
   up() {
     this.create('general_settings', (table) => {
       table.increments()
-      table.integer("vat").defaultTo(5)
-      table.integer("service_charge").defaultTo(2)
+      table.integer("vat").defaultTo(0)
+      table.integer("service_charge").defaultTo(500)
       table.timestamps()
     })
   }

@@ -15,13 +15,13 @@ class ManageWalletCashflow {
    * Defaults to true
    * @returns { Promise<object> } a Promise that resolves to the new cashflow.
    */
-  static async credit(data) {
+  static async credit(data, options) {
     const wallet = await ManageWalletCashflow.getWallet(data.wallet_id);
     const cashflow = await ManageWalletCashflow.createCashflow({
       ...data,
       type: 'credit',
-    });
-    await this.updateWalletBalance(wallet, cashflow);
+    }, options);
+    await this.updateWalletBalance(wallet, cashflow, options);
     return wallet;
   }
 
@@ -35,11 +35,11 @@ class ManageWalletCashflow {
    * @param { boolean } [data.is_cleared] - If true, the cashflow will be cleared instantly. Defaults to true
    * @returns { Promise<object> } a Promise that resolves to the new cashflow.
    */
-  static async debit(data) {
+  static async debit(data, options) {
     const wallet = await this.getWallet(data.wallet_id);
     data = { is_cleared: true, ...data, type: 'debit' };
-    const cashflow = await ManageWalletCashflow.createCashflow(data);
-    await ManageWalletCashflow.updateWalletBalance(wallet, cashflow);
+    const cashflow = await ManageWalletCashflow.createCashflow(data, options);
+    await ManageWalletCashflow.updateWalletBalance(wallet, cashflow, options);
     return cashflow
   }
 
@@ -74,14 +74,14 @@ class ManageWalletCashflow {
     wallet_id,
     is_cleared,
     description,
-  }) {
+  }, options) {
     const cashflow = new WalletCashflow();
     cashflow.type = type;
     cashflow.amount = amount;
     cashflow.wallet_id = wallet_id;
     cashflow.is_cleared = is_cleared || false;
     cashflow.description = description || null;
-
+    cashflow.useTransaction(options.transaction);
     await cashflow.save();
     return cashflow;
   }
@@ -91,7 +91,7 @@ class ManageWalletCashflow {
    * @param { object } wallet An instance of the `Wallet` model
    * @param { object } cashflow An instance of the `WalletCashflow` model
    */
-  static async updateWalletBalance(wallet, cashflow) {
+  static async updateWalletBalance(wallet, cashflow, options) {
     if (!cashflow.is_cleared) return;
 
     if (cashflow.type === 'debit') {
@@ -102,6 +102,7 @@ class ManageWalletCashflow {
       wallet.balance = wallet.balance + cashflow.amount;
     }
 
+    wallet.useTransaction(options.transaction);
     await wallet.save();
   }
 }
