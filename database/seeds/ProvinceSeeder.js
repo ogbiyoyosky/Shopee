@@ -15,7 +15,9 @@ const Factory = use('Factory')
 const Database = use('Database')
 
 
-const City = require('country-state-city').City;
+const City = require('country-state-city');
+
+console.log("Cities", City);
 
 const getCitiesOfState = (state) => {
   return City.getCitiesOfState(state.countryIsoCode, state.isoCode).map(city => ({
@@ -28,7 +30,7 @@ class ProvinceSeeder {
   async run() {
     await Database.raw('SET FOREIGN_KEY_CHECKS = 0;');
     await Database.truncate('provinces');
-    const result = await Database.raw('SELECT id, isoCode, countryIsoCode FROM states');
+    const result = await Database.raw('SELECT * FROM states');
     const states = result[0];
     console.log({ states, result })
 
