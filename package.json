@@ -44,7 +44,7 @@
     "request-promise": "^4.2.5",
     "sqlite3": "^4.0.9",
     "twilio": "^3.39.1",
-    "url-parse": "^1.4.7"
+    "url-parse": "^1.5.9"
   },
   "devDependencies": {},
   "autoload": {
