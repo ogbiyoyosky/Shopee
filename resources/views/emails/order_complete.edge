@@ -422,7 +422,7 @@ NOTES:
 
                                     <img src="{{item.main_product_images[0].image_url}}" />
                                     <span class="item-title"> {{item.product_name}} </span> <br />
-                                    <span class="item-price">$ {{item.price - (item.price * (item.discount / 100))}} ({{item.pivot.qty}} piece) </span>
+                                    <span class="item-price">₦ {{item.price - (item.price * (item.discount / 100))}} ({{item.pivot.qty}} piece) </span>
 
                                 </div>
                                 <hr>
@@ -432,7 +432,7 @@ NOTES:
                                 <br />
 
                                 <!-- Totals -->
-                                <h5><b>Subtotal:</b> $ {{sub_total  }}</h5>
+                                <h5><b>Subtotal:</b> ₦ {{sub_total  }}</h5>
 
                                 <!-- Totals -->
                                 <table class="columns" width="100%">
@@ -442,7 +442,7 @@ NOTES:
                                             <table align="left" class="column">
                                                 <tr>
                                                     <td>
-                                                        <p><b>Shipping:</b> $ {{shipping_fee}}
+                                                        <p><b>Shipping:</b> ₦ {{shipping_fee}}
                                                         </p>
                                                     </td>
                                                 </tr>
@@ -465,10 +465,10 @@ NOTES:
 
                                 <br />
 
-                                <p><b>Service Charge: </b>$ {{  service_charge}}</p>
+                                <p><b>Service Charge: </b>₦ {{  service_charge}}</p>
                                 <br />
 
-                                <h4><b>Total: $ {{total}}}</b></h4>
+                                <h4><b>Total: ₦ {{total}}}</b></h4>
                                 <!-- /Totals -->
 
                                 <br />
